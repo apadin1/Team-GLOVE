@@ -1,14 +1,24 @@
-/* Filename:  imu.h
+/*
+ * Filename:  IMU.h
  * Project:   EECS 473 - Team GLOVE
- * Date:      4 October 2016
- * 
- * Interface for reading data from IMU
+ * Date:      Fall 2016
+ * Authors:
+ *     Nick Bertoldi
+ *     Ben Heckathorn
+ *     Ryan O’Keefe
+ *     Adrian Padin
+ *     Tim Schumacher
+ *
+ *
+ *  Interface for a task to get data from the IMU
+ *
  */
- 
-#ifndef IMU_H
-#define IMU_H
+
+#ifndef IMU_H_
+#define IMU_H_
+
+#include "BNO055_Adafruit_lib.h" // this is a placeholder, will likely port
 
 
-#endif /* IMU_H */
-
+#endif /* IMU_H_ */
 
