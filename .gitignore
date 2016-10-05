@@ -1,0 +1,38 @@
+# Compiled Object files
+*.slo
+*.lo
+*.pyc
+*.ko
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# editor files
+*.swp
+*~
+
+Private/*
+.ycm*
+tags
+*.taghl
+*.metadata*
+*synthesis*
+*designer*
+
