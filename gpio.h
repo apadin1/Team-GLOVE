@@ -13,14 +13,17 @@
  *  These are the functions which will be used to
  *  read and write to GPIO pins
  *
+ *  Very vague for now, highly platform dependent
  */
 
 #ifndef GPIO_H_
 #define GPIO_H_
 
-void initGPIO(int pin_num, int in_out);
-void readGPIO(int pin_num);
-void writeGPIO(int pin_num);
+#include <inttypes.h>
+
+void initGPIO(uint8_t pin_num, uint8_t in_out);
+void readGPIO(uint8_t pin_num);
+void writeGPIO(uint8_t pin_num);
 
 #endif /* GPIO_H_*/
 
