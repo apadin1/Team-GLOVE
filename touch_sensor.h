@@ -37,4 +37,9 @@ typedef struct {
  */
 void updateTouchSensors(touch_sensor_t *sensor);
 
+/*
+ * Returns allocated array of [n] touch_sensor_t
+ */
+touch_sensor_t* initTouchSensorArray(uint8_t n);
+
 #endif /* TOUCH_SENSOR_H_ */
