@@ -9,15 +9,25 @@
  *     Adrian Padin
  *     Tim Schumacher
  *
- *
- *  Interface for a task to get data from the IMU
+ * Purpose:
+ *  Top-level interface for a task to get data from the IMU
  *
  */
 
 #ifndef IMU_H_
 #define IMU_H_
 
-#include "BNO055_Adafruit_lib.h" // this is a placeholder, will likely port
+#include "Adafruit_BNO055.h" // will need to port
+
+
+/*
+ * We will want some way to save the calibration for the IMU
+ * and then reload it on setup
+ */
+void saveIMUCalibration();
+void loadIMUCalibration();
+
+
 
 
 #endif /* IMU_H_ */
