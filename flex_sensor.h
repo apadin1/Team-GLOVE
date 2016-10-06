@@ -22,6 +22,7 @@
 /* flex_sensor_t
  *
  * analog_pin: GPIO pin number, as determined by the GPIO lib
+ *  NOTE: determine analog/ discrete ADC because of the NRF51 processor
  * deflection: scaled analog-to-digital value read from the GPIO
  */
 typedef struct {
