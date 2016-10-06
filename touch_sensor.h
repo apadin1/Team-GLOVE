@@ -35,7 +35,6 @@ typedef struct {
  * Given an array of touch_sensor_t, update each
  * of those structs.  Assumes TOUCH_SENSOR_NUM sensors
  */
-void update_touch_sensors(touch_sensor_t *sensor);
+void updateTouchSensors(touch_sensor_t *sensor);
 
 #endif /* TOUCH_SENSOR_H_ */
-

@@ -29,6 +29,6 @@ typedef struct {
     uint16_t deflection;
 } flex_sensor_t;
 
-int get_deflection(flex_sensor_t *sensor);
+void updateFlexSensorDeflection(flex_sensor_t *sensor);
 
 #endif /* FLEX_SENSOR_H_ */
