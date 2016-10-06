@@ -32,7 +32,7 @@ typedef struct {
 /*
  * given a single flex sensor, update its deflection
  */
-void updateFlexSensorDeflection(flex_sensor_t* sensor);
+void updateFlexSensorDeflection(flex_sensor_t*);
 
 /*
  * initialize the gpio pins for the flex sensor,
