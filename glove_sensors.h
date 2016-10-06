@@ -21,17 +21,17 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
+/*
+ *  This is the condenced sensor data struct used on either
+ * end of the bluetooth connection, must remain in sync on both
+ * ends of the connection
+ */
+typedef struct {
 
 
-class glove_sensors {
-public:
-
-
-
-private:
     xSemaphoreHandle data_mutex;
 
-}
+} glove_sensors_raw_t;
 
 
 #endif /* GLOVE_SENSORS_H_ */
