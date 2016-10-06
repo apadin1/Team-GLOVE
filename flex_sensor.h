@@ -29,6 +29,15 @@ typedef struct {
     uint16_t deflection;
 } flex_sensor_t;
 
-void updateFlexSensorDeflection(flex_sensor_t *sensor);
+/*
+ * given a single flex sensor, update its deflection
+ */
+void updateFlexSensorDeflection(flex_sensor_t* sensor);
+
+/*
+ * initialize the gpio pins for the flex sensor,
+ * allocate space for the flex_sensor
+ */
+flex_sensor_t* initFlexSensor(uint8_t analog_gpio_pin);
 
 #endif /* FLEX_SENSOR_H_ */
