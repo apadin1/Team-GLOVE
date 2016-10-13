@@ -29,7 +29,7 @@
 *~
 
 # mbed submodules
-*/mbed-os/*
+mbed-glove-firmware/mbed-os/
 .build
 .mbed
 projectfiles
