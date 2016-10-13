@@ -28,6 +28,13 @@
 *.swp
 *~
 
+# mbed submodules
+*/mbed-os/*
+.build
+.mbed
+projectfiles
+
+# misc
 Private/*
 .ycm*
 tags
