@@ -45,8 +45,8 @@ void updateFlexSensorDeflection(flex_sensor_t* f) {
  * allocate space for the flex_sensor
  */
 flex_sensor_t* initFlexSensor(PinName analog_pin) {
-    flex_sensor_t* f = malloc(sizeof(flex_sensor_t));
-    analogin_init(*(f->_adc), analog_pin);
+    flex_sensor_t* f = (flex_sensor_t*)malloc(sizeof(flex_sensor_t));
+    analogin_init(&(f->_adc), analog_pin);
 }
 
 #endif /* FLEX_SENSOR_H_ */
