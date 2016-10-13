@@ -30,6 +30,7 @@
 
 # mbed submodules
 mbed-glove-firmware/mbed-os/
+mbed-glove-firmware/BUILD/
 .build
 .mbed
 projectfiles
