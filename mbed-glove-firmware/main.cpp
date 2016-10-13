@@ -1,10 +1,12 @@
 #include "mbed.h"
 
+#include "flex_sensor.h"
+
 Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
 
-AnalogIn flex(A0);
+AnalogIn flex(A1);
 float brightness = 0.0;
 
 
@@ -37,9 +39,14 @@ void echo_term() {
 
 void flex_read() {
 
+    flex_sensor_t* f0 = initFlexSensor(A0);
+
     for (;;) {
         led = !led;
-        pc.printf("Flex reading is: 0x%x\r\n", flex.read_u16());
+        pc.printf("Flex0 reading is: 0x%x\r\n", flex.read_u16());
+
+        updateFlexSensorDeflection(f0);
+        pc.printf("Flex1 reading is: 0x%x\r\n", f0->deflection);
         Thread::wait(500);
     }
 }
