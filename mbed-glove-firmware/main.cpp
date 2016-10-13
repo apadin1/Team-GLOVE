@@ -1,7 +1,8 @@
 #include "mbed.h"
 
+Serial pc(USBTX, USBRX);
+
 DigitalOut led(LED1);
-Serial debug(USBTX, USBRX);
 
 AnalogIn flex(A0);
 float brightness = 0.0;
@@ -11,16 +12,16 @@ void blink() {
     // (note the calls to Thread::wait below for delays)
     while (true) {
         led = !led;
-        debug.printf("This is a thing\r\n");
+        pc.printf("This is a thing\r\n");
         Thread::wait(1000);
     }
 }
 
 void echo_term() {
-    debug.printf("Press 'u' to turn LED1 brightness up, 'd' to turn it down\n");
+    pc.printf("Press 'u' to turn LED1 brightness up, 'd' to turn it down\n");
     for (;;) {
-        char c = debug.getc();
-        debug.putc(c);
+        char c = pc.getc();
+        pc.putc(c);
 
         if ((c == 'u') && (brightness < 0.5)) {
             brightness += 0.01;
@@ -37,13 +38,9 @@ void echo_term() {
 void flex_read() {
 
     for (;;) {
-        debug.printf("Flex reading is: %f\n", flex);
-        Thread::wait(1000);
-        /*
-        if (c == 'r') {
-            debug.printf("\nFlex reading is: %f\n", flex);
-        }
-        */
+        led = !led;
+        pc.printf("Flex reading is: 0x%x\r\n", flex.read_u16());
+        Thread::wait(500);
     }
 }
 
