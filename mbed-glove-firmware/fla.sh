@@ -121,12 +121,13 @@ if [ ! $opt_u ]; then
 fi
 
 if [ $opt_s ]; then
-	echo "$pre Dropping into serial debug session in screen\n         Use Ctrl-A then :quit to exit\n"
+	echo "$pre Dropping into serial debug session in screen\n$pre Use Ctrl-A then :quit to exit\n"
 	sleep 1
     echo "$pre Connecting....."
 	until [ -c $serial_dev ]; do
 		sleep 1
 	done
-	screen $serial_dev
+    sleep 3
+	sudo screen $serial_dev 9600,cs8,inlcr,onlcr
 fi
 
