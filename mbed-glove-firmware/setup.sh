@@ -11,4 +11,4 @@ mbed deploy
 sudo pip install -r mbed-os/requirements.txt
 
 set +x
-echo "\nYou're gonna need gcc-arm-none-eabi version 4.9"
+echo "\n Don't forget to install GCC ARM embedded 4.9 https://launchpad.net/gcc-arm-embedded/4.9/4.9-2015-q3-update"
