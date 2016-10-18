@@ -6,7 +6,6 @@ Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
 
-AnalogIn flex(A1);
 float brightness = 0.0;
 
 
@@ -39,15 +38,21 @@ void echo_term() {
 
 void flex_read() {
 
-    flex_sensor_t* f0 = initFlexSensor(A0);
+    FlexSensors flex_sensors;
+    uint16_t flex_vals[FLEX_SENSORS_COUNT];
 
     for (;;) {
-        led = !led;
-        pc.printf("Flex0 reading is: 0x%x\r\n", flex.read_u16());
+        led = !led; // just so we know its running
 
-        updateFlexSensorDeflection(f0);
-        pc.printf("Flex1 reading is: 0x%x\r\n", f0->deflection);
-        Thread::wait(500);
+        flex_sensors.updateSensors();
+        flex_sensors.writeSensors(flex_vals);
+
+        //pc.printf("0x%x\r\n", flex.read_u16());
+        pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
+                flex_vals[0], flex_vals[0], flex_vals[1], flex_vals[1],
+                flex_vals[2], flex_vals[2], flex_vals[3], flex_vals[3]);
+
+        Thread::wait(800);
     }
 }
 
