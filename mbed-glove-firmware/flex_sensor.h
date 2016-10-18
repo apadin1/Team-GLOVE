@@ -19,34 +19,59 @@
 
 #include <inttypes.h>
 
-#include "platform.h"
-#include "analogin_api.h"
+#include "mbed.h"
+
+#define FLEX_SENSORS_COUNT 4
+
+typedef enum {
+    FLEX_0 = A0;
+    FLEX_1 = A1;
+    FLEX_2 = A2;
+    FLEX_3 = A3;
+} FlexPins;
 
 /* flex_sensor_t
  *
- * analog_pin: GPIO pin number, as determined by the GPIO lib
- *  NOTE: determine analog/ discrete ADC because of the NRF51 processor
+ * ain: mbed AnalogIn object
  * deflection: scaled analog-to-digital value read from the GPIO
  */
 typedef struct {
-    analogin_t _adc;
+    AnalogIn ain;
     uint16_t deflection;
 } flex_sensor_t;
 
-/*
- * given a single flex sensor, update its deflection
- */
-void updateFlexSensorDeflection(flex_sensor_t* f) {
-    f->deflection = analogin_read_u16(&(f->_adc));
-}
 
-/*
- * initialize the gpio pins for the flex sensor,
- * allocate space for the flex_sensor
+/* FlexSensors
+ *
+ * Single class to handle the flex sensor analog read objects,
+ * with methods to update internally, and write into the
+ * marshelled all sensors data structure
  */
-flex_sensor_t* initFlexSensor(PinName analog_pin) {
-    flex_sensor_t* f = (flex_sensor_t*)malloc(sizeof(flex_sensor_t));
-    analogin_init(&(f->_adc), analog_pin);
-}
+class FlexSensors {
+public:
+    /*
+     * Constructor initializes the AnalogIn objects
+     */
+    FlexSensors();
 
+    /*
+     * Update the deflection for all flex sensors
+     */
+    void updateSensors();
+
+    /*
+     * Write the flex sensor values to the given array.
+     * This assumes no ownership or locking of the given container
+     */
+    void writeSensors(uint16_t*);
+
+    /*
+     * Alternative interface to both update each pin
+     * And write it to the destination buffer
+     */
+    void updateAndWriteSensors(uint16_t* buf);
+
+private:
+    flex_sensor_t sensors[FLEX_SENSORS_COUNT];
+}
 #endif /* FLEX_SENSOR_H_ */
