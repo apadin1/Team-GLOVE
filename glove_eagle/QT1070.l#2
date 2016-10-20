@@ -119,26 +119,6 @@
 <pin name="OUT3" x="15.24" y="-2.54" length="middle" direction="out" rot="R180"/>
 <pin name="OUT4" x="15.24" y="-5.08" length="middle" direction="out" rot="R180"/>
 </symbol>
-<symbol name="I2C">
-<wire x1="-12.7" y1="15.24" x2="-12.7" y2="-15.24" width="0.254" layer="94"/>
-<wire x1="-12.7" y1="-15.24" x2="12.7" y2="-15.24" width="0.254" layer="94"/>
-<wire x1="12.7" y1="-15.24" x2="12.7" y2="15.24" width="0.254" layer="94"/>
-<wire x1="12.7" y1="15.24" x2="-12.7" y2="15.24" width="0.254" layer="94"/>
-<pin name="SCL" x="-17.78" y="7.62" length="middle"/>
-<pin name="SDA" x="-17.78" y="2.54" length="middle"/>
-<pin name="!CHANGE" x="-17.78" y="-2.54" length="middle"/>
-<pin name="!RESET" x="-17.78" y="-7.62" length="middle"/>
-<pin name="KEY0" x="17.78" y="-7.62" length="middle" rot="R180"/>
-<pin name="KEY1" x="17.78" y="-5.08" length="middle" rot="R180"/>
-<pin name="KEY2" x="17.78" y="-2.54" length="middle" rot="R180"/>
-<pin name="KEY3" x="17.78" y="0" length="middle" rot="R180"/>
-<pin name="KEY4" x="17.78" y="2.54" length="middle" rot="R180"/>
-<pin name="KEY5" x="17.78" y="5.08" length="middle" rot="R180"/>
-<pin name="KEY6" x="17.78" y="7.62" length="middle" rot="R180"/>
-<pin name="VDD" x="0" y="20.32" length="middle" rot="R270"/>
-<pin name="VSS" x="-2.54" y="-20.32" length="middle" rot="R90"/>
-<pin name="MODE" x="2.54" y="-20.32" length="middle" rot="R90"/>
-</symbol>
 </symbols>
 <devicesets>
 <deviceset name="QT1070">
@@ -160,34 +140,6 @@
 <connect gate="G$1" pin="OUT3" pad="P$6"/>
 <connect gate="G$1" pin="OUT4" pad="P$5"/>
 <connect gate="G$1" pin="RESET" pad="P$4"/>
-<connect gate="G$1" pin="VDD" pad="P$1"/>
-<connect gate="G$1" pin="VSS" pad="P$14"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="COMMS">
-<gates>
-<gate name="G$1" symbol="I2C" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="QT1070">
-<connects>
-<connect gate="G$1" pin="!CHANGE" pad="P$5"/>
-<connect gate="G$1" pin="!RESET" pad="P$4"/>
-<connect gate="G$1" pin="KEY0" pad="P$13"/>
-<connect gate="G$1" pin="KEY1" pad="P$12"/>
-<connect gate="G$1" pin="KEY2" pad="P$11"/>
-<connect gate="G$1" pin="KEY3" pad="P$10"/>
-<connect gate="G$1" pin="KEY4" pad="P$9"/>
-<connect gate="G$1" pin="KEY5" pad="P$8" route="any"/>
-<connect gate="G$1" pin="KEY6" pad="P$7"/>
-<connect gate="G$1" pin="MODE" pad="P$2"/>
-<connect gate="G$1" pin="SCL" pad="P$6"/>
-<connect gate="G$1" pin="SDA" pad="P$3"/>
 <connect gate="G$1" pin="VDD" pad="P$1"/>
 <connect gate="G$1" pin="VSS" pad="P$14"/>
 </connects>
