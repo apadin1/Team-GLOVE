@@ -25,6 +25,7 @@ void blink() {
 DigitalOut pwr_onoff(p13);
 I2C i2c(I2C_SDA0, I2C_SCL0); // p30, p7
 BNO055 imu(i2c, p12);  // Reset =D7, addr = BNO055_G_CHIP_ADDR, mode = MODE_NDOF <- as default
+Timer t;
 
 BNO055_ID_INF_TypeDef       bno055_id_inf;
 BNO055_EULER_TypeDef        euler_angles;
