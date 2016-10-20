@@ -234,6 +234,7 @@ uint8_t BNO055::select_page(uint8_t page)
             dt[1] = 0;  // select page 0
         }
         _i2c.write(chip_addr, dt, 2, false);
+        DigitalOut l2(LED2); l2 = 0;
         dt[0] = BNO055_PAGE_ID;
         _i2c.write(chip_addr, dt, 1, true);
         _i2c.read(chip_addr, dt, 1, false);
