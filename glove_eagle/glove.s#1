@@ -7455,15 +7455,13 @@ http://ww1.microchip.com/downloads/en/DeviceDoc/21984a.pdf</description>
 <junction x="-27.94" y="20.32"/>
 </segment>
 </net>
-<net name="GND" class="0">
+<net name="N$12" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PS0"/>
 <wire x1="-20.32" y1="12.7" x2="-22.86" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="-22.86" y1="12.7" x2="-22.86" y2="10.16" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="PS1"/>
 <wire x1="-22.86" y1="10.16" x2="-20.32" y2="10.16" width="0.1524" layer="91"/>
-<label x="-25.4" y="12.7" size="1.778" layer="95"/>
-<label x="-25.4" y="12.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GNDIO" class="0">
