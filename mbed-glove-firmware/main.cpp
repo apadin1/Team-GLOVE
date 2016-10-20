@@ -2,6 +2,8 @@
 
 #include "flex_sensor.h"
 
+#include "BNO055_fusion/BNO055.h"
+
 Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
@@ -17,6 +19,10 @@ void blink() {
         pc.printf("This is a thing\r\n");
         Thread::wait(1000);
     }
+}
+
+void imu_test() {
+
 }
 
 void echo_term() {
