@@ -8,7 +8,6 @@ Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
 
-AnalogIn flex(A1);
 float brightness = 0.0;
 
 void blink() {
@@ -54,14 +53,14 @@ void echo_term() {
 
 void flex_read() {
 
-    flex_sensor_t* f0 = initFlexSensor(A0);
+    AnalogIn flex(A0);
+    uint16_t val;
 
     for (;;) {
         led = !led;
-        pc.printf("Flex0 reading is: 0x%x\r\n", flex.read_u16());
+        val = flex.read_u16();
+        pc.printf("0x%hx | %hu\r\n", val, val);
 
-        updateFlexSensorDeflection(f0);
-        pc.printf("Flex1 reading is: 0x%x\r\n", f0->deflection);
         Thread::wait(500);
     }
 }
@@ -75,5 +74,5 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
 
-    imu_test();
+    flex_read();
 }
