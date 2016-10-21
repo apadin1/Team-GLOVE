@@ -54,3 +54,15 @@ void FlexSensors::updateAndWriteSensors(uint16_t* buf) {
         buf[i] = sensors[i].deflection;
     }
 }
+
+void FlexSensors::print(Serial& pc) {
+    pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
+            sensors[0], sensors[0], sensors[1], sensors[1],
+            sensors[2], sensors[2], sensors[3], sensors[3]);
+}
+
+void FlexSensors::printSingle(Serial& pc, uint8_t index) {
+    if (index < FLEX_SENSORS_COUNT) {
+        pc.printf("Flex %hu: %hu 0x%hx\r\n", index, sensors[index], sensors[index]);
+    }
+}
