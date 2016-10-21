@@ -19,13 +19,12 @@
 #define IMU_H_
 
 #include "BNO055.h"
-
 /*
  * PinName definitions for the BNO055 on the board
  */
 typedef enum {
-    IMU_I2C_SCL = I2C_SCL0, // = p7
-    IMU_I2C_SDA = I2C_SDA0, // = p30
+    IMU_I2C_SCL = I2C_SCL0,  // = p7
+    IMU_I2C_SDA = I2C_SDA0,  // = p30
     IMU_RST = p12,
 } IMUPins;
 
@@ -52,7 +51,6 @@ typedef struct {
     float accel_y;
     float accel_z;
 } bno_imu_t;
-
 
 class IMU_BNO055 {
 public:
@@ -110,4 +108,3 @@ void saveIMUCalibration();
 void loadIMUCalibration();
 
 #endif /* IMU_H_ */
-
