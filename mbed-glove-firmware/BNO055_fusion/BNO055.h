@@ -102,7 +102,8 @@ typedef struct {
     int8_t gyr_chip;
 } BNO055_TEMPERATURE_TypeDef;
 
-enum {MT_P0 = 0, MT_P1, MT_P2, MT_P3, MT_P4, MT_P5, MT_P6, MT_P7};
+typedef enum {MT_P0 = 0, MT_P1, MT_P2, MT_P3, MT_P4, MT_P5, MT_P6, MT_P7
+} BNO055_MOUNT_POSITIONS_TypeDef ;
 
 /** Interface for Bosch Sensortec Intelligent 9-axis absolute orientation sensor
  *      Chip: BNO055
@@ -502,7 +503,7 @@ void bno055_calbration(void){
         if ((d & 0x03) == 0x03){
             break;
         }
-        wait(1.0);   
+        wait(1.0);
     }
     pc.printf("-> Step2) is done\r\n\r\n");
     //---------- Magnetometer Caliblation ---------------------------------------------------------
