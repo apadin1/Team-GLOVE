@@ -73,5 +73,5 @@ public:
 
 private:
     flex_sensor_t sensors[FLEX_SENSORS_COUNT];
-}
+};
 #endif /* FLEX_SENSOR_H_ */
