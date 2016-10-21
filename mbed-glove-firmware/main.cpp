@@ -53,15 +53,17 @@ void echo_term() {
 
 void flex_read() {
 
-    AnalogIn flex(A0);
-    uint16_t val;
+    FlexSensors flex_sensors;
+    uint16_t flex_vals[FLEX_SENSORS_COUNT];
 
     for (;;) {
-        led = !led;
-        val = flex.read_u16();
-        pc.printf("0x%hx | %hu\r\n", val, val);
+        led = !led; // just so we know its running
 
-        Thread::wait(500);
+        flex_sensors.updateSensors();
+        //flex_sensors.writeSensors(flex_vals);
+        flex_sensors.printSingle(pc, 0);
+
+        Thread::wait(600);
     }
 }
 
