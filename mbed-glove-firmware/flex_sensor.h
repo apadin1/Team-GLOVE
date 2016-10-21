@@ -36,7 +36,7 @@ typedef enum {
  * deflection: scaled analog-to-digital value read from the GPIO
  */
 typedef struct {
-    AnalogIn ain;
+    AnalogIn* ain;
     uint16_t deflection;
 } flex_sensor_t;
 
