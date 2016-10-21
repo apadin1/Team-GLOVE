@@ -1,5 +1,5 @@
 /*
- * Filename:  IMU.h
+ * Filename:  imu.h
  * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
@@ -29,6 +29,12 @@ typedef enum {
     IMU_RST = p12;
 } IMUPins;
 
+/*
+ * TODO depending on layout for the PCB, figure this out
+ * RTD
+ */
+const enum IMU_MOUNT_POSITION = MT_P6;
+
 /* bno_imu_t
  *
  * Euler orientation in degrees (pitch, roll, yaw)
@@ -38,13 +44,13 @@ typedef enum {
  * and sent over BLE
  */
 typedef struct {
-    uint32_t orient_x;
-    uint32_t orient_y;
-    uint32_t orient_z;
+    float orient_pitch;
+    float orient_roll;
+    float orient_yaw;
 
-    uint32_t accel_x;
-    uint32_t accel_y;
-    uint32_t accel_z;
+    float accel_x;
+    float accel_y;
+    float accel_z;
 } bno_imu_t;
 
 
@@ -53,8 +59,12 @@ public:
     /*
      * Constructor initializes the BNO055 and takes care
      * of the default configuration.
+     *
+     * TODO Determine pins vs pass ref to I2C0
+     *
+     * XXX Using Serial& for debug
      */
-    IMU_BNO055();
+    IMU_BNO055(Serial& debug_out);
 
     /*
      * something something start periodic task
@@ -78,11 +88,19 @@ public:
      */
     void update();
 
+    /*
+     * For debuggs
+     */
+    void print(Serial& debug_out);
+
 private:
     BNO055 imu;
     bno_imu_t imu_data;
-}
 
+    BNO055_ID_INF_TypeDef bno055_id_inf;
+    BNO055_EULER_TypeDef euler_angles;
+    BNO055_LIN_ACC_TypeDef linear_acc;
+}
 
 /*
  * Need some way to save the calibration for the IMU
