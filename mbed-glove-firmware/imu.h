@@ -24,16 +24,16 @@
  * PinName definitions for the BNO055 on the board
  */
 typedef enum {
-    IMU_I2C_SCL = I2C_SCL0; // = p7
-    IMU_I2C_SDA = I2C_SDA0; // = p30
-    IMU_RST = p12;
+    IMU_I2C_SCL = I2C_SCL0, // = p7
+    IMU_I2C_SDA = I2C_SDA0, // = p30
+    IMU_RST = p12,
 } IMUPins;
 
 /*
  * TODO depending on layout for the PCB, figure this out
  * RTD
  */
-const enum IMU_MOUNT_POSITION = MT_P6;
+const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P6;
 
 /* bno_imu_t
  *
@@ -100,7 +100,7 @@ private:
     BNO055_ID_INF_TypeDef bno055_id_inf;
     BNO055_EULER_TypeDef euler_angles;
     BNO055_LIN_ACC_TypeDef linear_acc;
-}
+};
 
 /*
  * Need some way to save the calibration for the IMU
