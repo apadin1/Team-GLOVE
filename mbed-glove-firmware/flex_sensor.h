@@ -27,7 +27,7 @@ typedef enum {
     FLEX_0 = A0,
     FLEX_1 = A1,
     FLEX_2 = A2,
-    FLEX_3 = A3.
+    FLEX_3 = A3
 } FlexPins;
 
 /* flex_sensor_t
