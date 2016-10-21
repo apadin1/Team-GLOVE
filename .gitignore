@@ -34,6 +34,7 @@ mbed-glove-firmware/BUILD/
 .build
 .mbed
 projectfiles
+*.hg*
 
 # misc
 Private/*
