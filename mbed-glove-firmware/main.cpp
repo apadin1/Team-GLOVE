@@ -1,6 +1,8 @@
 #include "mbed.h"
 
 #include "flex_sensor.h"
+#include "imu.h"
+
 
 Serial pc(USBTX, USBRX);
 
@@ -8,13 +10,26 @@ DigitalOut led(LED1);
 
 float brightness = 0.0;
 
-
 void blink() {
     // (note the calls to Thread::wait below for delays)
     while (true) {
         led = !led;
         pc.printf("This is a thing\r\n");
         Thread::wait(1000);
+    }
+}
+
+void imu_test() {
+
+    pc.printf("Starting IMU test\r\n");
+    IMU_BNO055 imu(pc);
+
+    for (;;) {
+        imu.update();
+        imu.print(pc);
+
+        led = !led;
+        Thread::wait(500);
     }
 }
 
@@ -58,5 +73,12 @@ void flex_read() {
 
 int main() {
 
-    flex_read();
+    /*
+     * The current setup with main.cpp is to have single calls to
+     * test functions so we can each have test code without having
+     * to comment out/have multiple versions.
+     * Just change your local one to call the test loop you need.
+     */
+
+    imu_test();
 }

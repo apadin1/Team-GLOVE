@@ -1,0 +1,13 @@
+Style Guide:
+
+Use lower_case_with_underscores for:
+ - file_names.h
+ - type_names_t
+ - variables
+ - longer_variables
+
+Use camelCase for:
+ - functionDefinitions()
+
+See .clang-format for syntactic style
+
