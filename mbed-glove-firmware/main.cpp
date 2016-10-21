@@ -28,7 +28,6 @@ void imu_test() {
     for (;;) {
         imu.update();
         imu.print(pc);
-        pc.printf("yo\r\n");
 
         led = !led;
         Thread::wait(500);
