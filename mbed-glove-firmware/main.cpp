@@ -76,5 +76,5 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
 
-    imu_test();
+    flex_read();
 }
