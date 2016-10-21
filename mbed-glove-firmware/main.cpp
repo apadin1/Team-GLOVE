@@ -60,14 +60,10 @@ void flex_read() {
         led = !led; // just so we know its running
 
         flex_sensors.updateSensors();
-        flex_sensors.writeSensors(flex_vals);
+        //flex_sensors.writeSensors(flex_vals);
+        flex_sensors.printSingle(pc, 0);
 
-        //pc.printf("0x%x\r\n", flex.read_u16());
-        pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
-                flex_vals[0], flex_vals[0], flex_vals[1], flex_vals[1],
-                flex_vals[2], flex_vals[2], flex_vals[3], flex_vals[3]);
-
-        Thread::wait(800);
+        Thread::wait(200);
     }
 }
 

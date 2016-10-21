@@ -71,6 +71,16 @@ public:
      */
     void updateAndWriteSensors(uint16_t* buf);
 
+    /*
+     * Print the value of all the flex sensors for debugging
+     */
+    void print(Serial& debug_out);
+
+    /*
+     * Print the value of one sensor
+     */
+    void printSingle(Serial& pc, uint8_t index);
+
 private:
     flex_sensor_t sensors[FLEX_SENSORS_COUNT];
 };
