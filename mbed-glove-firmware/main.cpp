@@ -63,7 +63,7 @@ void flex_read() {
         //flex_sensors.writeSensors(flex_vals);
         flex_sensors.printSingle(pc, 0);
 
-        Thread::wait(200);
+        Thread::wait(600);
     }
 }
 
