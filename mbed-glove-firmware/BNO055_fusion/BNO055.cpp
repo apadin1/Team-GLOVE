@@ -199,6 +199,7 @@ void BNO055::get_chip_temperature(BNO055_TEMPERATURE_TypeDef *tmp)
 /////////////// Initialize ////////////////////////////////
 void BNO055::initialize (void)
 {
+    _res = 1;
 #if defined(TARGET_STM32L152RE)
     _i2c.frequency(100000);
 #else
@@ -233,8 +234,8 @@ uint8_t BNO055::select_page(uint8_t page)
         } else {
             dt[1] = 0;  // select page 0
         }
+
         _i2c.write(chip_addr, dt, 2, false);
-        DigitalOut l2(LED2); l2 = 0;
         dt[0] = BNO055_PAGE_ID;
         _i2c.write(chip_addr, dt, 1, true);
         _i2c.read(chip_addr, dt, 1, false);
