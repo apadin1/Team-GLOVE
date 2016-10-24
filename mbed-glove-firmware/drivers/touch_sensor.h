@@ -25,6 +25,25 @@
  *   Sensor Calibration:
  *     - max on -> recalibration from 160ms - 40800ms (can disable)
  *     - Threshold -> number of samples before change in state (10)
+ *
+ *   Guard Channel:
+ *    - decide if we even need one...
+ *
+ *   Low-Power Mode:
+ *    - set multiple of 8ms between key measurements, default 2 (16ms)
+ *    - using 0, for best response time
+ *
+ *   Max On:
+ *    - default is 180 (28.8 seconds)
+ *    - might want this to be off
+ *
+ *   Calibrate:
+ *    - can send into "calibration cycle" with any non-zero value
+ *
+ *   Reset:
+ *    - soft reset with any non-zero value
+ *    - hard reset with minimum 5us pulse to reset line
+ *
  */
 
 #ifndef TOUCH_SENSOR_H_

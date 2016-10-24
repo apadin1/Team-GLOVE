@@ -257,12 +257,12 @@ public:
 
 private:
     /**
- * Writes a byte value into the register
- *
- * @param reg Register location to write into
- * @param byte Byte to write
- * @return True if successful
- */
+     * Writes a byte value into the register
+     *
+     * @param reg Register location to write into
+     * @param byte Byte to write
+     * @return True if successful
+     */
     bool writeByte(uint8_t reg, uint8_t byte);
 
     /**
