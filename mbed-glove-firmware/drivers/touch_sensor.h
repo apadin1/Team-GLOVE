@@ -29,6 +29,7 @@
 #include <inttypes.h>
 
 #include "mbed.h"
+#include "rtos.h"
 
 #include "at42qt1070.h"
 
