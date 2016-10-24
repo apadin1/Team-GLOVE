@@ -31,8 +31,9 @@
 
 using namespace std;
 
-const uint8_t AVE_KEY_MAX = 4; // restricted internally to 1,2,4,8,16,32 (default 8)
-const uint8_t AKS_KEY_MAX = 3; // 0: no group, 1..3: in key group
+const uint8_t AVE_KEY_MAX =
+      6;  // values restricted internally to 1,2,4,8,16,32 (default 8)
+const uint8_t AKS_KEY_MAX = 3;  // 0: no group, 1..3: in key group
 
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
     : _i2c(sda, scl), _addr(address << 1) {
@@ -166,7 +167,9 @@ bool AT42QT1070::isButtonPressed(const uint8_t button) {
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::getLowPowerMode(void) { return readByte(REG_LP); }
+uint8_t AT42QT1070::getLowPowerMode(void) {
+    return readByte(REG_LP);
+}
 
 //--------------------------------------------------------------------------------
 uint8_t AT42QT1070::setLowPowerMode(uint8_t mode) {
@@ -243,6 +246,23 @@ uint8_t AT42QT1070::setAKSGroup(uint8_t key, uint8_t group) {
 
     return getAKSGroup(key);
 }
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::getDetectionIntegrator(uint8_t key) {
+    if (key <= AKS_KEY_MAX) {
+        return readByte(REG_DI0 + key);
+    }
+}
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::setDetectionIntegrator(uint8_t key, uint8_t di) {
+    if (key <= AVE_KEY_MAX) {
+        writeByte(REG_DI0 + key, di);
+    }
+
+    return getDetectionIntegrator(key);
+}
+
 
 //--------------------------------------------------------------------------------
 bool AT42QT1070::reset() {

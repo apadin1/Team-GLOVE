@@ -132,10 +132,11 @@ public:
     /**
      * AT42QT1070 constructor
      *
-     * @param bus I2C bus to use
+     * @param sda I2C data line
+     * @param scl I2C clock line
      * @param address Address for this sensor
      */
-    AT42QT1070(PinName sda, PinName sck,
+    AT42QT1070(PinName sda, PinName scl,
                uint8_t address = AT42QT1070_DEFAULT_I2C_ADDR);
 
     /**
@@ -150,6 +151,11 @@ public:
      * AT42QT1070 destructor
      */
     ~AT42QT1070();
+
+    /**
+     * Helper for the multiple constructor calls
+     */
+    void initialize();
 
     /**
      * Reads the Chip ID register on the sensor
@@ -213,6 +219,24 @@ public:
      * @return New value on the sensor
      */
     uint8_t setAKSGroup(uint8_t key, uint8_t group);
+
+    /**
+     * Reads the Detection Integrator (DI) level on key
+     *
+     * @param key Key (0-6) being changed
+     * @return DI level on the key
+     */
+    uint8_t getDetectionIntegrator(uint8_t key);
+
+    /**
+     * Set the Detection Integrator (DI) level on key
+     * Default is 4, minimum 2
+     *
+     * @param key Key (0-6) being changed
+     * @param di New DI level
+     * @return New DI on the key
+     */
+    uint8_t setDetectionIntegrator(uint8_t key, uint8_t di);
 
     /**
      * Returns the overflow indicator
