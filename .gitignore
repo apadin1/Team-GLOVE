@@ -28,6 +28,10 @@
 *.swp
 *~
 
+# eagle tmp files
+*.brd.lck
+*.sch.lck
+
 # mbed submodules
 mbed-glove-firmware/mbed-os/
 mbed-glove-firmware/BUILD/
