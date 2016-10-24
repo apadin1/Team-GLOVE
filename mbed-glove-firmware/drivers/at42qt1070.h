@@ -34,8 +34,7 @@
 #define AT42QT1070_I2C_BUS 0
 #define AT42QT1070_DEFAULT_I2C_ADDR 0x1b
 
-namespace upm
-{
+namespace upm {
 /**
  * @brief Atmel* AT42QT1070 QTouch* Sensor library
  * @defgroup at42qt1070 libupm-at42qt1070
@@ -61,18 +60,15 @@ namespace upm
  * @image html at42qt1070.jpg
  * @snippet at42qt1070.cxx Interesting
  */
-class AT42QT1070
-{
-  public:
+class AT42QT1070 {
+public:
     // registers
     typedef enum {
         REG_CHIPID = 0,
         REG_FWVERS = 1,
-
-        REG_DETSTATUS = 2, // detection status
-        REG_KEYSTATUS = 3, // key status
-
-        REG_KEYSIG0_H = 4, // key signal
+        REG_DETSTATUS = 2,  // detection status
+        REG_KEYSTATUS = 3,  // key status
+        REG_KEYSIG0_H = 4,  // key signal
         REG_KEYSIG0_L = 5,
         REG_KEYSIG1_H = 6,
         REG_KEYSIG1_L = 7,
@@ -86,8 +82,7 @@ class AT42QT1070
         REG_KEYSIG5_L = 15,
         REG_KEYSIG6_H = 16,
         REG_KEYSIG6_L = 17,
-
-        REG_REFDATA0_H = 18, // key reference data
+        REG_REFDATA0_H = 18,  // key reference data
         REG_REFDATA0_L = 19,
         REG_REFDATA1_H = 20,
         REG_REFDATA1_L = 21,
@@ -101,34 +96,30 @@ class AT42QT1070
         REG_REFDATA5_L = 29,
         REG_REFDATA6_H = 30,
         REG_REFDATA6_L = 31,
-
-        REG_NTHR0 = 32, // negative threshold level
+        REG_NTHR0 = 32,  // negative threshold level
         REG_NTHR1 = 33,
         REG_NTHR2 = 34,
         REG_NTHR3 = 35,
         REG_NTHR4 = 36,
         REG_NTHR5 = 37,
         REG_NTHR6 = 38,
-
-        REG_AVE0 = 39, // key suppression
+        REG_AVE0 = 39,  // key suppression
         REG_AVE1 = 40,
         REG_AVE2 = 41,
         REG_AVE3 = 42,
         REG_AVE4 = 43,
         REG_AVE5 = 44,
         REG_AVE6 = 45,
-
-        REG_DI0 = 46, // detection integrator
+        REG_DI0 = 46,  // detection integrator
         REG_DI1 = 47,
         REG_DI2 = 48,
         REG_DI3 = 49,
         REG_DI4 = 50,
         REG_DI5 = 51,
         REG_DI6 = 52,
-
-        REG_GUARD = 53, // FastOutDI/Max Cal/Guard channel
-        REG_LP = 54,    // low power
-        REG_MAXON = 55, // max on duration
+        REG_GUARD = 53,  // FastOutDI/Max Cal/Guard channel
+        REG_LP = 54,     // low power
+        REG_MAXON = 55,  // max on duration
         REG_CALIBRATE = 56,
         REG_RESET = 57
     } AT42QT1070_REG_T;
@@ -141,14 +132,14 @@ class AT42QT1070
         DET_CALIBRATE = 0x80
     } AT42QT1070_DET_T;
 
-
     /**
      * AT42QT1070 constructor
      *
      * @param bus I2C bus to use
      * @param address Address for this sensor
      */
-    AT42QT1070(PinName sda, PinName sck, int bus, uint8_t address = AT42QT1070_DEFAULT_I2C_ADDR);
+    AT42QT1070(PinName sda, PinName sck, int bus,
+               uint8_t address = AT42QT1070_DEFAULT_I2C_ADDR);
 
     /**
      * AT42QT1070 destructor
@@ -169,7 +160,6 @@ class AT42QT1070
      */
     void updateState();
 
-
     /**
      * Reads the current low-power mode setting
      *
@@ -184,7 +174,6 @@ class AT42QT1070
      * @return New setting on the sensor
      */
     uint8_t setLowPowerMode(uint8_t mode);
-
 
     /**
      * Reads the current averaging factor setting for a key
@@ -225,14 +214,18 @@ class AT42QT1070
      *
      * @return True if overflow is indicated
      */
-    bool isOverflowed() { return _overflow; };
+    bool isOverflowed() {
+        return _overflow;
+    };
 
     /**
      * Returns the calibrating indicator
      *
      * @return True if calibration is in progress
      */
-    bool isCalibrating() { return _calibrating; };
+    bool isCalibrating() {
+        return _calibrating;
+    };
 
     /**
      * Issues a reset command
@@ -254,17 +247,17 @@ class AT42QT1070
      * @returns Button states
      */
     uint8_t getButtonsState();
-    
+
     bool isButtonPressed(const uint8_t button);
-    
-  private:
-        /**
-     * Writes a byte value into the register
-     *
-     * @param reg Register location to write into
-     * @param byte Byte to write
-     * @return True if successful
-     */
+
+private:
+    /**
+ * Writes a byte value into the register
+ *
+ * @param reg Register location to write into
+ * @param byte Byte to write
+ * @return True if successful
+ */
     bool writeByte(uint8_t reg, uint8_t byte);
 
     /**
@@ -294,12 +287,12 @@ class AT42QT1070
      */
     uint16_t readWord(uint8_t reg);
 
-  private:
+private:
     uint8_t _buttonStates;
-    bool    _calibrating;
-    bool    _overflow;
+    bool _calibrating;
+    bool _overflow;
 
-    mbed::I2C        _i2cPort;
-    uint8_t          _addr;
+    mbed::I2C _i2cPort;
+    uint8_t _addr;
 };
 }

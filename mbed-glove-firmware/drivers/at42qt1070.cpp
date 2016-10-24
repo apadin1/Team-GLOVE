@@ -33,95 +33,80 @@ using namespace std;
 
 const uint8_t AVE_KEY_MAX = 6;
 const uint8_t AKS_KEY_MAX = 3;
- 
 
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
-    :_i2cPort(sda, scl),
-    _addr(address<<1)
-{
-    _i2cPort.frequency(400000);
+    : _i2c(sda, scl), _addr(address << 1) {
+
+    _i2c.frequency(400000);
 
     if (readChipID() != 0x2E) {
-        return; //throw std::runtime_error("Chip ID does not match the expected value (2Eh)");
+        return;  // throw std::runtime_error("Chip ID does not match the
+                 // expected value (2Eh)");
     }
 
     _buttonStates = 0;
-    _calibrating  = false;
-    _overflow     = false;
+    _calibrating = false;
+    _overflow = false;
 }
 
 //--------------------------------------------------------------------------------
-AT42QT1070::~AT42QT1070()
-{
-    _i2cPort.stop();
-}
+AT42QT1070::~AT42QT1070() { _i2c.stop(); }
 
 //--------------------------------------------------------------------------------
-bool AT42QT1070::writeByte(uint8_t reg, uint8_t byte)
-{
-     const char cmd[] = { reg,  byte };
-    
-    if( 0 == _i2cPort.write(_addr, cmd, 2 ))
+bool AT42QT1070::writeByte(uint8_t reg, uint8_t byte) {
+    const char cmd[] = { reg, byte };
+
+    if (0 == _i2c.write(_addr, cmd, 2))
         return true;
     else
-        return false;       
+        return false;
 }
 
 //--------------------------------------------------------------------------------
-bool AT42QT1070::writeWord(uint8_t reg, uint16_t word)
-{
-    const char cmd[] = { reg,  word & 0xff, (word&0xff00)>>8 };
-    
-    if( 0 == _i2cPort.write(_addr, cmd, 3 ))
+bool AT42QT1070::writeWord(uint8_t reg, uint16_t word) {
+    const char cmd[] = { reg, word & 0xff, (word & 0xff00) >> 8 };
+
+    if (0 == _i2c.write(_addr, cmd, 3))
         return true;
     else
-        return false;    
+        return false;
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::readByte(uint8_t reg)
-{    
+uint8_t AT42QT1070::readByte(uint8_t reg) {
     char data = 0;
     const char cmd = reg;
-    _i2cPort.write(_addr, &cmd, 1);
-    _i2cPort.read(_addr, &data, 1);
-    
+    _i2c.write(_addr, &cmd, 1);
+    _i2c.read(_addr, &data, 1);
+
     return data;
 }
 
 //--------------------------------------------------------------------------------
-uint16_t AT42QT1070::readWord(uint8_t reg)
-{
+uint16_t AT42QT1070::readWord(uint8_t reg) {
     uint16_t res = 0;
-    char data[]  = {0, 0};
+    char data[] = { 0, 0 };
     const char cmd = reg;
-    
-    _i2cPort.write(_addr, &cmd, 1);
-    _i2cPort.read(_addr, data, 2);  
-    res = data[1]<<8 & data[0];
-    
+
+    _i2c.write(_addr, &cmd, 1);
+    _i2c.read(_addr, data, 2);
+    res = data[1] << 8 & data[0];
+
     return res;
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::readChipID(void)
-{
-    return readByte(REG_CHIPID);
-}
+uint8_t AT42QT1070::readChipID(void) { return readByte(REG_CHIPID); }
 
 //--------------------------------------------------------------------------------
-void AT42QT1070::updateState()
-{
+void AT42QT1070::updateState() {
     uint8_t stat = readByte(REG_DETSTATUS);
 
     // if we are calibrating, don't change anything
-    if (stat & DET_CALIBRATE) 
-    {
+    if (stat & DET_CALIBRATE) {
         _calibrating = true;
         return;
-    } 
-    else 
-    {
+    } else {
         _calibrating = false;
     }
 
@@ -131,102 +116,85 @@ void AT42QT1070::updateState()
         _overflow = false;
 
     // if a touch is occurring, read the button states
-    if (stat & DET_TOUCH)
-    {
+    if (stat & DET_TOUCH) {
         uint8_t keys = readByte(REG_KEYSTATUS);
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
-    } 
-    else 
-    {
+    } else {
         _buttonStates = 0;
     }
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::getButtonsState()
-{
+uint8_t AT42QT1070::getButtonsState() {
     uint8_t stat = readByte(REG_DETSTATUS);
 
     // if a touch is occurring, read the button states
-    if (stat & DET_TOUCH)
-    {
+    if (stat & DET_TOUCH) {
         uint8_t keys = readByte(REG_KEYSTATUS);
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
-    } 
-    else 
-    {
+    } else {
         _buttonStates = 0;
     }
-    
+
     return _buttonStates;
 }
 
-
 //--------------------------------------------------------------------------------
-bool AT42QT1070::isButtonPressed(const uint8_t button)
-{
+bool AT42QT1070::isButtonPressed(const uint8_t button) {
     uint8_t buttonsState = 0;
-    
-    if(button <= 6)
-    {
+
+    if (button <= 6) {
         buttonsState = getButtonsState();
     }
-    
+
     return (buttonsState & (0x1 << button));
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::getLowPowerMode(void)
-{
-    return readByte(REG_LP);
-}
+uint8_t AT42QT1070::getLowPowerMode(void) { return readByte(REG_LP); }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::setLowPowerMode(uint8_t mode)
-{
+uint8_t AT42QT1070::setLowPowerMode(uint8_t mode) {
     writeByte(REG_LP, mode);
 
     return getLowPowerMode();
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::getAVE(uint8_t key)
-{
+uint8_t AT42QT1070::getAVE(uint8_t key) {
     uint8_t value = 0;
-    uint8_t ave   = 0;
+    uint8_t ave = 0;
 
-    if (key <= AVE_KEY_MAX) 
-    {
+    if (key <= AVE_KEY_MAX) {
         value = readByte(REG_AVE0 + key);
         ave = (value & 0xFC) >> 2;
     }
-    
+
     return ave;
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::setAVE(uint8_t key, uint8_t ave)
-{
+uint8_t AT42QT1070::setAVE(uint8_t key, uint8_t ave) {
     uint8_t value = 0;
 
-//    if (key > AVE_KEY_MAX) {
-//        throw std::invalid_argument("Only keys 0-6 are allowed");
-//    }
+    //    if (key > AVE_KEY_MAX) {
+    //        throw std::invalid_argument("Only keys 0-6 are allowed");
+    //    }
 
-//    switch (ave) {
-//        case 1:
-//        case 2:
-//        case 4:
-//        case 8:
-//        case 16:
-//        case 32:
-//            break;
+    //    switch (ave) {
+    //        case 1:
+    //        case 2:
+    //        case 4:
+    //        case 8:
+    //        case 16:
+    //        case 32:
+    //            break;
 
-//        default:
-//            throw std::invalid_argument("Invalid averaging factor");
-//    }
+    //        default:
+    //            throw std::invalid_argument("Invalid averaging factor");
+    //    }
 
     value = readByte(REG_AVE0 + key);
     value = value & 0x03;
@@ -237,46 +205,40 @@ uint8_t AT42QT1070::setAVE(uint8_t key, uint8_t ave)
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::getAKSGroup(uint8_t key)
-{
+uint8_t AT42QT1070::getAKSGroup(uint8_t key) {
     uint8_t value = 0;
-    uint8_t aks   = 0;
+    uint8_t aks = 0;
 
-    if (key <= AKS_KEY_MAX) 
-    {
+    if (key <= AKS_KEY_MAX) {
         value = readByte(REG_AVE0 + key);
         aks = value & 0x03;
     }
-    
+
     return aks;
 }
 
 //--------------------------------------------------------------------------------
-uint8_t AT42QT1070::setAKSGroup(uint8_t key, uint8_t group)
-{
+uint8_t AT42QT1070::setAKSGroup(uint8_t key, uint8_t group) {
     uint8_t value = 0;
 
-    if (key <= AVE_KEY_MAX && group <= AKS_KEY_MAX) 
-    {
+    if (key <= AVE_KEY_MAX && group <= AKS_KEY_MAX) {
         value = readByte(REG_AVE0 + key);
         value = value & 0xFC;
         value = value | group;
         writeByte(REG_AVE0 + key, value);
     }
-    
+
     return getAKSGroup(key);
 }
 
 //--------------------------------------------------------------------------------
-bool AT42QT1070::reset()
-{
+bool AT42QT1070::reset() {
     // write a non-zero value to the reset register
     return writeByte(REG_RESET, 0xff);
 }
 
 //--------------------------------------------------------------------------------
-bool AT42QT1070::calibrate()
-{
+bool AT42QT1070::calibrate() {
     // write a non-zero value to the calibrate register
     return writeByte(REG_CALIBRATE, 0xff);
 }
