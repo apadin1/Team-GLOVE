@@ -1,7 +1,7 @@
 #include "mbed.h"
 
-#include "flex_sensor.h"
-#include "imu.h"
+#include "drivers/flex_sensor.h"
+#include "drivers/imu.h"
 
 
 Serial pc(USBTX, USBRX);
