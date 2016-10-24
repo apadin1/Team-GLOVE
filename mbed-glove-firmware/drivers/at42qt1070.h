@@ -1,5 +1,5 @@
 /*
- * Author: Jon Trulson <jtrulson@ics.com>
+ g* Author: Jon Trulson <jtrulson@ics.com>
  * Copyright (c) 2015 Intel Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -23,19 +23,14 @@
  */
 #pragma once
 
-#include <stdint.h>
-//#include <sys/time.h>
-
+#include <inttypes.h>
 #include <string>
 #include <I2C.h>
-#include "PinNames.h"
-//#include <mraa/i2c.h>
+
+#include "mbed.h"
 
 #define AT42QT1070_I2C_BUS 0
-#define AT42QT1070_DEFAULT_I2C_ADDR 0x1b
-
-namespace upm {
-/**
+#define AT42QT1070_DEFAULT_I2C_ADDR 0x1b /**
  * @brief Atmel* AT42QT1070 QTouch* Sensor library
  * @defgroup at42qt1070 libupm-at42qt1070
  * @ingroup seeed i2c touch
@@ -103,8 +98,7 @@ public:
         REG_NTHR4 = 36,
         REG_NTHR5 = 37,
         REG_NTHR6 = 38,
-        REG_AVE0 = 39,  // key suppression
-        REG_AVE1 = 40,
+        REG_AVE0 = 39,  // key suppression REG_AVE1 = 40,
         REG_AVE2 = 41,
         REG_AVE3 = 42,
         REG_AVE4 = 43,
@@ -138,8 +132,16 @@ public:
      * @param bus I2C bus to use
      * @param address Address for this sensor
      */
-    AT42QT1070(PinName sda, PinName sck, int bus,
+    AT42QT1070(PinName sda, PinName sck,
                uint8_t address = AT42QT1070_DEFAULT_I2C_ADDR);
+
+    /**
+     * AT42QT1070 alternate constructor
+     *
+     * @param i2c mbed::I2C object to use
+     * @param address Address for this sensor
+     */
+    AT42QT1070(I2C& i2c, uint8_t address = AT42QT1070_DEFAULT_I2C_ADDR);
 
     /**
      * AT42QT1070 destructor
@@ -292,7 +294,7 @@ private:
     bool _calibrating;
     bool _overflow;
 
-    mbed::I2C _i2cPort;
+    I2C _i2c;
     uint8_t _addr;
 };
-}
+
