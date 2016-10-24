@@ -30,7 +30,8 @@
 #include "mbed.h"
 
 #define AT42QT1070_I2C_BUS 0
-#define AT42QT1070_DEFAULT_I2C_ADDR 0x1b
+#define AT42QT1070_DEFAULT_I2C_ADDR 0x1B
+#define AT42QT1070_I2C_MAX_FREQUENCY 400000
 
 /**
  * @brief Atmel* AT42QT1070 QTouch* Sensor library

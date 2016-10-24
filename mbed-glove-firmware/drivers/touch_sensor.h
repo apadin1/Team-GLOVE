@@ -21,6 +21,10 @@
  *    - callback on the interrupt to update the touch sensors
  *      - priority lower than the total updater
  *      - callback WaitingSemaphore state from mbed::Thread
+ *
+ *   Sensor Calibration:
+ *     - max on -> recalibration from 160ms - 40800ms (can disable)
+ *     - Threshold -> number of samples before change in state (10)
  */
 
 #ifndef TOUCH_SENSOR_H_
@@ -32,6 +36,11 @@
 #include "rtos.h"
 
 #include "at42qt1070.h"
+
+const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
+const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
+const PinName TOUCH_CHANGE = p13; // CHANGE interrupt line (active low)
+                                  // stays low until read to the status bytes
 
 /*
  * touch_sensor_t
