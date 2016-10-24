@@ -19,8 +19,7 @@
 #include "imu.h"
 
 IMU_BNO055::IMU_BNO055(Serial& pc)
-    : imu((PinName)IMU_I2C_SDA, (PinName)IMU_I2C_SCL, (PinName)IMU_RST,
-          BNO055_G_CHIP_ADDR, MODE_NDOF) {
+    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
 
     imu.set_mounting_position(IMU_MOUNT_POSITION);
 
