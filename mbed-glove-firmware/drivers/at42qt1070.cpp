@@ -31,28 +31,26 @@
 
 using namespace std;
 
-const uint8_t AVE_KEY_MAX = 6;
-const uint8_t AKS_KEY_MAX = 3;
+const uint8_t AVE_KEY_MAX = 4; // restricted internally to 1,2,4,8,16,32 (default 8)
+const uint8_t AKS_KEY_MAX = 3; // 0: no group, 1..3: in key group
 
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
     : _i2c(sda, scl), _addr(address << 1) {
 
-    _i2c.frequency(AT42QT1070_I2C_MAX_FREQUENCY);
-
-    if (readChipID() != 0x2E) {
-        return;  // throw std::runtime_error("Chip ID does not match the
-                 // expected value (2Eh)");
-    }
-
-    _buttonStates = 0;
-    _calibrating = false;
-    _overflow = false;
+    initialize();
 }
 
 AT42QT1070::AT42QT1070(I2C& i2c, uint8_t address)
     : _i2c(i2c), _addr(address << 1) {
 
+    initialize();
+}
+
+void AT42QT1070::initialize() {
     _i2c.frequency(AT42QT1070_I2C_MAX_FREQUENCY);
+
+    // spec list <230ms as boot up time, wait here to be sure
+    wait_ms(230);
 
     if (readChipID() != 0x2E) {
         return;  // throw std::runtime_error("Chip ID does not match the
