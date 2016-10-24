@@ -37,7 +37,7 @@ const uint8_t AKS_KEY_MAX = 3;
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
     : _i2c(sda, scl), _addr(address << 1) {
 
-    _i2c.frequency(400000);
+    _i2c.frequency(AT42QT1070_I2C_MAX_FREQUENCY);
 
     if (readChipID() != 0x2E) {
         return;  // throw std::runtime_error("Chip ID does not match the
@@ -52,7 +52,7 @@ AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
 AT42QT1070::AT42QT1070(I2C& i2c, uint8_t address)
     : _i2c(i2c), _addr(address << 1) {
 
-    _i2c.frequency(400000);
+    _i2c.frequency(AT42QT1070_I2C_MAX_FREQUENCY);
 
     if (readChipID() != 0x2E) {
         return;  // throw std::runtime_error("Chip ID does not match the
