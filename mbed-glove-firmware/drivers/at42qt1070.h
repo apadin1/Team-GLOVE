@@ -30,7 +30,9 @@
 #include "mbed.h"
 
 #define AT42QT1070_I2C_BUS 0
-#define AT42QT1070_DEFAULT_I2C_ADDR 0x1b /**
+#define AT42QT1070_DEFAULT_I2C_ADDR 0x1b
+
+/**
  * @brief Atmel* AT42QT1070 QTouch* Sensor library
  * @defgroup at42qt1070 libupm-at42qt1070
  * @ingroup seeed i2c touch

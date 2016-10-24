@@ -42,6 +42,17 @@ typedef struct {
 } touch_sensor_t;
 
 /*
+ * Unpacks the _buttonStates byte in AT42QT1070 to
+ * the desired keys as struct members
+ */
+typedef struct {
+    uint8_t a : 1;
+    uint8_t b : 1;
+    uint8_t c : 1;
+    uint8_t d : 1;
+} key_states_t;
+
+/*
  * Callback to update the in memory state for the four touch sensors,
  */
 void updateTouchSensors(touch_sensor_t *sensor);
