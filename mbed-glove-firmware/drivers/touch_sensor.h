@@ -105,7 +105,8 @@ public:
     /*
      * Default constructor
      *
-     * Calls writeStaticConfig and assosciateCallback
+     * Writes all the static config settings to the sensor
+     * Assosciates the update() method with the CHANGE event line
      */
     TouchSensor(PinName sda=TOUCH_I2C_SDA,
                 PinName scl=TOUCH_I2C_SCL,
@@ -121,17 +122,10 @@ public:
      */
     void update();
 
-    /*
-     * Initialize its callback for the InterruptIn API
-     */
-    void assosciateCallback();
-
 private:
     AT42QT1070 qt;
-    InterruptIn change;
+    InterruptIn changeEvent;
     key_states_t keys;
 }
-
-
 
 #endif /* TOUCH_SENSOR_H_ */

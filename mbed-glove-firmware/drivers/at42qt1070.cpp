@@ -145,6 +145,12 @@ void AT42QT1070::updateState() {
 uint8_t AT42QT1070::getButtonsState() {
     uint8_t status = readByte(REG_DETSTATUS);
 
+    // if we are calibrating, don't change anything
+    if (status & DET_CALIBRATE) {
+        _calibrating = true;
+        return 0;
+    }
+
     // if a touch is occurring, read the button states
     if (status & DET_TOUCH) {
         uint8_t keys = readByte(REG_KEYSTATUS);
@@ -152,6 +158,11 @@ uint8_t AT42QT1070::getButtonsState() {
         _buttonStates = keys & ~0x80;
     } else {
         _buttonStates = 0;
+    }
+
+    // set the top bit in _buttonStates to signal overflow
+    if (status & DET_OVERFLOW) {
+        _buttonStates |= 0x80;
     }
 
     return _buttonStates;
