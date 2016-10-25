@@ -283,6 +283,16 @@ public:
     };
 
     /**
+     * Sets which key is the guard key
+     *
+     * Defaults to disabling the GUARD_KEY feature
+     *
+     * @param key Key to set as guard key
+     * @return Value of the Guard key register
+     */
+    uint8_t setGuard(uint8_t key);
+
+    /**
      * Issues a reset command
      *
      * @return True if successful
