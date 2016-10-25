@@ -17,15 +17,29 @@
  *   to indicate a change in state of the sensors.
  */
 
-TouchSensor::TouchSensor()
-    : qt(TOUCH_I2C_SDA, TOUCH_I2C_SCL, TOUCH_CHANGE) {}
+TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
+    : qt(sda, scl), change(intr) {
 
-bool TouchSensor::writeStaticConfig();
-// reset?
-// calibrate???
-// setGuard (none)
-// setLP
-// setAVE
-// setAKS per key
-// setDI
-// setThresh
+        writeStaticConfig();
+        assosciateCallback();
+    }
+
+bool TouchSensor::writeStaticConfig() {
+    // reset?
+    // calibrate???
+
+    qt.setGuard();
+    qt.setLowPowerMode(TOUCH_LP_MODE);
+    qt.setMaxOn(TOUCH_MAX_ON);
+
+    for (uint8_t k = 0; k < 7; ++k) {
+        qt.setThreshold(k, TOUCH_NTHRESHOLD);
+        qt.setDetectionIntegrator(k, TOUCH_DI);
+        qt.setAVE(k, TOUCH_AVE);
+        qt.setAKSGroup(k, TOUCH_AKS[k]);
+    }
+}
+
+void TouchSensor::assosciateCallback() {
+
+}
