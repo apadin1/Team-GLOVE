@@ -33,6 +33,7 @@ using namespace std;
 
 const uint8_t AVE_KEY_MAX = 6;
 const uint8_t AKS_KEY_MAX = 3;
+const uint8_t NO_GUARD_KEY = 7;
 
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
     : _i2c(sda, scl), _addr(address << 1) {
@@ -278,6 +279,15 @@ uint8_t AT42QT1070::setThreshold(uint8_t key, uint8_t nthr) {
     return getThreshold(key);
 }
 
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::setGuard(uint8_t key=NO_GUARD_KEY) {
+    // TODO add setters for FO/MaxCal instead of clearing here
+    if (key <= AVE_KEY_MAX || key == NO_GUARD_KEY) {
+        writeByte(REG_GUARD, (0x0f) & key);
+    }
+
+    return (0x0f) & readByte(REG_GUARD);
+}
 
 //--------------------------------------------------------------------------------
 bool AT42QT1070::reset() {
