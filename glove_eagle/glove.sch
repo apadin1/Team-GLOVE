@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.6.0">
+<eagle version="7.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -6845,6 +6845,96 @@ http://ww1.microchip.com/downloads/en/DeviceDoc/21984a.pdf</description>
 <wire x1="3.8354" y1="2.55" x2="3.8354" y2="-1.524" width="0" layer="20"/>
 <text x="0" y="5" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
 </package>
+<package name="TC2030-IDC">
+<description>Tag Connect TC2030-IDC</description>
+<smd name="1" x="-1.27" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<hole x="-2.54" y="2.54" drill="2.3749"/>
+<smd name="3" x="0" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="5" x="1.27" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="6" x="1.27" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="4" x="0" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="2" x="-1.27" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<hole x="0.635" y="2.54" drill="2.3749"/>
+<hole x="0.635" y="-2.54" drill="2.3749"/>
+<hole x="-2.54" y="-2.54" drill="2.3749"/>
+<hole x="-2.54" y="0" drill="1.016"/>
+<hole x="2.54" y="1.016" drill="1.016"/>
+<hole x="2.54" y="-1.016" drill="1.016"/>
+<polygon width="0.127" layer="42">
+<vertex x="-3.175" y="-3.81"/>
+<vertex x="-1.905" y="-3.81"/>
+<vertex x="-1.905" y="-4.7625"/>
+<vertex x="-3.175" y="-4.7625"/>
+</polygon>
+<polygon width="0.127" layer="42">
+<vertex x="0" y="-3.81"/>
+<vertex x="1.27" y="-3.81"/>
+<vertex x="1.27" y="-4.7625"/>
+<vertex x="0" y="-4.7625"/>
+</polygon>
+<polygon width="0.127" layer="42">
+<vertex x="0" y="3.81"/>
+<vertex x="1.27" y="3.81"/>
+<vertex x="1.27" y="4.7625"/>
+<vertex x="0" y="4.7625"/>
+</polygon>
+<polygon width="0.127" layer="42">
+<vertex x="-1.905" y="3.81"/>
+<vertex x="-3.175" y="3.81"/>
+<vertex x="-3.175" y="4.7625"/>
+<vertex x="-1.905" y="4.7625"/>
+</polygon>
+<polygon width="0.127" layer="39">
+<vertex x="-1.27" y="0.635"/>
+<vertex x="1.27" y="0.635"/>
+<vertex x="1.27" y="-0.635"/>
+<vertex x="-1.27" y="-0.635"/>
+</polygon>
+<text x="0" y="5.08" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-6.0325" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center">&gt;VALUE</text>
+<wire x1="-2.54" y1="3.81" x2="2.54" y2="3.81" width="0.127" layer="25"/>
+<wire x1="4.2545" y1="2.0955" x2="4.2545" y2="-2.0955" width="0.127" layer="25"/>
+<wire x1="2.54" y1="-3.81" x2="-2.54" y2="-3.81" width="0.127" layer="25"/>
+<wire x1="-4.2545" y1="-2.0955" x2="-4.2545" y2="2.0955" width="0.127" layer="25"/>
+<wire x1="-2.54" y1="3.81" x2="-4.2545" y2="2.0955" width="0.127" layer="25" curve="90"/>
+<wire x1="4.2545" y1="2.0955" x2="2.54" y2="3.81" width="0.127" layer="25" curve="90"/>
+<wire x1="-4.2545" y1="-2.0955" x2="-2.54" y2="-3.81" width="0.127" layer="25" curve="90"/>
+<wire x1="2.54" y1="-3.81" x2="4.2545" y2="-2.0955" width="0.127" layer="25" curve="90"/>
+<circle x="-1.27" y="-0.635" radius="0.635" width="0.127" layer="21"/>
+</package>
+<package name="TC2030-IDC-NL">
+<description>The TC2030-IDC-NL is our "No Legs" 6-pin Plug-of-Nails Cable</description>
+<smd name="1" x="-1.27" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="3" x="0" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="5" x="1.27" y="-0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="6" x="1.27" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="4" x="0" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<smd name="2" x="-1.27" y="0.635" dx="0.7874" dy="0.7874" layer="1" roundness="100" cream="no"/>
+<hole x="-2.54" y="0" drill="1.016"/>
+<hole x="2.54" y="1.016" drill="1.016"/>
+<hole x="2.54" y="-1.016" drill="1.016"/>
+<polygon width="0.127" layer="39">
+<vertex x="-1.27" y="0.635"/>
+<vertex x="1.27" y="0.635"/>
+<vertex x="1.27" y="-0.635"/>
+<vertex x="-1.27" y="-0.635"/>
+</polygon>
+<text x="0" y="2.54" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-3.4925" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center">&gt;VALUE</text>
+<circle x="-1.27" y="-0.635" radius="0.635" width="0.127" layer="21"/>
+<wire x1="2.286" y1="-2.0447" x2="-0.979178125" y2="-2.0447" width="0.127" layer="21"/>
+<wire x1="-0.979178125" y1="-2.0447" x2="-1.531840625" y2="-1.91814375" width="0.127" layer="21" curve="-25.795946"/>
+<wire x1="-1.531840625" y1="-1.91814375" x2="-3.19733125" y2="-1.11315625" width="0.127" layer="21"/>
+<wire x1="-3.19733125" y1="-1.11315625" x2="-3.556" y2="-0.541434375" width="0.127" layer="21" curve="-64.204213"/>
+<wire x1="-3.556" y1="-0.541434375" x2="-3.556" y2="0.541434375" width="0.127" layer="21"/>
+<wire x1="-3.556" y1="0.541434375" x2="-3.19733125" y2="1.11315625" width="0.127" layer="21" curve="-64.204054"/>
+<wire x1="-3.19733125" y1="1.11315625" x2="-1.531840625" y2="1.91814375" width="0.127" layer="21"/>
+<wire x1="-1.531840625" y1="1.91814375" x2="-0.979178125" y2="2.0447" width="0.127" layer="21" curve="-25.795871"/>
+<wire x1="-0.979178125" y1="2.0447" x2="2.286" y2="2.0447" width="0.127" layer="21"/>
+<wire x1="2.286" y1="2.0447" x2="3.556" y2="0.7747" width="0.127" layer="21" curve="-90"/>
+<wire x1="3.556" y1="0.7747" x2="3.556" y2="-0.7747" width="0.127" layer="21"/>
+<wire x1="3.556" y1="-0.7747" x2="2.286" y2="-2.0447" width="0.127" layer="21" curve="-90"/>
+</package>
 </packages>
 <symbols>
 <symbol name="USB-B-MICRO">
@@ -6858,6 +6948,20 @@ http://ww1.microchip.com/downloads/en/DeviceDoc/21984a.pdf</description>
 <pin name="D+" x="-7.62" y="0" visible="pin" length="middle" function="dot"/>
 <pin name="ID" x="-7.62" y="-2.54" visible="pin" length="middle" function="dot"/>
 <pin name="GND" x="-7.62" y="-5.08" visible="pin" length="middle" function="dot"/>
+</symbol>
+<symbol name="JLINK-SWD-TC">
+<pin name="SWDIO" x="12.7" y="5.08" visible="pin" length="short" rot="R180"/>
+<pin name="SWDCLK" x="12.7" y="2.54" visible="pin" length="short" rot="R180"/>
+<pin name="SWO" x="12.7" y="-2.54" visible="pin" length="short" rot="R180"/>
+<pin name="!RESET" x="12.7" y="-5.08" visible="pin" length="short" rot="R180"/>
+<pin name="VCC" x="-12.7" y="5.08" visible="pin" length="short"/>
+<pin name="GND" x="-12.7" y="-5.08" visible="pin" length="short"/>
+<wire x1="-10.16" y1="7.62" x2="-10.16" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-7.62" x2="10.16" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-7.62" x2="10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="7.62" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
+<text x="-10.16" y="7.874" size="1.778" layer="95" ratio="12">&gt;NAME</text>
+<text x="-10.16" y="-9.906" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -6880,6 +6984,39 @@ http://ww1.microchip.com/downloads/en/DeviceDoc/21984a.pdf</description>
 <attribute name="DIGIKEY" value="455-2567-2-ND" constant="no"/>
 <attribute name="MOUSER" value="53X3655" constant="no"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TC2030-JLINK" prefix="J">
+<gates>
+<gate name="G$1" symbol="JLINK-SWD-TC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-L" package="TC2030-IDC">
+<connects>
+<connect gate="G$1" pin="!RESET" pad="3"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="SWDCLK" pad="4"/>
+<connect gate="G$1" pin="SWDIO" pad="2"/>
+<connect gate="G$1" pin="SWO" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="-NL" package="TC2030-IDC-NL">
+<connects>
+<connect gate="G$1" pin="!RESET" pad="3"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="SWDCLK" pad="4"/>
+<connect gate="G$1" pin="SWDIO" pad="2"/>
+<connect gate="G$1" pin="SWO" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -7412,6 +7549,11 @@ JST PH 2-pin thru-home side entry</description>
 <part name="C6" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="10 uF"/>
 <part name="C7" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="10 uF"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
+<part name="P+4" library="supply1" deviceset="VCC" device=""/>
+<part name="GND15" library="supply1" deviceset="GND" device=""/>
+<part name="J2" library="connector" deviceset="TC2030-JLINK" device="-NL"/>
+<part name="R14" library="passives" deviceset="RESISTOR" device="0603_RES" value="1k"/>
+<part name="P+5" library="supply1" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7453,7 +7595,12 @@ JST PH 2-pin thru-home side entry</description>
 <instance part="GND14" gate="1" x="-48.26" y="-58.42"/>
 <instance part="R4" gate="G$1" x="-48.26" y="-35.56" rot="R90"/>
 <instance part="R5" gate="G$1" x="-33.02" y="-35.56" rot="R90"/>
-<instance part="LED2" gate="G$1" x="-45.72" y="5.08"/>
+<instance part="LED2" gate="G$1" x="-45.72" y="-5.08" rot="R270"/>
+<instance part="P+4" gate="VCC" x="-91.44" y="-15.24"/>
+<instance part="GND15" gate="1" x="-91.44" y="-38.1"/>
+<instance part="J2" gate="G$1" x="-73.66" y="-27.94"/>
+<instance part="R14" gate="G$1" x="-45.72" y="7.62" rot="R90"/>
+<instance part="P+5" gate="VCC" x="-45.72" y="15.24"/>
 </instances>
 <busses>
 </busses>
@@ -7537,6 +7684,12 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="R4" gate="G$1" pin="1"/>
 <pinref part="GND14" gate="1" pin="GND"/>
 <wire x1="-48.26" y1="-40.64" x2="-48.26" y2="-55.88" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND15" gate="1" pin="GND"/>
+<wire x1="-86.36" y1="-33.02" x2="-91.44" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="-91.44" y1="-33.02" x2="-91.44" y2="-35.56" width="0.1524" layer="91"/>
+<pinref part="J2" gate="G$1" pin="GND"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -7689,6 +7842,17 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="-2.54" y1="73.66" x2="-2.54" y2="68.58" width="0.1524" layer="91"/>
 <junction x="-2.54" y="68.58"/>
 </segment>
+<segment>
+<pinref part="P+4" gate="VCC" pin="VCC"/>
+<wire x1="-86.36" y1="-22.86" x2="-91.44" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="-91.44" y1="-22.86" x2="-91.44" y2="-17.78" width="0.1524" layer="91"/>
+<pinref part="J2" gate="G$1" pin="VCC"/>
+</segment>
+<segment>
+<pinref part="P+5" gate="VCC" pin="VCC"/>
+<pinref part="R14" gate="G$1" pin="2"/>
+<wire x1="-45.72" y1="12.7" x2="-45.72" y2="10.16" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$19" class="0">
 <segment>
@@ -7696,8 +7860,9 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="-22.86" x2="-48.26" y2="-22.86" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="-22.86" x2="-48.26" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="-48.26" y1="-22.86" x2="-55.88" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="-60.96" y1="-22.86" x2="-48.26" y2="-22.86" width="0.1524" layer="91"/>
 <junction x="-48.26" y="-22.86"/>
+<pinref part="J2" gate="G$1" pin="SWDIO"/>
 </segment>
 </net>
 <net name="N$30" class="0">
@@ -7706,8 +7871,73 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="-22.86" y1="-25.4" x2="-33.02" y2="-25.4" width="0.1524" layer="91"/>
 <wire x1="-33.02" y1="-25.4" x2="-33.02" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="-33.02" y1="-25.4" x2="-40.64" y2="-25.4" width="0.1524" layer="91"/>
+<wire x1="-33.02" y1="-25.4" x2="-60.96" y2="-25.4" width="0.1524" layer="91"/>
 <junction x="-33.02" y="-25.4"/>
+<pinref part="J2" gate="G$1" pin="SWDCLK"/>
+</segment>
+</net>
+<net name="SCL" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P07"/>
+<wire x1="-22.86" y1="5.08" x2="-25.4" y2="5.08" width="0.1524" layer="91"/>
+<label x="-33.02" y="5.08" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="SDA" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P08"/>
+<wire x1="-22.86" y1="0" x2="-25.4" y2="0" width="0.1524" layer="91"/>
+<label x="-33.02" y="0" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="SLCK" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P09"/>
+<wire x1="-22.86" y1="-2.54" x2="-25.4" y2="-2.54" width="0.1524" layer="91"/>
+<label x="-33.02" y="-2.54" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="FLEX0" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P01/AIN2"/>
+<wire x1="-22.86" y1="20.32" x2="-25.4" y2="20.32" width="0.1524" layer="91"/>
+<label x="-33.02" y="20.32" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="FLEX1" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P02/AIN3"/>
+<wire x1="-22.86" y1="17.78" x2="-25.4" y2="17.78" width="0.1524" layer="91"/>
+<label x="-33.02" y="17.78" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="FLEX2" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P03/AIN4"/>
+<wire x1="-22.86" y1="15.24" x2="-25.4" y2="15.24" width="0.1524" layer="91"/>
+<label x="-33.02" y="15.24" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="FLEX3" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P04/AIN5"/>
+<wire x1="-22.86" y1="12.7" x2="-25.4" y2="12.7" width="0.1524" layer="91"/>
+<label x="-33.02" y="12.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="LED2" gate="G$1" pin="CATHODE"/>
+<pinref part="U3" gate="G$1" pin="P13"/>
+<wire x1="-45.72" y1="-7.62" x2="-45.72" y2="-12.7" width="0.1524" layer="91"/>
+<wire x1="-45.72" y1="-12.7" x2="-22.86" y2="-12.7" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="R14" gate="G$1" pin="1"/>
+<pinref part="LED2" gate="G$1" pin="ANODE"/>
+<wire x1="-45.72" y1="2.54" x2="-45.72" y2="-2.54" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -8196,8 +8426,6 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="U2" gate="A" pin="VOUT"/>
 <wire x1="12.7" y1="-17.78" x2="12.7" y2="-20.32" width="0.1524" layer="91"/>
 <wire x1="12.7" y1="-20.32" x2="-5.08" y2="-20.32" width="0.1524" layer="91"/>
-<pinref part="C5" gate="G$1" pin="2"/>
-<wire x1="-5.08" y1="-20.32" x2="-5.08" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="-5.08" y1="-20.32" x2="-12.7" y2="-20.32" width="0.1524" layer="91"/>
 <junction x="-5.08" y="-20.32"/>
 <pinref part="R12" gate="G$1" pin="1"/>
@@ -8207,6 +8435,8 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="C7" gate="G$1" pin="1"/>
 <wire x1="-5.08" y1="-22.86" x2="-5.08" y2="-20.32" width="0.1524" layer="91"/>
 <label x="-20.32" y="-20.32" size="1.778" layer="95"/>
+<pinref part="C5" gate="G$1" pin="2"/>
+<wire x1="-5.08" y1="-17.78" x2="-5.08" y2="-20.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
