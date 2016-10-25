@@ -196,6 +196,7 @@ public:
 
     /**
      * Changes the averaging factor setting for a key
+     * values restricted internally to 1,2,4,8,16,32 (default 8)
      *
      * @param key Key being changed
      * @param ave New averaging factor
@@ -206,6 +207,9 @@ public:
     /**
      * Reads the AKS group of which a key is part
      *
+     * 0: no group
+     * 1..3: available AKS groups
+     *
      * @param key Key (0-6) being queried
      * @return AKS group of which the key is part
      */
@@ -213,6 +217,9 @@ public:
 
     /**
      * Changes the AKS group of which a key is part
+     *
+     * 0: no group
+     * 1..3: available AKS groups
      *
      * @param key Key (0-6) being changed
      * @param group New group for the key
@@ -237,6 +244,24 @@ public:
      * @return New DI on the key
      */
     uint8_t setDetectionIntegrator(uint8_t key, uint8_t di);
+
+    /**
+     * Reads the Negative Threshold for key to register touch
+     *
+     * @param key Key (0-6) being changed
+     * @return NTHR level on the key
+     */
+    uint8_t getThreshold(uint8_t key);
+
+    /**
+     * Reads the Negative Threshold for key to register touch
+     * Default is 20
+     *
+     * @param key Key (0-6) being changed
+     * @param di New NTHR level
+     * @return New NTHR on the key
+     */
+    uint8_t setThreshold(uint8_t key, uint8_t nthr);
 
     /**
      * Returns the overflow indicator
