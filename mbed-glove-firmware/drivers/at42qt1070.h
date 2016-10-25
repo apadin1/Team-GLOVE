@@ -101,7 +101,8 @@ public:
         REG_NTHR4 = 36,
         REG_NTHR5 = 37,
         REG_NTHR6 = 38,
-        REG_AVE0 = 39,  // key suppression REG_AVE1 = 40,
+        REG_AVE0 = 39,  // key suppression
+        REG_AVE1 = 40,
         REG_AVE2 = 41,
         REG_AVE3 = 42,
         REG_AVE4 = 43,
@@ -115,7 +116,7 @@ public:
         REG_DI5 = 51,
         REG_DI6 = 52,
         REG_GUARD = 53,  // FastOutDI/Max Cal/Guard channel
-        REG_LP = 54,     // low power
+        REG_LP = 54,     // low power mode register
         REG_MAXON = 55,  // max on duration
         REG_CALIBRATE = 56,
         REG_RESET = 57
