@@ -31,9 +31,8 @@
 
 using namespace std;
 
-const uint8_t AVE_KEY_MAX =
-      6;  // values restricted internally to 1,2,4,8,16,32 (default 8)
-const uint8_t AKS_KEY_MAX = 3;  // 0: no group, 1..3: in key group
+const uint8_t AVE_KEY_MAX = 6;
+const uint8_t AKS_KEY_MAX = 3;
 
 AT42QT1070::AT42QT1070(PinName sda, PinName scl, uint8_t address)
     : _i2c(sda, scl), _addr(address << 1) {
@@ -114,23 +113,23 @@ uint8_t AT42QT1070::readChipID(void) { return readByte(REG_CHIPID); }
 
 //--------------------------------------------------------------------------------
 void AT42QT1070::updateState() {
-    uint8_t stat = readByte(REG_DETSTATUS);
+    uint8_t status = readByte(REG_DETSTATUS);
 
     // if we are calibrating, don't change anything
-    if (stat & DET_CALIBRATE) {
+    if (status & DET_CALIBRATE) {
         _calibrating = true;
         return;
     } else {
         _calibrating = false;
     }
 
-    if (stat & DET_OVERFLOW)
+    if (status & DET_OVERFLOW)
         _overflow = true;
     else
         _overflow = false;
 
     // if a touch is occurring, read the button states
-    if (stat & DET_TOUCH) {
+    if (status & DET_TOUCH) {
         uint8_t keys = readByte(REG_KEYSTATUS);
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
@@ -141,10 +140,10 @@ void AT42QT1070::updateState() {
 
 //--------------------------------------------------------------------------------
 uint8_t AT42QT1070::getButtonsState() {
-    uint8_t stat = readByte(REG_DETSTATUS);
+    uint8_t status = readByte(REG_DETSTATUS);
 
     // if a touch is occurring, read the button states
-    if (stat & DET_TOUCH) {
+    if (status & DET_TOUCH) {
         uint8_t keys = readByte(REG_KEYSTATUS);
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
@@ -261,6 +260,22 @@ uint8_t AT42QT1070::setDetectionIntegrator(uint8_t key, uint8_t di) {
     }
 
     return getDetectionIntegrator(key);
+}
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::getThreshold(uint8_t key) {
+    if (key <= AKS_KEY_MAX) {
+        return readByte(REG_NTHR0 + key);
+    }
+}
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::setThreshold(uint8_t key, uint8_t nthr) {
+    if (key <= AVE_KEY_MAX) {
+        writeByte(REG_NTHR0 + key, nthr);
+    }
+
+    return getThreshold(key);
 }
 
 
