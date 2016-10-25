@@ -18,10 +18,12 @@
  */
 
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl), change(intr) {
+    : qt(sda, scl), changeEvent(intr) {
 
         writeStaticConfig();
-        assosciateCallback();
+
+        // Assosciate the update function with the interrupt CHANGE line
+        event.fall(this, &update); // TODO check syntax
     }
 
 bool TouchSensor::writeStaticConfig() {
@@ -40,6 +42,16 @@ bool TouchSensor::writeStaticConfig() {
     }
 }
 
-void TouchSensor::assosciateCallback() {
+void TouchSensor::update() {
 
+    uint8_t buttons = qt.getButtonsState();
+
+    // Check overflow flag
+    if (buttons & 0x80) {
+        // do something
+
+        return;
+    }
+
+    // just get the keys we want
 }
