@@ -52,6 +52,8 @@ void AT42QT1070::initialize() {
 
     // spec list <230ms as boot up time, wait here to be sure
     wait_ms(230);
+    reset();
+    wait_ms(230);
 
     if (readChipID() != 0x2E) {
         return;  // throw std::runtime_error("Chip ID does not match the
@@ -176,6 +178,18 @@ uint8_t AT42QT1070::setLowPowerMode(uint8_t mode) {
     writeByte(REG_LP, mode);
 
     return getLowPowerMode();
+}
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::getMaxOn(void) {
+    return readByte(REG_MAXON);
+}
+
+//--------------------------------------------------------------------------------
+uint8_t AT42QT1070::setMaxOn(uint8_t maxon) {
+    writeByte(REG_MAXON, maxon);
+
+    return getMaxOn();
 }
 
 //--------------------------------------------------------------------------------

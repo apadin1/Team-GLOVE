@@ -182,10 +182,25 @@ public:
     /**
      * Changes the low-pomer mode setting on the sensor
      *
-     * @param mode dDsired new mode
+     * @param mode Dsired new mode
      * @return New setting on the sensor
      */
     uint8_t setLowPowerMode(uint8_t mode);
+
+    /**
+     * Reads the current max on duration
+     *
+     * @return Max-On Duration from the sensor
+     */
+    uint8_t getMaxOn(void);
+
+    /**
+     * Changes the current max on duration
+     *
+     * @param maxon Desired max on duration (0 for off)
+     * @return Max-On Duration from the sensor
+     */
+    uint8_t setMaxOn(uint8_t maxon);
 
     /**
      * Reads the current averaging factor setting for a key
