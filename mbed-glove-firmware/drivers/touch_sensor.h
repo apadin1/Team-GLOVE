@@ -47,7 +47,7 @@
 
 const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
-const PinName TOUCH_CHANGE = p13;  // CHANGE interrupt line (active low)
+const PinName TOUCH_INTERRUPT = p13;  // CHANGE interrupt line (active low)
 
 /* Low-Power Mode:
  *  - set multiple of 8ms between key measurements, default 2 (16ms)
@@ -87,7 +87,7 @@ const uint8_t TOUCH_DI = 4;
  *  - only one key in each group can be in detect simultaniously
  *  - group for each key [0..7]
  */
-const uint8_t[] TOUCH_AKS = {0, 0, 0, 0, 0, 0, 0};
+const uint8_t[] TOUCH_AKS = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
 
 /*
  * Unpacks the _buttonStates byte in AT42QT1070 to
@@ -104,22 +104,34 @@ class TouchSensor {
 public:
     /*
      * Default constructor
+     *
+     * Calls writeStaticConfig and assosciateCallback
      */
-    TouchSensor();
+    TouchSensor(PinName sda=TOUCH_I2C_SDA,
+                PinName scl=TOUCH_I2C_SCL,
+                PinName intr=TOUCH_INTERRUPT);
 
     /*
      * Write the configuration values defined above
      */
     bool writeStaticConfig();
 
+    /*
+     * Callback to update the in memory state for the keys
+     */
+    void update();
+
+    /*
+     * Initialize its callback for the InterruptIn API
+     */
+    void assosciateCallback();
+
 private:
-    key_states_t keys;
     AT42QT1070 qt;
+    InterruptIn change;
+    key_states_t keys;
 }
 
-/*
- * Callback to update the in memory state for the four touch sensors,
- */
-void updateTouchSensors(touch_sensor_t *sensor);
+
 
 #endif /* TOUCH_SENSOR_H_ */
