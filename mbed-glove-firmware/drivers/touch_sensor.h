@@ -22,20 +22,9 @@
  *      - priority lower than the total updater
  *      - callback WaitingSemaphore state from mbed::Thread
  *
- *   Sensor Calibration:
- *     - max on -> recalibration from 160ms - 40800ms (can disable)
- *     - Threshold -> number of samples before change in state (10)
  *
  *   Guard Channel:
  *    - decide if we even need one...
- *
- *   Low-Power Mode:
- *    - set multiple of 8ms between key measurements, default 2 (16ms)
- *    - using 0, for best response time
- *
- *   Max On:
- *    - default is 180 (28.8 seconds)
- *    - might want this to be off
  *
  *   Calibrate:
  *    - can send into "calibration cycle" with any non-zero value
@@ -58,8 +47,47 @@
 
 const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
-const PinName TOUCH_CHANGE = p13; // CHANGE interrupt line (active low)
-                                  // stays low until read to the status bytes
+const PinName TOUCH_CHANGE = p13;  // CHANGE interrupt line (active low)
+
+/* Low-Power Mode:
+ *  - set multiple of 8ms between key measurements, default 2 (16ms)
+ *  - using 0, for best response time
+ */
+const uint8_t TOUCH_LP_MODE = 0;
+
+/* Max On:
+ *  - default is 180 steps of 160ms (28.8 seconds)
+ *  - might want this to be off (0)
+ */
+const uint8_t TOUCH_MAX_ON = 0;
+
+/* Negative Threshold:
+ *  - default is 20
+ *  - unsure what units these are, but more is less sensitive
+ */
+const uint8_t TOUCH_NTHRESHOLD = 40;
+
+/* Averaging Factor:
+ *  - default is 8
+ *  - number of pulses to average for a channel
+ *  - values restricted internally to 1,2,4,8,16,32
+ */
+const uint8_t TOUCH_AVE = 8;
+
+/* Detection Integrator:
+ *  - default is 4
+ *  - number of consecutive measurementsthat must be confirmed as
+ *  having passed the hey threshold before key is registered in detect
+ */
+const uint8_t TOUCH_DI = 4;
+
+/* Adjacent Key Suppression:
+ *  - group 0 disables feature
+ *  - 1, 2, 3 are available groups
+ *  - only one key in each group can be in detect simultaniously
+ *  - group for each key [0..7]
+ */
+const uint8_t[] TOUCH_AKS = {0, 0, 0, 0, 0, 0, 0};
 
 /*
  * touch_sensor_t
