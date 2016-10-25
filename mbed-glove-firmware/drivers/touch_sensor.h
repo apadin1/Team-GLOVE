@@ -90,14 +90,6 @@ const uint8_t TOUCH_DI = 4;
 const uint8_t[] TOUCH_AKS = {0, 0, 0, 0, 0, 0, 0};
 
 /*
- * touch_sensor_t
- */
-typedef struct {
-    uint8_t id;
-    uint16_t capacitance;
-} touch_sensor_t;
-
-/*
  * Unpacks the _buttonStates byte in AT42QT1070 to
  * the desired keys as struct members
  */
@@ -107,6 +99,23 @@ typedef struct {
     uint8_t c : 1;
     uint8_t d : 1;
 } key_states_t;
+
+class TouchSensor {
+public:
+    /*
+     * Default constructor
+     */
+    TouchSensor();
+
+    /*
+     * Write the configuration values defined above
+     */
+    bool writeStaticConfig();
+
+private:
+    key_states_t keys;
+    AT42QT1070 qt;
+}
 
 /*
  * Callback to update the in memory state for the four touch sensors,
