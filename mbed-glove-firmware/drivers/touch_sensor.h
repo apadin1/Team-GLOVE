@@ -150,10 +150,6 @@ public:
 
     /*
      * Task loop for updating the buttons on change event
-     *
-     * Usage:
-     *   TouchSensor touch_sensor;
-     *   Thread touch_sensor_thread(touch_sensor.updateTask);
      */
     void updateTask();
 
@@ -164,5 +160,13 @@ private:
     key_states_t keys;
     Mutex keys_mutex;
 };
+
+/*
+ * Handle for a Thread
+ *
+ * TouchSensor touch_sensor;
+ * Thread touch_sensor_thread(updsatetouch_sensor
+ */
+void updateTouchSensorTask(const void*);
 
 #endif /* TOUCH_SENSOR_H_ */

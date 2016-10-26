@@ -83,3 +83,7 @@ void TouchSensor::updateTask() {
     }
 }
 
+void updateTouchSensorTask(const void* arg) {
+    TouchSensor* touch_sensor = (TouchSensor*)arg;
+    touch_sensor->updateTask();
+}
