@@ -56,8 +56,8 @@ void touch_sensor_complete() {
     key_states_t last_keys;
 
     TouchSensor touch_sensor;
-    //Thread touch_sensor_thread(updateTouchSensorTask, &touch_sensor);
-    Thread::start(&touch_sensor, &(touch_sensor.updateTask));
+    Thread touch_sensor_thread;
+    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
 
     for (;;) {
 

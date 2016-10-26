@@ -28,7 +28,7 @@ TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
         change_event.fall(this, &TouchSensor::changeEventHandler);
     }
 
-bool TouchSensor::writeStaticConfig() {
+void TouchSensor::writeStaticConfig() {
     // reset?
     // calibrate???
 
@@ -81,9 +81,4 @@ void TouchSensor::updateTask() {
         do_update.wait(osWaitForever);
         update();
     }
-}
-
-void updateTouchSensorTask(const void* arg) {
-    TouchSensor* touch_sensor = (TouchSensor*)arg;
-    touch_sensor->updateTask();
 }

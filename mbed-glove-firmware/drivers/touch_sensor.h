@@ -16,28 +16,23 @@
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
  *   to indicate a change in state of the sensors.
  *
- * Usage: (TODO test this)
+ * Usage: needs Thread and TouchSensor objects
  *   TouchSensor touch_sensor;
- *   Thread touch_sensor_thread(touch_sensor.updateTask);
+ *   Thread touch_sensor_thread;
+ *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
  *
  ************************
- *   NEED TODO:
- *    - deferred interrupt in
+ *  NEED TODO:
  *    - callback on the interrupt to update the touch sensors
  *      - priority lower than the total updater
- *      - callback WaitingSemaphore state from mbed::Thread
  *
- *
- *   Guard Channel:
- *    - decide if we even need one...
- *
+ *  NOTES
  *   Calibrate:
  *    - can send into "calibration cycle" with any non-zero value
  *
  *   Reset:
  *    - soft reset with any non-zero value
  *    - hard reset with minimum 5us pulse to reset line
- *
  */
 
 #ifndef TOUCH_SENSOR_H_
@@ -130,7 +125,7 @@ public:
     /*
      * Write the configuration values defined above
      */
-    bool writeStaticConfig();
+    void writeStaticConfig();
 
     /*
      * Copy the key states to the given key states struct
@@ -150,6 +145,11 @@ public:
 
     /*
      * Task loop for updating the buttons on change event
+     *
+     * Usage: needs Thread and TouchSensor objects
+     *   TouchSensor touch_sensor;
+     *   Thread touch_sensor_thread;
+     *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
      */
     void updateTask();
 
@@ -160,13 +160,5 @@ private:
     key_states_t keys;
     Mutex keys_mutex;
 };
-
-/*
- * Handle for a Thread
- *
- * TouchSensor touch_sensor;
- * Thread touch_sensor_thread(updsatetouch_sensor
- */
-void updateTouchSensorTask(const void*);
 
 #endif /* TOUCH_SENSOR_H_ */
