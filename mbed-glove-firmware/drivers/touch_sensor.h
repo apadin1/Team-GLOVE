@@ -16,6 +16,11 @@
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
  *   to indicate a change in state of the sensors.
  *
+ * Usage: (TODO test this)
+ *   TouchSensor touch_sensor;
+ *   Thread touch_sensor_thread(touch_sensor.updateTask);
+ *
+ ************************
  *   NEED TODO:
  *    - deferred interrupt in
  *    - callback on the interrupt to update the touch sensors
@@ -118,14 +123,36 @@ public:
     bool writeStaticConfig();
 
     /*
-     * Callback to update the in memory state for the keys
+     * Copy the key states to the given key states struct
+     * Internal mutual exclusion is used to exclude update()
+     */
+    void writeKeys(key_states_t& key_states);
+
+    /*
+     * Update the in memory state for the keys
      */
     void update();
 
+    /*
+     * Callback for the change event interrupt line
+     */
+    void changeEventHandler();
+
+    /*
+     * Task loop for updating the buttons on change event
+     *
+     * Usage:
+     *   TouchSensor touch_sensor;
+     *   Thread touch_sensor_thread(touch_sensor.updateTask);
+     */
+    void updateTask();
+
 private:
     AT42QT1070 qt;
-    InterruptIn changeEvent;
+    InterruptIn change_event;
+    Semaphore do_update;
     key_states_t keys;
+    Mutex keys_mutex;
 }
 
 #endif /* TOUCH_SENSOR_H_ */
