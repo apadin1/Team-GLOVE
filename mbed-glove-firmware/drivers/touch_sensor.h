@@ -71,7 +71,7 @@ const uint8_t TOUCH_GUARD_KEY = 7;
  *  - default is 20
  *  - unsure what units these are, but more is less sensitive
  */
-const uint8_t TOUCH_NTHRESHOLD = 40;
+const uint8_t TOUCH_NTHRESHOLD = 255; //seem to need the maximum to avoid accidental touch/proximity
 
 /* Averaging Factor:
  *  - default is 8
