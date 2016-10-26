@@ -75,20 +75,20 @@
 <wire x1="-1.9685" y1="-4.318" x2="1.9685" y2="-4.318" width="0.127" layer="51"/>
 <wire x1="1.9685" y1="-4.318" x2="1.9685" y2="4.318" width="0.127" layer="51"/>
 <wire x1="1.9685" y1="4.318" x2="-1.9685" y2="4.318" width="0.127" layer="51"/>
-<smd name="P$1" x="-3.175" y="3.81" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$2" x="-3.175" y="2.54" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$3" x="-3.175" y="1.27" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$4" x="-3.175" y="0" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$5" x="-3.175" y="-1.27" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$6" x="-3.175" y="-2.54" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$7" x="-3.175" y="-3.81" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$8" x="3.175" y="3.81" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$9" x="3.175" y="2.54" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$10" x="3.175" y="1.27" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$11" x="3.175" y="0" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$12" x="3.175" y="-1.27" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$13" x="3.175" y="-2.54" dx="1.4224" dy="0.7112" layer="1"/>
-<smd name="P$14" x="3.175" y="-3.81" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="1" x="-3.175" y="3.81" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="2" x="-3.175" y="2.54" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="3" x="-3.175" y="1.27" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="4" x="-3.175" y="0" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="5" x="-3.175" y="-1.27" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="6" x="-3.175" y="-2.54" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="7" x="-3.175" y="-3.81" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="14" x="3.175" y="3.81" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="13" x="3.175" y="2.54" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="12" x="3.175" y="1.27" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="11" x="3.175" y="0" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="10" x="3.175" y="-1.27" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="9" x="3.175" y="-2.54" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="8" x="3.175" y="-3.81" dx="1.4224" dy="0.7112" layer="1"/>
 <wire x1="-2.286" y1="4.445" x2="-2.286" y2="-4.445" width="0.2032" layer="21"/>
 <wire x1="-2.286" y1="-4.445" x2="2.286" y2="-4.445" width="0.2032" layer="21"/>
 <wire x1="2.286" y1="-4.445" x2="2.286" y2="4.445" width="0.2032" layer="21"/>
@@ -148,20 +148,20 @@
 <devices>
 <device name="" package="QT1070">
 <connects>
-<connect gate="G$1" pin="KEY0" pad="P$13"/>
-<connect gate="G$1" pin="KEY1" pad="P$12"/>
-<connect gate="G$1" pin="KEY2" pad="P$11"/>
-<connect gate="G$1" pin="KEY3" pad="P$10"/>
-<connect gate="G$1" pin="KEY4" pad="P$9"/>
-<connect gate="G$1" pin="MODE" pad="P$2"/>
-<connect gate="G$1" pin="OUT0" pad="P$3"/>
-<connect gate="G$1" pin="OUT1" pad="P$8"/>
-<connect gate="G$1" pin="OUT2" pad="P$7"/>
-<connect gate="G$1" pin="OUT3" pad="P$6"/>
-<connect gate="G$1" pin="OUT4" pad="P$5"/>
-<connect gate="G$1" pin="RESET" pad="P$4"/>
-<connect gate="G$1" pin="VDD" pad="P$1"/>
-<connect gate="G$1" pin="VSS" pad="P$14"/>
+<connect gate="G$1" pin="KEY0" pad="9"/>
+<connect gate="G$1" pin="KEY1" pad="10"/>
+<connect gate="G$1" pin="KEY2" pad="11"/>
+<connect gate="G$1" pin="KEY3" pad="12"/>
+<connect gate="G$1" pin="KEY4" pad="13"/>
+<connect gate="G$1" pin="MODE" pad="2"/>
+<connect gate="G$1" pin="OUT0" pad="3"/>
+<connect gate="G$1" pin="OUT1" pad="14"/>
+<connect gate="G$1" pin="OUT2" pad="7"/>
+<connect gate="G$1" pin="OUT3" pad="6"/>
+<connect gate="G$1" pin="OUT4" pad="5"/>
+<connect gate="G$1" pin="RESET" pad="4"/>
+<connect gate="G$1" pin="VDD" pad="1"/>
+<connect gate="G$1" pin="VSS" pad="8"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -169,27 +169,27 @@
 </device>
 </devices>
 </deviceset>
-<deviceset name="COMMS">
+<deviceset name="AT42QT1070" prefix="U">
 <gates>
 <gate name="G$1" symbol="I2C" x="0" y="0"/>
 </gates>
 <devices>
 <device name="" package="QT1070">
 <connects>
-<connect gate="G$1" pin="!CHANGE" pad="P$5"/>
-<connect gate="G$1" pin="!RESET" pad="P$4"/>
-<connect gate="G$1" pin="KEY0" pad="P$13"/>
-<connect gate="G$1" pin="KEY1" pad="P$12"/>
-<connect gate="G$1" pin="KEY2" pad="P$11"/>
-<connect gate="G$1" pin="KEY3" pad="P$10"/>
-<connect gate="G$1" pin="KEY4" pad="P$9"/>
-<connect gate="G$1" pin="KEY5" pad="P$8" route="any"/>
-<connect gate="G$1" pin="KEY6" pad="P$7"/>
-<connect gate="G$1" pin="MODE" pad="P$2"/>
-<connect gate="G$1" pin="SCL" pad="P$6"/>
-<connect gate="G$1" pin="SDA" pad="P$3"/>
-<connect gate="G$1" pin="VDD" pad="P$1"/>
-<connect gate="G$1" pin="VSS" pad="P$14"/>
+<connect gate="G$1" pin="!CHANGE" pad="5"/>
+<connect gate="G$1" pin="!RESET" pad="4"/>
+<connect gate="G$1" pin="KEY0" pad="13"/>
+<connect gate="G$1" pin="KEY1" pad="12"/>
+<connect gate="G$1" pin="KEY2" pad="11"/>
+<connect gate="G$1" pin="KEY3" pad="10"/>
+<connect gate="G$1" pin="KEY4" pad="9"/>
+<connect gate="G$1" pin="KEY5" pad="8" route="any"/>
+<connect gate="G$1" pin="KEY6" pad="7"/>
+<connect gate="G$1" pin="MODE" pad="2"/>
+<connect gate="G$1" pin="SCL" pad="6"/>
+<connect gate="G$1" pin="SDA" pad="3"/>
+<connect gate="G$1" pin="VDD" pad="1"/>
+<connect gate="G$1" pin="VSS" pad="14"/>
 </connects>
 <technologies>
 <technology name=""/>
