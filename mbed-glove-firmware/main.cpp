@@ -2,7 +2,7 @@
 
 #include "drivers/flex_sensor.h"
 #include "drivers/imu.h"
-
+#include "drivers/touch_sensor.h"
 
 Serial pc(USBTX, USBRX);
 
@@ -51,10 +51,30 @@ void echo_term() {
     }
 }
 
+void touch_sensor_complete() {
+    key_states_t keys;
+    key_states_t last_keys;
+
+    TouchSensor touch_sensor;
+    Thread touch_sensor_thread(touch_sensor.updateTask);
+
+    for (;;) {
+
+        last_keys = keys;
+        touch_sensor.writeKeys(keys);
+
+        if (last_keys.pack() != keys.pack()) {
+            pc.printf("Key States: %hu %hu %hu %hu",
+                    keys.a, keys.b, keys.c, keys.d);
+        }
+        Thread::wait(200);
+    }
+}
+
 void flex_read() {
 
     FlexSensors flex_sensors;
-    uint16_t flex_vals[FLEX_SENSORS_COUNT];
+    //uint16_t flex_vals[FLEX_SENSORS_COUNT];
 
     for (;;) {
         led = !led; // just so we know its running

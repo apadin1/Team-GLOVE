@@ -109,6 +109,10 @@ typedef struct {
     uint8_t b : 1;
     uint8_t c : 1;
     uint8_t d : 1;
+
+    uint8_t pack() {
+        return a << 3 | b << 2 | c << 1 | d;
+    }
 } key_states_t;
 
 class TouchSensor {
