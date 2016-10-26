@@ -23,7 +23,7 @@ TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl), change_event(intr) {
 
         writeStaticConfig();
-
+        qt.getButtonsState();
         // Associate the update function with the interrupt CHANGE line
         change_event.fall(this, &TouchSensor::changeEventHandler);
     }
@@ -42,6 +42,7 @@ void TouchSensor::writeStaticConfig() {
         qt.setAVE(k, TOUCH_AVE);
         qt.setAKSGroup(k, TOUCH_AKS[k]);
     }
+    
 }
 
 void TouchSensor::writeKeys(key_states_t& key_states) {
