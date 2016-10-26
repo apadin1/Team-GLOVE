@@ -20,12 +20,12 @@
 #include "touch_sensor.h"
 
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl), changeEvent(intr) {
+    : qt(sda, scl), change_event(intr) {
 
         writeStaticConfig();
 
         // Assosciate the update function with the interrupt CHANGE line
-        event.fall(this, &update); // TODO check syntax
+        event.fall(this, &changeEventHandler); // TODO check syntax
     }
 
 bool TouchSensor::writeStaticConfig() {
@@ -44,6 +44,12 @@ bool TouchSensor::writeStaticConfig() {
     }
 }
 
+void TouchSensor::writeKeys(key_states_t& key_states) {
+    keys_mutex.lock();
+    key_states = keys;
+    keys_mutex.unlock();
+}
+
 void TouchSensor::update() {
 
     uint8_t buttons = qt.getButtonsState();
@@ -55,6 +61,7 @@ void TouchSensor::update() {
     }
 
     // just get the keys we want
+    keys_mutex.lock();
     keys.a = buttons & 0x01; // key 0
     keys.b = buttons & 0x02; // key 1
     keys.c = buttons & 0x04; // key 2
@@ -62,4 +69,17 @@ void TouchSensor::update() {
     //keys.x = buttons & 0x10; // key 4
     //keys.x = buttons & 0x20; // key 5
     //keys.x = buttons & 0x40; // key 6
+    keys_mutex.unlock();
 }
+
+void TouchSensor::changeEventHandler() {
+    do_update.release();
+}
+
+void TouchSensor::updateTask() {
+    for (;;) {
+        do_update.wait(osWaitForever);
+        update();
+    }
+}
+
