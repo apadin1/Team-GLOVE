@@ -1852,6 +1852,7 @@ JST PH 2-pin thru-home side entry</description>
 <sheets>
 <sheet>
 <plain>
+<text x="134.62" y="-35.56" size="1.778" layer="91">Ceramic</text>
 </plain>
 <instances>
 <instance part="U1" gate="G$1" x="0" y="0"/>
@@ -2534,6 +2535,9 @@ JST PH 2-pin thru-home side entry</description>
 </sheet>
 <sheet>
 <plain>
+<text x="60.96" y="-15.24" size="1.778" layer="91">Tantalum/Ceramic</text>
+<text x="0" y="-27.94" size="1.778" layer="91">&lt;1cm away from device</text>
+<text x="5.08" y="-30.48" size="1.778" layer="91">Tantalum</text>
 </plain>
 <instances>
 <instance part="U4" gate="G$1" x="2.54" y="17.78"/>
@@ -2671,8 +2675,13 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="104.14" y1="12.7" x2="104.14" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="-17.78" x2="55.88" y2="-17.78" width="0.1524" layer="91"/>
 <pinref part="C22" gate="G$1" pin="2"/>
-<wire x1="55.88" y1="-17.78" x2="48.26" y2="-17.78" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="-17.78" x2="50.8" y2="-17.78" width="0.1524" layer="91"/>
 <junction x="55.88" y="-17.78"/>
+<pinref part="U5" gate="A" pin="~SD"/>
+<wire x1="50.8" y1="-17.78" x2="48.26" y2="-17.78" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="-12.7" x2="50.8" y2="-12.7" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="-12.7" x2="50.8" y2="-17.78" width="0.1524" layer="91"/>
+<junction x="50.8" y="-17.78"/>
 </segment>
 </net>
 <net name="VCC" class="0">
