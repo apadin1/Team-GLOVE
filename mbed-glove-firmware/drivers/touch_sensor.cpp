@@ -24,15 +24,15 @@ TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
 
         writeStaticConfig();
 
-        // Assosciate the update function with the interrupt CHANGE line
-        event.fall(this, &changeEventHandler); // TODO check syntax
+        // Associate the update function with the interrupt CHANGE line
+        change_event.fall(this, &TouchSensor::changeEventHandler);
     }
 
 bool TouchSensor::writeStaticConfig() {
     // reset?
     // calibrate???
 
-    qt.setGuard();
+    qt.setGuard(TOUCH_GUARD_KEY);
     qt.setLowPowerMode(TOUCH_LP_MODE);
     qt.setMaxOn(TOUCH_MAX_ON);
 

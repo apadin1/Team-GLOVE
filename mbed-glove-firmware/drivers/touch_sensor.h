@@ -66,6 +66,12 @@ const uint8_t TOUCH_LP_MODE = 0;
  */
 const uint8_t TOUCH_MAX_ON = 0;
 
+/* Guard Key:
+ *  - default is key 0
+ *  - 0..6 valid as guard key, 7 disables guard key function
+ */
+const uint8_t TOUCH_GUARD_KEY = 7;
+
 /* Negative Threshold:
  *  - default is 20
  *  - unsure what units these are, but more is less sensitive
@@ -92,7 +98,7 @@ const uint8_t TOUCH_DI = 4;
  *  - only one key in each group can be in detect simultaniously
  *  - group for each key [0..7]
  */
-const uint8_t[] TOUCH_AKS = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
+const uint8_t TOUCH_AKS[] = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
 
 /*
  * Unpacks the _buttonStates byte in AT42QT1070 to
@@ -153,6 +159,6 @@ private:
     Semaphore do_update;
     key_states_t keys;
     Mutex keys_mutex;
-}
+};
 
 #endif /* TOUCH_SENSOR_H_ */
