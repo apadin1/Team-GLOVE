@@ -151,9 +151,11 @@ uint8_t AT42QT1070::getButtonsState() {
         return 0;
     }
 
-    // if a touch is occurring, read the button states
+    // Old library only read buttons if one of them was touched.
+    // We want to read either way so that change line gets reset.
+    // Therefore read command has been moved outside of if statement.
+    uint8_t keys = readByte(REG_KEYSTATUS);
     if (status & DET_TOUCH) {
-        uint8_t keys = readByte(REG_KEYSTATUS);
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
     } else {
