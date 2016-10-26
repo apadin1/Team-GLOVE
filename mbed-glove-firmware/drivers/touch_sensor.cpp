@@ -17,6 +17,8 @@
  *   to indicate a change in state of the sensors.
  */
 
+#include "touch_sensor.h"
+
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl), changeEvent(intr) {
 
@@ -48,10 +50,16 @@ void TouchSensor::update() {
 
     // Check overflow flag
     if (buttons & 0x80) {
-        // do something
-
+        // do something about it
         return;
     }
 
     // just get the keys we want
+    keys.a = buttons & 0x01; // key 0
+    keys.b = buttons & 0x02; // key 1
+    keys.c = buttons & 0x04; // key 2
+    keys.d = buttons & 0x08; // key 3
+    //keys.x = buttons & 0x10; // key 4
+    //keys.x = buttons & 0x20; // key 5
+    //keys.x = buttons & 0x40; // key 6
 }
