@@ -10,6 +10,7 @@ show_help() { echo "$pre A shell script for Team GLOVE by Tim Schumacher";
 			echo " Usage:\n      fla.sh [-h] [-v] [-n] [-c] [-s] [-u] [-d <dev_file>]";
 			echo "      -h Show this help and exit";
 			echo "      -v Verbose output for debugging this script";
+			echo "      -b Board, compile to the board target instead of dev kit";
 			echo "      -n Dry-run, won't copy the hex file to the board";
 			echo "      -c Compile, will also run the default compile command";
 			echo "      -s Screen, drop into a screen on the serial debug port";
@@ -33,13 +34,15 @@ opt_c=
 opt_s=
 opt_u=
 dev_file=
-while getopts "h?vncsud:" opt; do
+while getopts "h?vbncsud:" opt; do
 	case "$opt" in
 		h|\?)
 			show_help
 			exit 0
 			;;
 		v)  opt_v=0
+			;;
+		b)  target="NRF51822"
 			;;
 		n)  opt_n=0
 			;;
