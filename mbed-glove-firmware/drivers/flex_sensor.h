@@ -23,12 +23,17 @@
 
 #define FLEX_SENSORS_COUNT 4
 
-typedef enum {
-    FLEX_0 = A0,
-    FLEX_1 = A1,
-    FLEX_2 = A2,
-    FLEX_3 = A3
-} FlexPins;
+#if defined(TARGET_NRF51_DK)
+const PinName FLEX_0 = A0;
+const PinName FLEX_1 = A1;
+const PinName FLEX_2 = A2;
+const PinName FLEX_3 = A3;
+#elif defined(TARGET_MCU_NRF51822)
+const PinName FLEX_0 = p1;
+const PinName FLEX_1 = p2;
+const PinName FLEX_2 = p3;
+const PinName FLEX_3 = p4;
+#endif
 
 /* flex_sensor_t
  *

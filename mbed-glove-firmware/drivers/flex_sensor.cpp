@@ -19,10 +19,10 @@
  * Constructor initializes the AnalogIn objects
  */
 FlexSensors::FlexSensors() {
-    sensors[0].ain = new AnalogIn((PinName)FLEX_0);
-    sensors[1].ain = new AnalogIn((PinName)FLEX_1);
-    sensors[2].ain = new AnalogIn((PinName)FLEX_2);
-    sensors[3].ain = new AnalogIn((PinName)FLEX_3);
+    sensors[0].ain = new AnalogIn(FLEX_0);
+    sensors[1].ain = new AnalogIn(FLEX_1);
+    sensors[2].ain = new AnalogIn(FLEX_2);
+    sensors[3].ain = new AnalogIn(FLEX_3);
 }
 
 /*
