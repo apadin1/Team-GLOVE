@@ -26,7 +26,6 @@ const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
 const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
 const PinName IMU_RST = p12;
 
-
 /*
  * Update Period (in seconds)
  *
@@ -71,14 +70,21 @@ public:
     IMU_BNO055(Serial& debug_out);
 
     /*
-     * something something start periodic task
+     * Update the orientation and acceleration information
+     * Callback for the periodic mode
      */
-    // .begin()
+    void update();
 
     /*
-     * something something do manual calibration
+     * Calls the start() method on the periodic update task,
+     * an internal timer is set up in the constructor
      */
-    // .manualCalibration()
+    void startUpdateTask(float period_s=IMU_UPDATE_PERIOD);
+
+    /*
+     * Calls the stop() method on the periodic update timer,
+     */
+    void stopUpdateTask();
 
     /*
      * Write the imu orientation values to the given struct
@@ -87,10 +93,9 @@ public:
     void writeSensors(bno_imu_t&);
 
     /*
-     * Update the orientation and acceleration information
-     * Callback for the periodic mode
+     * something something do manual calibration
      */
-    void update();
+    // .manualCalibration()
 
     /*
      * For debuggs
@@ -100,10 +105,13 @@ public:
 private:
     BNO055 imu;
     bno_imu_t imu_data;
+    Mutex imu_mutex;
 
     BNO055_ID_INF_TypeDef bno055_id_inf;
     BNO055_EULER_TypeDef euler_angles;
     BNO055_LIN_ACC_TypeDef linear_acc;
+
+    RtosTimer* update_task_timer;
 };
 
 /*

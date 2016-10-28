@@ -77,7 +77,6 @@ public:
      */
     void stopUpdateTask();
 
-
     /*
      * Write the flex sensor values to the given array.
      * This assumes no ownership or locking of the given container
