@@ -4,6 +4,7 @@
 #include "drivers/flex_sensor.h"
 #include "drivers/imu.h"
 #include "drivers/touch_sensor.h"
+#include "drivers/collector.h"
 
 Serial pc(USBTX, USBRX);
 
@@ -100,9 +101,10 @@ void launch_periodic() {
     IMU_BNO055 imu;
     imu.startUpdateTask();
 
-    //Collector collector(flex_sensors, touch_sensor, imu);
-    //collector.startTransmission();
-    //Thread::wait(osWaitForever);
+    Collector collector(&flex_sensors, &touch_sensor, &imu, &pc);
+    collector.startUpdateTask(1); // 1 sec period for serial out
+
+    Thread::wait(osWaitForever);
 }
 
 int main() {
