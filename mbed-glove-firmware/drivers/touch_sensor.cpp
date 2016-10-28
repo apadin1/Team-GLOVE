@@ -42,12 +42,15 @@ void TouchSensor::writeStaticConfig() {
         qt.setAVE(k, TOUCH_AVE);
         qt.setAKSGroup(k, TOUCH_AKS[k]);
     }
-    
+
 }
 
-void TouchSensor::writeKeys(key_states_t& key_states) {
+void TouchSensor::writeKeys(key_states_t* key_states) {
     keys_mutex.lock();
-    key_states = keys;
+    key_states->a = keys.a;
+    key_states->b = keys.b;
+    key_states->c = keys.c;
+    key_states->d = keys.d;
     keys_mutex.unlock();
 }
 
