@@ -11,7 +11,6 @@
  *
  * Purpose:
  *  Implementation for the FlexSensors class in flex_sensor.h
- *
  */
 #include "flex_sensor.h"
 
@@ -19,53 +18,63 @@
  * Constructor initializes the AnalogIn objects
  */
 FlexSensors::FlexSensors() {
-    sensors[0].ain = new AnalogIn(FLEX_0);
-    sensors[1].ain = new AnalogIn(FLEX_1);
-    sensors[2].ain = new AnalogIn(FLEX_2);
-    sensors[3].ain = new AnalogIn(FLEX_3);
+    pins[0] = new AnalogIn(FLEX_0);
+    pins[1] = new AnalogIn(FLEX_1);
+    pins[2] = new AnalogIn(FLEX_2);
+    pins[3] = new AnalogIn(FLEX_3);
 }
 
 /*
  * Update the deflection for all flex sensors
  */
-void FlexSensors::updateSensors() {
+void FlexSensors::update() {
+    sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
-        sensors[i].deflection = sensors[i].ain->read_u16();
+        values[i] = pins[i]->read_u16();
     }
+    sensors_mutex.unlock();
 }
 
 /*
  * Write the flex sensor values to the given array.
  * This assumes no ownership or locking of the given container
  */
-void FlexSensors::writeSensors(uint16_t* buf) {
+void FlexSensors::writeSensors(flex_sensor_t* buf) {
+    sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
-        buf[i] = sensors[i].deflection;
+        buf[i] = values[i];
     }
+    sensors_mutex.unlock();
 }
 
 /*
  * Alternative interface to both update each pin
  * And write it to the destination buffer
  */
-void FlexSensors::updateAndWriteSensors(uint16_t* buf) {
+void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
+    sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
-        sensors[i].deflection = sensors[i].ain->read_u16();
-        buf[i] = sensors[i].deflection;
+        values[i] = pins[i]->read_u16();
+        buf[i] = values[i];
     }
+    sensors_mutex.unlock();
 }
 
 void FlexSensors::print(Serial& pc) {
+    sensors_mutex.lock();
     pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
-            sensors[0].deflection, sensors[0].deflection,
-            sensors[1].deflection, sensors[1].deflection,
-            sensors[2].deflection, sensors[2].deflection,
-            sensors[3].deflection, sensors[3].deflection);
+            values[0], values[0],
+            values[1], values[1],
+            values[2], values[2],
+            values[3], values[3]);
+    sensors_mutex.unlock();
 }
 
 void FlexSensors::printSingle(Serial& pc, uint8_t index) {
+    sensors_mutex.lock();
     if (index < FLEX_SENSORS_COUNT) {
         pc.printf("Flex %hu: %hu 0x%hx\r\n", index,
-                sensors[index].deflection, sensors[index].deflection);
+                values[index], values[index]);
     }
+    sensors_mutex.unlock();
 }

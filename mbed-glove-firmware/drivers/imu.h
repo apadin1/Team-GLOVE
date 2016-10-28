@@ -26,6 +26,14 @@ const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
 const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
 const PinName IMU_RST = p12;
 
+
+/*
+ * Update Period (in seconds)
+ *
+ * 0.01 s = 10 ms = 100 Hz
+ */
+const float IMU_UPDATE_PERIOD 0.01;
+
 /*
  * TODO depending on layout for the PCB, figure this out
  * RTD

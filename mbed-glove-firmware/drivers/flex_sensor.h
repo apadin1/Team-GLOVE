@@ -11,7 +11,6 @@
  *
  * Purpose:
  *  Top-level interface to the flex sensors
- *
  */
 
 #ifndef FLEX_SENSOR_H_
@@ -35,15 +34,18 @@ const PinName FLEX_2 = p3;
 const PinName FLEX_3 = p4;
 #endif
 
+/*
+ * Update Period (in seconds)
+ *
+ * 0.01 s = 10 ms = 100 Hz
+ */
+const float FLEX_UPDATE_PERIOD 0.01;
+
 /* flex_sensor_t
  *
- * ain: mbed AnalogIn object
  * deflection: scaled analog-to-digital value read from the GPIO
  */
-typedef struct {
-    AnalogIn* ain;
-    uint16_t deflection;
-} flex_sensor_t;
+typedef uint16_t flex_sensor_t;
 
 
 /* FlexSensors
@@ -62,19 +64,19 @@ public:
     /*
      * Update the deflection for all flex sensors
      */
-    void updateSensors();
+    void update();
 
     /*
      * Write the flex sensor values to the given array.
      * This assumes no ownership or locking of the given container
      */
-    void writeSensors(uint16_t*);
+    void writeSensors(flex_sensor_t* buf);
 
     /*
      * Alternative interface to both update each pin
      * And write it to the destination buffer
      */
-    void updateAndWriteSensors(uint16_t* buf);
+    void updateAndWriteSensors(flex_sensor_t* buf);
 
     /*
      * Print the value of all the flex sensors for debugging
@@ -86,7 +88,11 @@ public:
      */
     void printSingle(Serial& pc, uint8_t index);
 
+
+
 private:
-    flex_sensor_t sensors[FLEX_SENSORS_COUNT];
+    flex_sensor_t values[FLEX_SENSORS_COUNT];
+    AnalogIn* pins[FLEX_SENSORS_COUNT];
+    Mutex sensors_mutex;
 };
 #endif /* FLEX_SENSOR_H_ */
