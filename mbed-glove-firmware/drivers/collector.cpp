@@ -16,35 +16,32 @@
 
 #include "collector.h"
 
- Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
-         TouchSensor* _touch, Serial* _pc) {
+Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch,
+                     Serial* _pc) {
      : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {}
- }
+}
 
- Collector::get_data() {
+Collector::get_data() {
     flex.writeSensors(glove_data.flex_sensors);
     imu.writeSensors(glove_data.imu);
     touch.writeKeys(glove_data.touch_sensor);
-  }
+}
 
- Collector::transmitData() {
-    //Check to see if lock is active
-       //Transmit data to reciever
-  }
+Collector::transmitData() {
+    // Check to see if lock is active
+    // Transmit data to reciever
+}
 
- Collector::update() {
+Collector::update() {
     glove_mutex.lock();
     flex.writeSensors(glove_data.flex_sensors);
     imu.writeSensors(glove_data.imu);
     touch.writeKeys(glove_data.touch_sensor);
     glove_mutex.unlock();
- }
+}
 
- Collector::startUpdateTask(float period_s) {
+Collector::startUpdateTask(float period_s) {
     update_task_timer->start(period_s);
- }
+}
 
- Collector::stopUpdateTask() {
-    update_task_timer->stop();
- }
-
+Collector::stopUpdateTask() { update_task_timer->stop(); }
