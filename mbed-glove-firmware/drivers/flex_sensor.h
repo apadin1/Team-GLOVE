@@ -39,7 +39,7 @@ const PinName FLEX_3 = p4;
  *
  * 0.01 s = 10 ms = 100 Hz
  */
-const float FLEX_UPDATE_PERIOD 0.01;
+const float FLEX_UPDATE_PERIOD = 0.01;
 
 /* flex_sensor_t
  *
@@ -65,6 +65,18 @@ public:
      * Update the deflection for all flex sensors
      */
     void update();
+
+    /*
+     * Calls the start() method on the periodic update task,
+     * an internal timer is set up in the constructor
+     */
+    void startUpdateTask(float period_s=FLEX_UPDATE_PERIOD);
+
+    /*
+     * Calls the stop() method on the periodic update timer,
+     */
+    void stopUpdateTask();
+
 
     /*
      * Write the flex sensor values to the given array.
@@ -94,5 +106,6 @@ private:
     flex_sensor_t values[FLEX_SENSORS_COUNT];
     AnalogIn* pins[FLEX_SENSORS_COUNT];
     Mutex sensors_mutex;
+    RtosTimer* update_task_timer;
 };
 #endif /* FLEX_SENSOR_H_ */

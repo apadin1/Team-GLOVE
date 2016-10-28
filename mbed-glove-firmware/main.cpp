@@ -1,4 +1,5 @@
 #include "mbed.h"
+#include "rtos.h"
 
 #include "drivers/flex_sensor.h"
 #include "drivers/imu.h"
@@ -80,12 +81,23 @@ void flex_read() {
     for (;;) {
         led = !led; // just so we know its running
 
-        flex_sensors.updateSensors();
+        flex_sensors.update();
         //flex_sensors.writeSensors(flex_vals);
         flex_sensors.printSingle(pc, 0);
 
         Thread::wait(600);
     }
+}
+
+void launch_periodic() {
+    TouchSensor touch_sensor;
+    Thread touch_sensor_thread;
+    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+
+    FlexSensors flex_sensors;
+    flex_sensors.startUpdateTask();
+
+    //IMU_BNO055 imu;
 }
 
 int main() {
@@ -97,5 +109,7 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
 
-    flex_read();
+    launch_periodic();
+
+    Thread::wait(osWaitForever);
 }
