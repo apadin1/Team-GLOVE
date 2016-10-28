@@ -27,7 +27,7 @@
   *
   * 0.01 s = 10 ms = 100 Hz
   */
- const float FLEX_UPDATE_PERIOD = 0.01;
+ const float COLLECTOR_UPDATE_PERIOD = 0.01;
 
  /* Collector
   *
@@ -41,7 +41,7 @@
    /*
     * Constructor for collector
     */
-   Collector(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
+   Collector(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch, Serial* pc=NULL);
 
    /*
     * Collect data from sensors
@@ -62,7 +62,7 @@
     * Calls the start() method on the periodic update task,
     * an internal timer is set up in the constructor
     */
-   void startUpdateTask(float period_s=FLEX_UPDATE_PERIOD);
+   void startUpdateTask(float period_s=COLLECTOR_UPDATE_PERIOD);
 
    /*
     * Calls the stop() method on the periodic update timer,
@@ -70,11 +70,15 @@
    void stopUpdateTask();
 
  private:
-   FlexSensors& flex_sensors;
-   IMU_BNO055& IMU;
-   TouchSensor& touch_sensors;
+   FlexSensors* flex;
+   IMU_BNO055* imu;
+   TouchSensor* touch;
+
    glove_sensors_raw_t glove_data;
-   Mutex sensors_mutex;
+   Mutex glove_mutex;
    RtosTimer* update_task_timer;
+
+   Serial* pc; // for debugging
  };
  #endif /* COLLECTOR_H_ */
+

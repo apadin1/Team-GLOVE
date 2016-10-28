@@ -13,58 +13,38 @@
  *  Implementation for the Collector class in collector.h
  *
  */
-#include "collector.h";
 
-/*
- * Constructor initializes the Collector class
- */
- Collector::Collector(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch) {
-    flex_sensors = *flex;
-    IMU = *imu;
-    touch_sensors = *touch;
+#include "collector.h"
+
+ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
+         TouchSensor* _touch, Serial* _pc) {
+     : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {}
  }
 
-/*
- * Collect data from sensors
- */
  Collector::get_data() {
-    flex_sensors.writeSensors(glove_data.flex_sensors);
-    IMU.writeSensors(glove_data.imu);
-    touch_sensors.writeKeys(glove_data.touch_sensor);
+    flex.writeSensors(glove_data.flex_sensors);
+    imu.writeSensors(glove_data.imu);
+    touch.writeKeys(glove_data.touch_sensor);
   }
 
-/*
- * Transmit collected data to reciever
- *
- * TODO: Complete Implementation w/ BLE
- */
  Collector::transmitData() {
     //Check to see if lock is active
        //Transmit data to reciever
   }
 
-/*
- * Update the data contained in the collector
- */
- Collector::Update() {
-    sensors_mutex.lock();
-    flex_sensors.writeSensors(glove_data.flex_sensors);
-    IMU.writeSensors(glove_data.imu);
-    touch_sensors.writeKeys(glove_data.touch_sensor);
-    sensors_mutex.unlock();
+ Collector::update() {
+    glove_mutex.lock();
+    flex.writeSensors(glove_data.flex_sensors);
+    imu.writeSensors(glove_data.imu);
+    touch.writeKeys(glove_data.touch_sensor);
+    glove_mutex.unlock();
  }
 
-/*
- * Calls the start() method on the periodic update task,
- * an internal timer is set up in the constructor
- */
  Collector::startUpdateTask(float period_s) {
     update_task_timer->start(period_s);
  }
 
-/*
- * Calls the stop() method on the periodic update timer,
- */
  Collector::stopUpdateTask() {
     update_task_timer->stop();
  }
+
