@@ -17,6 +17,21 @@
  */
 
 #include "imu.h"
+IMU_BNO055::IMU_BNO055()
+    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
+
+    imu.set_mounting_position(IMU_MOUNT_POSITION);
+
+    if (imu.chip_ready() == 0) {
+        do {
+            wait_ms(10);
+        } while (imu.reset());
+    }
+
+    imu.read_id_inf(&bno055_id_inf);
+
+    update_task_timer = new RtosTimer(this, &IMU_BNO055::update, osTimerPeriodic);
+}
 
 IMU_BNO055::IMU_BNO055(Serial& pc)
     : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
@@ -38,11 +53,15 @@ IMU_BNO055::IMU_BNO055(Serial& pc)
               bno055_id_inf.gyr_id);
     pc.printf("SW REV:0x%04x, BL REV:0x%02x\r\n", bno055_id_inf.sw_rev_id,
               bno055_id_inf.bootldr_rev_id);
+
+    update_task_timer = new RtosTimer(this, &IMU_BNO055::update, osTimerPeriodic);
 }
 
 void IMU_BNO055::update() {
     imu.get_Euler_Angles(&euler_angles);
     imu.get_linear_accel(&linear_acc);
+
+    imu_mutex.lock();
     imu_data.orient_pitch = euler_angles.p;
     imu_data.orient_roll = euler_angles.r;
     imu_data.orient_yaw = euler_angles.h;
@@ -50,6 +69,26 @@ void IMU_BNO055::update() {
     imu_data.accel_x = linear_acc.x;
     imu_data.accel_y = linear_acc.y;
     imu_data.accel_z = linear_acc.z;
+    imu_mutex.unlock();
+}
+
+void IMU_BNO055::startUpdateTask(float period_s) {
+    update_task_timer->start(period_s);
+}
+
+void IMU_BNO055::stopUpdateTask() {
+    update_task_timer->stop();
+}
+
+void IMU_BNO055::writeSensors(bno_imu_t* _imu) {
+    imu_mutex.lock();
+    _imu->orient_pitch = imu_data.orient_pitch;
+    _imu->orient_roll = imu_data.orient_roll;
+    _imu->orient_yaw = imu_data.orient_yaw;
+    _imu->accel_x = imu_data.accel_x;
+    _imu->accel_y = imu_data.accel_y;
+    _imu->accel_z = imu_data.accel_z;
+    imu_mutex.unlock();
 }
 
 void IMU_BNO055::print(Serial& pc) {
