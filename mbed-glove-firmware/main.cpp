@@ -111,5 +111,6 @@ int main() {
 
     launch_periodic();
 
+    // Just in case the above returns
     Thread::wait(osWaitForever);
 }
