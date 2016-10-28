@@ -22,10 +22,6 @@
  *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
  *
  ************************
- *  NEED TODO:
- *    - callback on the interrupt to update the touch sensors
- *      - priority lower than the total updater
- *
  *  NOTES
  *   Calibrate:
  *    - can send into "calibration cycle" with any non-zero value
