@@ -68,6 +68,7 @@ public:
      * XXX Using Serial& for debug
      */
     IMU_BNO055(Serial& debug_out);
+    IMU_BNO055();
 
     /*
      * Update the orientation and acceleration information
@@ -90,7 +91,7 @@ public:
      * Write the imu orientation values to the given struct
      * This assumes no ownership or locking of the given container
      */
-    void writeSensors(bno_imu_t&);
+    void writeSensors(bno_imu_t*);
 
     /*
      * something something do manual calibration
