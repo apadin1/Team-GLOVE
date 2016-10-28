@@ -18,7 +18,11 @@
 
 Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
         TouchSensor* _touch, Serial* _pc)
-     : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {}
+     : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {
+
+
+         // RtosTimer definition
+     }
 
 
 void Collector::transmitData() {
