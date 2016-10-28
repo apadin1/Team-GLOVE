@@ -14,9 +14,6 @@
  */
 #include "flex_sensor.h"
 
-/*
- * Constructor initializes the AnalogIn objects
- */
 FlexSensors::FlexSensors() {
     pins[0] = new AnalogIn(FLEX_0);
     pins[1] = new AnalogIn(FLEX_1);
@@ -26,9 +23,6 @@ FlexSensors::FlexSensors() {
     update_task_timer = new RtosTimer(this, &FlexSensors::update, osTimerPeriodic);
 }
 
-/*
- * Update the deflection for all flex sensors
- */
 void FlexSensors::update() {
     sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
@@ -45,10 +39,6 @@ void FlexSensors::stopUpdateTask() {
     update_task_timer->stop();
 }
 
-/*
- * Write the flex sensor values to the given array.
- * This assumes no ownership or locking of the given container
- */
 void FlexSensors::writeSensors(flex_sensor_t* buf) {
     sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
@@ -57,10 +47,6 @@ void FlexSensors::writeSensors(flex_sensor_t* buf) {
     sensors_mutex.unlock();
 }
 
-/*
- * Alternative interface to both update each pin
- * And write it to the destination buffer
- */
 void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
     sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
