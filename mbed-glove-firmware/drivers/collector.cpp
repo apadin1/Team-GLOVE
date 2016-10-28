@@ -16,32 +16,35 @@
 
 #include "collector.h"
 
-Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch,
-                     Serial* _pc) {
+Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
+        TouchSensor* _touch, Serial* _pc)
      : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {}
-}
 
-Collector::get_data() {
-    flex.writeSensors(glove_data.flex_sensors);
-    imu.writeSensors(glove_data.imu);
-    touch.writeKeys(glove_data.touch_sensor);
-}
 
-Collector::transmitData() {
+void Collector::transmitData() {
     // Check to see if lock is active
     // Transmit data to reciever
+
+    pc->printf("[T]: %hu %hu %hu %hu | [F]: %hu %hu %hu %hu | [O]: %f %f %f \r\n",
+            glove_data.touch_sensor.a, glove_data.touch_sensor.b,
+            glove_data.touch_sensor.c, glove_data.touch_sensor.d,
+            glove_data.flex_sensors[0], glove_data.flex_sensors[1],
+            glove_data.flex_sensors[2], glove_data.flex_sensors[3],
+            glove_data.imu.orient_pitch, glove_data.imu.orient_roll,
+            glove_data.imu.orient_yaw);
+
 }
 
-Collector::update() {
-    glove_mutex.lock();
-    flex.writeSensors(glove_data.flex_sensors);
-    imu.writeSensors(glove_data.imu);
-    touch.writeKeys(glove_data.touch_sensor);
-    glove_mutex.unlock();
+void Collector::update() {
+    flex->writeSensors(glove_data.flex_sensors);
+    touch->writeKeys(&glove_data.touch_sensor);
+    imu->writeSensors(&glove_data.imu);
 }
 
-Collector::startUpdateTask(float period_s) {
+void Collector::startUpdateTask(float period_s) {
     update_task_timer->start(period_s);
 }
 
-Collector::stopUpdateTask() { update_task_timer->stop(); }
+void Collector::stopUpdateTask() {
+    update_task_timer->stop();
+}

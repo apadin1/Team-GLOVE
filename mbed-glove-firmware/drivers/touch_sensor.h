@@ -127,7 +127,7 @@ public:
      * Copy the key states to the given key states struct
      * Internal mutual exclusion is used to exclude update()
      */
-    void writeKeys(key_states_t& key_states);
+    void writeKeys(key_states_t* key_states);
 
     /*
      * Update the in memory state for the keys

@@ -63,7 +63,7 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(float period_s = COLLECTOR_UPDATE_PERIOD);
+    void startUpdateTask(float period_s=COLLECTOR_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -76,7 +76,6 @@ private:
     TouchSensor* touch;
 
     glove_sensors_raw_t glove_data;
-    Mutex glove_mutex;
     RtosTimer* update_task_timer;
 
     Serial* pc;  // for debugging

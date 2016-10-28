@@ -63,7 +63,7 @@ void touch_sensor_complete() {
     for (;;) {
 
         last_keys = keys;
-        touch_sensor.writeKeys(keys);
+        touch_sensor.writeKeys(&keys);
 
         if (last_keys.pack() != keys.pack()) {
             pc.printf("Key States: %hu %hu %hu %hu",
