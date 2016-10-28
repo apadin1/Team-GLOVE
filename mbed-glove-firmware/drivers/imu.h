@@ -32,7 +32,7 @@ const PinName IMU_RST = p12;
  *
  * 0.01 s = 10 ms = 100 Hz
  */
-const float IMU_UPDATE_PERIOD 0.01;
+const float IMU_UPDATE_PERIOD = 0.01;
 
 /*
  * TODO depending on layout for the PCB, figure this out
