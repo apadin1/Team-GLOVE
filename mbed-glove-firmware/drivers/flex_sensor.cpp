@@ -22,6 +22,8 @@ FlexSensors::FlexSensors() {
     pins[1] = new AnalogIn(FLEX_1);
     pins[2] = new AnalogIn(FLEX_2);
     pins[3] = new AnalogIn(FLEX_3);
+
+    update_task_timer = new RtosTimer(this, &FlexSensors::update, osTimerPeriodic);
 }
 
 /*
@@ -33,6 +35,14 @@ void FlexSensors::update() {
         values[i] = pins[i]->read_u16();
     }
     sensors_mutex.unlock();
+}
+
+void FlexSensors::startUpdateTask(float period_s) {
+    update_task_timer->start(period_s);
+}
+
+void FlexSensors::stopUpdateTask() {
+    update_task_timer->stop();
 }
 
 /*
