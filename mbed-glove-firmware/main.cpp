@@ -101,7 +101,7 @@ void launch_periodic() {
     IMU_BNO055 imu;
     imu.startUpdateTask();
 
-    Collector collector(&flex_sensors, &touch_sensor, &imu, &pc);
+    Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     collector.startUpdateTask(1); // 1 sec period for serial out
 
     Thread::wait(osWaitForever);
