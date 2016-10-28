@@ -98,6 +98,10 @@ void launch_periodic() {
     flex_sensors.startUpdateTask();
 
     //IMU_BNO055 imu;
+
+    //Collector collector(flex_sensors, touch_sensor, imu);
+    //collector.startTransmission();
+    //Thread::wait(osWaitForever);
 }
 
 int main() {
