@@ -97,7 +97,8 @@ void launch_periodic() {
     FlexSensors flex_sensors;
     flex_sensors.startUpdateTask();
 
-    //IMU_BNO055 imu;
+    IMU_BNO055 imu;
+    imu.startUpdateTask();
 
     //Collector collector(flex_sensors, touch_sensor, imu);
     //collector.startTransmission();
