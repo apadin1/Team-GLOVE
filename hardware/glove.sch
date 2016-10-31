@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.7.0">
+<eagle version="7.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -2884,9 +2884,11 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="-20.32" y1="-10.16" x2="-35.56" y2="-10.16" width="0.1524" layer="91"/>
 <pinref part="GND15" gate="1" pin="GND"/>
 <wire x1="-35.56" y1="-12.7" x2="-35.56" y2="-10.16" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="COM2"/>
+<wire x1="-20.32" y1="-7.62" x2="-35.56" y2="-7.62" width="0.1524" layer="91"/>
+<wire x1="-35.56" y1="-7.62" x2="-35.56" y2="-10.16" width="0.1524" layer="91"/>
+<junction x="-35.56" y="-10.16"/>
 </segment>
-</net>
-<net name="GNDIO" class="0">
 <segment>
 <pinref part="GND16" gate="1" pin="GND"/>
 <wire x1="-25.4" y1="-25.4" x2="0" y2="-25.4" width="0.1524" layer="91"/>
@@ -2924,11 +2926,6 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="40.64" y1="-12.7" x2="40.64" y2="-2.54" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="-12.7" x2="33.02" y2="-12.7" width="0.1524" layer="91"/>
 <junction x="33.02" y="-12.7"/>
-</segment>
-<segment>
-<pinref part="U2" gate="G$1" pin="COM2"/>
-<wire x1="-20.32" y1="-7.62" x2="-25.4" y2="-7.62" width="0.1524" layer="91"/>
-<label x="-33.02" y="-7.62" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SCL" class="0">
