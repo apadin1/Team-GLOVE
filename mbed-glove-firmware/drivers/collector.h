@@ -45,11 +45,6 @@ public:
               Serial* pc = NULL);
 
     /*
-     * Collect data from sensors
-     */
-    void get_data();
-
-    /*
      * Transmit data from the glove
      */
     void transmitData();

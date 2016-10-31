@@ -20,15 +20,15 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
         TouchSensor* _touch, mbed::Serial* _pc)
      : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {
 
-
-         // RtosTimer definition
-     }
+     update_task_timer = new RtosTimer(this, &Collector::update, osTimerPeriodic);
+ }
 
 
 void Collector::transmitData() {
     // Check to see if lock is active
     // Transmit data to reciever
 
+    if (pc != NULL)
     pc->printf("[T]: %hu %hu %hu %hu | [F]: %hu %hu %hu %hu | [O]: %f %f %f \r\n",
             glove_data.touch_sensor.a, glove_data.touch_sensor.b,
             glove_data.touch_sensor.c, glove_data.touch_sensor.d,
@@ -43,6 +43,8 @@ void Collector::update() {
     flex->writeSensors(glove_data.flex_sensors);
     touch->writeKeys(&glove_data.touch_sensor);
     imu->writeSensors(&glove_data.imu);
+
+    transmitData();
 }
 
 void Collector::startUpdateTask(float period_s) {
