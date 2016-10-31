@@ -31,6 +31,7 @@
 # eagle tmp files
 *.brd.lck
 *.sch.lck
+*.b\#*
 
 # mbed submodules
 mbed-glove-firmware/mbed-os/
