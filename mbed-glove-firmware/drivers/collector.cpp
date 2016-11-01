@@ -16,6 +16,9 @@
 
 #include "collector.h"
 
+const PinName COLLECTOR_DEBUG_PIN = p26;
+DigitalOut working(COLLECTOR_DEBUG_PIN);
+
 Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
         TouchSensor* _touch, mbed::Serial* _pc)
      : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {
@@ -40,11 +43,13 @@ void Collector::transmitData() {
 }
 
 void Collector::update() {
+    working = 1;
     flex->writeSensors(glove_data.flex_sensors);
     touch->writeKeys(&glove_data.touch_sensor);
     imu->writeSensors(&glove_data.imu);
 
     transmitData();
+    working = 0;
 }
 
 void Collector::startUpdateTask(float period_s) {

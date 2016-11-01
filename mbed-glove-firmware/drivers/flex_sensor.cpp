@@ -14,6 +14,9 @@
  */
 #include "flex_sensor.h"
 
+const PinName FLEX_DEBUG_PIN = p15;
+DigitalOut working(FLEX_DEBUG_PIN);
+
 FlexSensors::FlexSensors() {
     pins[0] = new AnalogIn(FLEX_0);
     pins[1] = new AnalogIn(FLEX_1);
@@ -24,11 +27,13 @@ FlexSensors::FlexSensors() {
 }
 
 void FlexSensors::update() {
+    working = 1;
     sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
     }
     sensors_mutex.unlock();
+    working = 0;
 }
 
 void FlexSensors::startUpdateTask(float period_s) {
