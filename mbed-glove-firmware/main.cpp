@@ -104,7 +104,10 @@ void launch_periodic() {
     Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     collector.startUpdateTask(1); // 1 sec period for serial out
 
-    Thread::wait(osWaitForever);
+    for (;;) {
+        led = !led; // just so we know its running
+        Thread::wait(1000);
+    }
 }
 
 int main() {
