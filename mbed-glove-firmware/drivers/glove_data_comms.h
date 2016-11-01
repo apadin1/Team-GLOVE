@@ -22,6 +22,8 @@
 
 #include <inttypes.h>
 
+#include "glove_sensors.h"
+
 class GloveDataComms {
 public:
 
