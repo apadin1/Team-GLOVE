@@ -20,15 +20,27 @@
 #include "glove_data_comms.h"
 #include "crc.h"
 
+// Start signal is a 0, flex sensors don't go to 0
+const uint8_t GDC_START = 0x00;
+
+// Size of start byte + glove data + CRC
+const uint16_t GDC_TXRX_BUF_LEN  = 1 + sizeof(glove_sensors_raw_t) + sizeof(crc_t);
+
+
 GloveDataComms::GloveDataComms() {
     crcInit();
 }
 
-int GloveDataComms::sendSerialized(glove_data_raw_t* data) {
+int GloveDataComms::sendSerialized(glove_sensors_raw_t* data) {
 
+    crc_ = crcFast((unsigned char const*)data, sizeof(glove_sensors_raw_t));
+
+    ble_.write((char*)&GDC_START, 1);
+    ble_.write((char*)data, sizeof(glove_sensors_raw_t));
+    ble_.write((char*)&crc_, sizeof(crc_t));
 }
 
-int GloveDataComms::recvSerialized(glove_data_raw_t* data) {
+int GloveDataComms::recvSerialized(glove_sensors_raw_t* data) {
 
 }
 

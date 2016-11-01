@@ -44,7 +44,8 @@ public:
     int recvSerialized(glove_data_raw_t* data);
 
 private:
-    // BLE object
+    BLE ble_;
+    crc_t crc_;
 
 };
 
