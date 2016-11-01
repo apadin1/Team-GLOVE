@@ -19,6 +19,9 @@
 
 #include "touch_sensor.h"
 
+const PinName TOUCH_DEBUG_PIN = p14;
+DigitalOut working(TOUCH_DEBUG_PIN);
+
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl), change_event(intr) {
 
@@ -55,6 +58,7 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
 }
 
 void TouchSensor::update() {
+    working = 1;
 
     uint8_t buttons = qt.getButtonsState();
 
@@ -74,6 +78,7 @@ void TouchSensor::update() {
     //keys.x = buttons & 0x20; // key 5
     //keys.x = buttons & 0x40; // key 6
     keys_mutex.unlock();
+    working = 0;
 }
 
 void TouchSensor::changeEventHandler() {

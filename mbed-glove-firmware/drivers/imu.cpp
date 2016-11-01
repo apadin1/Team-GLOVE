@@ -17,6 +17,10 @@
  */
 
 #include "imu.h"
+
+const PinName IMU_DEBUG_PIN = p16;
+DigitalOut working(IMU_DEBUG_PIN);
+
 IMU_BNO055::IMU_BNO055()
     : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
 
@@ -58,6 +62,7 @@ IMU_BNO055::IMU_BNO055(Serial& pc)
 }
 
 void IMU_BNO055::update() {
+    working = 1;
     imu.get_Euler_Angles(&euler_angles);
     imu.get_linear_accel(&linear_acc);
 
@@ -70,6 +75,7 @@ void IMU_BNO055::update() {
     imu_data.accel_y = linear_acc.y;
     imu_data.accel_z = linear_acc.z;
     imu_mutex.unlock();
+    working = 0;
 }
 
 void IMU_BNO055::startUpdateTask(float period_s) {
