@@ -22,10 +22,19 @@
 
 #include <inttypes.h>
 
+#include "ble/BLE.h"
+#include "ble/services/UARTService.h"
+
 #include "glove_sensors.h"
 
 class GloveDataComms {
 public:
+
+    /*
+     * Constructor sets up the BLE communication
+     * between reciever board and sending glove
+     */
+    GloveDataComms();
 
     /*
      * Serializes a struct requires its length
@@ -44,7 +53,7 @@ public:
     int recvSerialized(glove_data_raw_t* data);
 
 private:
-    BLE ble_;
+    BLEDevice ble_;
     crc_t crc_;
 
 };

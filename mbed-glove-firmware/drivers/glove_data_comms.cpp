@@ -5,8 +5,7 @@
  * Authors:
  *     Nick Bertoldi
  *     Ben Heckathorn
- *     Ryan O’Keefe
- *     Adrian Padin
+ *     Ryan O’Keefe *     Adrian Padin
  *     Tim Schumacher
  *
  * Purpose:
@@ -41,6 +40,8 @@ int GloveDataComms::sendSerialized(glove_sensors_raw_t* data) {
 }
 
 int GloveDataComms::recvSerialized(glove_sensors_raw_t* data) {
+
+
 
 }
 
