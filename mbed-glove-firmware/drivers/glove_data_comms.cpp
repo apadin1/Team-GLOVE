@@ -18,8 +18,11 @@
  */
 
 #include "glove_data_comms.h"
+#include "crc.h"
 
-
+GloveDataComms::GloveDataComms() {
+    crcInit();
+}
 
 int GloveDataComms::sendSerialized(glove_data_raw_t* data) {
 
@@ -28,5 +31,4 @@ int GloveDataComms::sendSerialized(glove_data_raw_t* data) {
 int GloveDataComms::recvSerialized(glove_data_raw_t* data) {
 
 }
-
 
