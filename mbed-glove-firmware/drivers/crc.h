@@ -69,7 +69,6 @@ typedef uint32_t crc_t;
 #endif
 
 void crcInit(void);
-crc_t crcSlow(unsigned char const message[], int nBytes);
 crc_t crcFast(unsigned char const message[], int nBytes);
 
 #endif /* _crc_h */
