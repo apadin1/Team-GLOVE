@@ -15,9 +15,10 @@
 #include "flex_sensor.h"
 
 const PinName FLEX_DEBUG_PIN = p15;
-DigitalOut working(FLEX_DEBUG_PIN);
 
-FlexSensors::FlexSensors() {
+FlexSensors::FlexSensors()
+    : working(FLEX_DEBUG_PIN) {
+
     pins[0] = new AnalogIn(FLEX_0);
     pins[1] = new AnalogIn(FLEX_1);
     pins[2] = new AnalogIn(FLEX_2);

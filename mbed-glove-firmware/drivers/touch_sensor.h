@@ -155,6 +155,7 @@ private:
     Semaphore do_update;
     key_states_t keys;
     Mutex keys_mutex;
+    DigitalOut working;
 };
 
 #endif /* TOUCH_SENSOR_H_ */

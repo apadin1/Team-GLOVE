@@ -113,6 +113,8 @@ private:
     BNO055_LIN_ACC_TypeDef linear_acc;
 
     RtosTimer* update_task_timer;
+
+    DigitalOut working;
 };
 
 /*

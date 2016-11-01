@@ -19,10 +19,10 @@
 #include "imu.h"
 
 const PinName IMU_DEBUG_PIN = p16;
-DigitalOut working(IMU_DEBUG_PIN);
 
 IMU_BNO055::IMU_BNO055()
-    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
+    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
+    working(IMU_DEBUG_PIN) {
 
     imu.set_mounting_position(IMU_MOUNT_POSITION);
 
@@ -38,7 +38,8 @@ IMU_BNO055::IMU_BNO055()
 }
 
 IMU_BNO055::IMU_BNO055(Serial& pc)
-    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
+    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
+    working(IMU_DEBUG_PIN) {
 
     imu.set_mounting_position(IMU_MOUNT_POSITION);
 

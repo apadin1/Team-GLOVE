@@ -106,5 +106,6 @@ private:
     AnalogIn* pins[FLEX_SENSORS_COUNT];
     Mutex sensors_mutex;
     RtosTimer* update_task_timer;
+    DigitalOut working;
 };
 #endif /* FLEX_SENSOR_H_ */
