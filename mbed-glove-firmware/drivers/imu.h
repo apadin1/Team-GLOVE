@@ -22,8 +22,8 @@
 /*
  * PinName definitions for the BNO055 on the board
  */
-const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
-const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
+//const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
+//const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
 const PinName IMU_RST = p12;
 
 /*
@@ -63,12 +63,10 @@ public:
      * Constructor initializes the BNO055 and takes care
      * of the default configuration.
      *
-     * TODO Determine pins vs pass ref to I2C0
-     *
-     * XXX Using Serial& for debug
+     * XXX Use Serial& for debug
      */
-    IMU_BNO055(Serial& debug_out);
-    IMU_BNO055();
+    IMU_BNO055(I2C& i2c);
+    IMU_BNO055(I2C& i2c, Serial& debug_out);
 
     /*
      * Update the orientation and acceleration information
