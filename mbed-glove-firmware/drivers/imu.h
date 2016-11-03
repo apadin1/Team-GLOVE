@@ -27,11 +27,9 @@
 const PinName IMU_RST = p12;
 
 /*
- * Update Period (in seconds)
- *
- * 0.01 s = 10 ms = 100 Hz
+ * Update Period (in milliseconds)
  */
-const float IMU_UPDATE_PERIOD = 0.01;
+const uint32_t IMU_UPDATE_PERIOD = 10;
 
 /*
  * TODO depending on layout for the PCB, figure this out
@@ -78,7 +76,7 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(float period_s=IMU_UPDATE_PERIOD);
+    void startUpdateTask(uint32_t ms=IMU_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -104,7 +102,7 @@ public:
 private:
     BNO055 imu;
     bno_imu_t imu_data;
-    Mutex imu_mutex;
+    Mutex mutex;
 
     BNO055_ID_INF_TypeDef bno055_id_inf;
     BNO055_EULER_TypeDef euler_angles;

@@ -1,6 +1,5 @@
 /*
- * Filename:  touch_sensor.h
- * Project:   EECS 473 - Team GLOVE
+ * Filename:  touch_sensor.h * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
  *     Nick Bertoldi
@@ -139,7 +138,10 @@ public:
     void writeKeys(key_states_t* key_states);
 
     /*
-     * Update the in memory state for the keys
+     * Update the in memory state for the keys,
+     * asking for the key states over I2C
+     *
+     * Measured to take approximately 1.01 ms
      */
     void update();
 

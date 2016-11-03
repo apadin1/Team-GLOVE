@@ -17,11 +17,10 @@
 #include "collector.h"
 
 const PinName COLLECTOR_DEBUG_PIN = p26;
-DigitalOut working(COLLECTOR_DEBUG_PIN);
 
 Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
         TouchSensor* _touch, mbed::Serial* _pc)
-     : flex(_flex), imu(_imu), touch(_touch), pc(_pc) {
+     : flex(_flex), imu(_imu), touch(_touch), pc(_pc), working(COLLECTOR_DEBUG_PIN) {
 
      update_task_timer = new RtosTimer(this, &Collector::update, osTimerPeriodic);
  }
@@ -33,9 +32,8 @@ void Collector::transmitData() {
 
     if (pc != NULL)
     pc->printf("[T]: %hu %hu %hu %hu | [F]: %hu %hu %hu %hu | [O]: %f %f %f \r\n",
-            //glove_data.touch_sensor.a, glove_data.touch_sensor.b,
-            //glove_data.touch_sensor.c, glove_data.touch_sensor.d,
-            1,1,1,1,
+            glove_data.touch_sensor.a, glove_data.touch_sensor.b,
+            glove_data.touch_sensor.c, glove_data.touch_sensor.d,
             glove_data.flex_sensors[0], glove_data.flex_sensors[1],
             glove_data.flex_sensors[2], glove_data.flex_sensors[3],
             glove_data.imu.orient_pitch, glove_data.imu.orient_roll,
@@ -53,8 +51,8 @@ void Collector::update() {
     working = 0;
 }
 
-void Collector::startUpdateTask(float period_s) {
-    update_task_timer->start(period_s);
+void Collector::startUpdateTask(uint32_t ms) {
+    update_task_timer->start(ms);
 }
 
 void Collector::stopUpdateTask() {

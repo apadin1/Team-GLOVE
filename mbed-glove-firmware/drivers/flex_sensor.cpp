@@ -28,17 +28,17 @@ FlexSensors::FlexSensors()
 }
 
 void FlexSensors::update() {
+    mutex.lock();
     working = 1;
-    sensors_mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
     }
-    sensors_mutex.unlock();
     working = 0;
+    mutex.unlock();
 }
 
-void FlexSensors::startUpdateTask(float period_s) {
-    update_task_timer->start(period_s);
+void FlexSensors::startUpdateTask(uint32_t ms) {
+    update_task_timer->start(ms);
 }
 
 void FlexSensors::stopUpdateTask() {
@@ -46,37 +46,34 @@ void FlexSensors::stopUpdateTask() {
 }
 
 void FlexSensors::writeSensors(flex_sensor_t* buf) {
-    sensors_mutex.lock();
+    mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         buf[i] = values[i];
     }
-    sensors_mutex.unlock();
+    mutex.unlock();
 }
 
 void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
-    sensors_mutex.lock();
+    mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
         buf[i] = values[i];
     }
-    sensors_mutex.unlock();
+    mutex.unlock();
 }
 
 void FlexSensors::print(Serial& pc) {
-    sensors_mutex.lock();
+    mutex.lock();
     pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
             values[0], values[0],
             values[1], values[1],
             values[2], values[2],
             values[3], values[3]);
-    sensors_mutex.unlock();
+    mutex.unlock();
 }
 
 void FlexSensors::printSingle(Serial& pc, uint8_t index) {
-    sensors_mutex.lock();
     if (index < FLEX_SENSORS_COUNT) {
-        pc.printf("Flex %hu: %hu 0x%hx\r\n", index,
-                values[index], values[index]);
+        pc.printf("Flex %hu: %hu", index, values[index]);
     }
-    sensors_mutex.unlock();
 }
