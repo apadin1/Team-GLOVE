@@ -23,11 +23,9 @@
 #include "glove_sensors.h"
 
 /*
- * Update Period (in seconds)
- *
- * 0.01 s = 10 ms = 100 Hz
+ * Update Period (in milliseconds)
  */
-const float COLLECTOR_UPDATE_PERIOD = 0.01;
+const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
 
 /* Collector
  *
@@ -58,7 +56,7 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(float period_s=COLLECTOR_UPDATE_PERIOD);
+    void startUpdateTask(uint32_t ms=COLLECTOR_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -73,6 +71,7 @@ private:
     glove_sensors_raw_t glove_data;
     RtosTimer* update_task_timer;
 
+    DigitalOut working;
     Serial* pc;  // for debugging
 };
 #endif /* COLLECTOR_H_ */

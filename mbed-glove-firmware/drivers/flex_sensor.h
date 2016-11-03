@@ -35,11 +35,9 @@ const PinName FLEX_3 = p4;
 #endif
 
 /*
- * Update Period (in seconds)
- *
- * 0.01 s = 10 ms = 100 Hz
+ * Update Period (in milliseconds)
  */
-const float FLEX_UPDATE_PERIOD = 0.01;
+const uint32_t FLEX_UPDATE_PERIOD = 10;
 
 /* flex_sensor_t
  *
@@ -69,8 +67,10 @@ public:
     /*
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
+     *
+     * Measured to take approximately 520us
      */
-    void startUpdateTask(float period_s=FLEX_UPDATE_PERIOD);
+    void startUpdateTask(uint32_t ms=FLEX_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -104,7 +104,7 @@ public:
 private:
     flex_sensor_t values[FLEX_SENSORS_COUNT];
     AnalogIn* pins[FLEX_SENSORS_COUNT];
-    Mutex sensors_mutex;
+    Mutex mutex;
     RtosTimer* update_task_timer;
     DigitalOut working;
 };
