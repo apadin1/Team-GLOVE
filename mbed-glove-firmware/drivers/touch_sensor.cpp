@@ -24,11 +24,22 @@ const PinName TOUCH_DEBUG_PIN = p14;
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl), change_event(intr), working(TOUCH_DEBUG_PIN) {
 
-        writeStaticConfig();
-        qt.getButtonsState();
-        // Associate the update function with the interrupt CHANGE line
-        change_event.fall(this, &TouchSensor::changeEventHandler);
-    }
+    initialize()
+}
+
+TouchSensor::TouchSensor(I2C& i2c, PinName intr)
+    : qt(i2c), change_event(intr), working(TOUCH_DEBUG_PIN) {
+
+    initialize();
+}
+
+
+void TouchSensor::initialize() {
+    writeStaticConfig();
+    qt.getButtonsState();
+    // Associate the update function with the interrupt CHANGE line
+    change_event.fall(this, &TouchSensor::changeEventHandler);
+}
 
 void TouchSensor::writeStaticConfig() {
     // reset?
