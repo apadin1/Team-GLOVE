@@ -55,7 +55,6 @@ void TouchSensor::writeStaticConfig() {
         qt.setAVE(k, TOUCH_AVE);
         qt.setAKSGroup(k, TOUCH_AKS[k]);
     }
-
 }
 
 void TouchSensor::writeKeys(key_states_t* key_states) {
@@ -75,18 +74,19 @@ void TouchSensor::update() {
     // Check overflow flag
     if (buttons & 0x80) {
         // do something about it
+        working = 0;
         return;
     }
 
     // just get the keys we want
     keys_mutex.lock();
-    keys.a = buttons & 0x01; // key 0
-    keys.b = buttons & 0x02; // key 1
-    keys.c = buttons & 0x04; // key 2
-    keys.d = buttons & 0x08; // key 3
-    //keys.x = buttons & 0x10; // key 4
-    //keys.x = buttons & 0x20; // key 5
-    //keys.x = buttons & 0x40; // key 6
+    keys.a = (buttons & 0x01); // key 0
+    keys.b = (buttons & 0x02) >> 1; // key 1
+    keys.c = (buttons & 0x04) >> 2; // key 2
+    keys.d = (buttons & 0x08) >> 3; // key 3
+    //keys.e = buttons & 0x10; // key 4
+    //keys.f = buttons & 0x20; // key 5
+    //keys.g = buttons & 0x40; // key 6
     keys_mutex.unlock();
     working = 0;
 }
@@ -101,3 +101,9 @@ void TouchSensor::updateTask() {
         update();
     }
 }
+
+void TouchSensor::print(Serial& pc, key_states_t& keys_) {
+    pc.printf("Keys: %hu %hu %hu %hu\r\n",
+            keys_.a, keys_.b, keys_.c, keys_.d);
+}
+

@@ -105,6 +105,7 @@ typedef struct {
         return a << 3 | b << 2 | c << 1 | d;
     }
 } key_states_t;
+//typedef uint8_t key_states_t;
 
 class TouchSensor {
 public:
@@ -156,6 +157,11 @@ public:
      *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
      */
     void updateTask();
+
+    /*
+     * Print out the given key states
+     */
+    static void print(Serial& pc, key_states_t&);
 
 private:
     void initialize();

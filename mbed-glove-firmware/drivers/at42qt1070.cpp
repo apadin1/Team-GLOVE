@@ -144,6 +144,7 @@ void AT42QT1070::updateState() {
 //--------------------------------------------------------------------------------
 uint8_t AT42QT1070::getButtonsState() {
     uint8_t status = readByte(REG_DETSTATUS);
+    uint8_t keys = readByte(REG_KEYSTATUS);
 
     // if we are calibrating, don't change anything
     if (status & DET_CALIBRATE) {
@@ -154,7 +155,6 @@ uint8_t AT42QT1070::getButtonsState() {
     // Old library only read buttons if one of them was touched.
     // We want to read either way so that change line gets reset.
     // Therefore read command has been moved outside of if statement.
-    uint8_t keys = readByte(REG_KEYSTATUS);
     if (status & DET_TOUCH) {
         // high bit is reserved, filter it out
         _buttonStates = keys & ~0x80;
