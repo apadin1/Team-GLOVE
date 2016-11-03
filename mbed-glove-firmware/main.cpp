@@ -15,6 +15,13 @@ Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
 
+void blink() {
+    for (;;) {
+        led = !led;
+        Thread::wait(250);
+    }
+}
+
 void imu_test() {
 
     IMU_BNO055 imu(i2c);
@@ -50,14 +57,17 @@ void touch_sensor_test() {
     }
 }
 
+
 void flex_test() {
 
     FlexSensors flex_sensors;
-    flex_sensors.startUpdateTask(0.5);
+    //flex_sensors.startUpdateTask(400);
 
     for (;;) {
 
+        flex_sensors.update();
         flex_sensors.printSingle(pc, 0);
+
 
         led = !led;
         Thread::wait(1000);
@@ -92,9 +102,7 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
+    flex_test();
 
-    touch_sensor_test();
-
-    // Just in case the above returns
-    Thread::wait(osWaitForever);
+    blink();
 }
