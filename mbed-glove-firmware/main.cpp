@@ -6,54 +6,29 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
+const PinName GLOVE_I2C_SDA = I2C_SDA0; // p30
+const PinName GLOVE_I2C_SCL = I2C_SCL0; // p7
+I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
+
 Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
 
-float brightness = 0.0;
+void imu_test() {
 
-void blink() {
-    // (note the calls to Thread::wait below for delays)
-    while (true) {
+    IMU_BNO055 imu(i2c);
+
+    imu.startUpdateTask(0.5);
+
+    for (;;) {
+        imu.print(pc);
+
         led = !led;
-        pc.printf("This is a thing\r\n");
         Thread::wait(1000);
     }
 }
 
-void imu_test() {
-
-    pc.printf("Starting IMU test\r\n");
-    IMU_BNO055 imu(pc);
-
-    for (;;) {
-        imu.update();
-        imu.print(pc);
-
-        led = !led;
-        Thread::wait(500);
-    }
-}
-
-void echo_term() {
-    pc.printf("Press 'u' to turn LED1 brightness up, 'd' to turn it down\n");
-    for (;;) {
-        char c = pc.getc();
-        pc.putc(c);
-
-        if ((c == 'u') && (brightness < 0.5)) {
-            brightness += 0.01;
-            led = brightness;
-        }
-        if ((c == 'd') && (brightness > 0.0)) {
-            brightness -= 0.01;
-            led = brightness;
-        }
-
-    }
-}
-
-void touch_sensor_complete() {
+void touch_sensor_test() {
     key_states_t keys;
     key_states_t last_keys;
 
@@ -70,23 +45,22 @@ void touch_sensor_complete() {
             pc.printf("Key States: %hu %hu %hu %hu",
                     keys.a, keys.b, keys.c, keys.d);
         }
+        led = !led;
         Thread::wait(200);
     }
 }
 
-void flex_read() {
+void flex_test() {
 
     FlexSensors flex_sensors;
-    //uint16_t flex_vals[FLEX_SENSORS_COUNT];
+    flex_sensors.startUpdateTask(0.5);
 
     for (;;) {
-        led = !led; // just so we know its running
 
-        flex_sensors.update();
-        //flex_sensors.writeSensors(flex_vals);
         flex_sensors.printSingle(pc, 0);
 
-        Thread::wait(600);
+        led = !led;
+        Thread::wait(1000);
     }
 }
 
@@ -95,18 +69,18 @@ void launch_periodic() {
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
 
-    FlexSensors flex_sensors;
-    flex_sensors.startUpdateTask();
+    //FlexSensors flex_sensors;
+    //flex_sensors.startUpdateTask();
 
-    IMU_BNO055 imu;
-    imu.startUpdateTask();
+    //IMU_BNO055 imu(i2c);
+    //imu.startUpdateTask();
 
-    Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
-    collector.startUpdateTask(1); // 1 sec period for serial out
+    //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
+    //collector.startUpdateTask(1); // 1 sec period for serial out
 
     for (;;) {
         led = !led; // just so we know its running
-        Thread::wait(1000);
+        Thread::wait(500);
     }
 }
 
@@ -119,7 +93,7 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
 
-    launch_periodic();
+    imu_test();
 
     // Just in case the above returns
     Thread::wait(osWaitForever);
