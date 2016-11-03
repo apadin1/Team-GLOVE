@@ -20,8 +20,8 @@
 
 const PinName IMU_DEBUG_PIN = p16;
 
-IMU_BNO055::IMU_BNO055()
-    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
+IMU_BNO055::IMU_BNO055(I2C& i2c)
+    : imu(i2c, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
     working(IMU_DEBUG_PIN) {
 
     imu.set_mounting_position(IMU_MOUNT_POSITION);
@@ -37,8 +37,8 @@ IMU_BNO055::IMU_BNO055()
     update_task_timer = new RtosTimer(this, &IMU_BNO055::update, osTimerPeriodic);
 }
 
-IMU_BNO055::IMU_BNO055(Serial& pc)
-    : imu(IMU_I2C_SDA, IMU_I2C_SCL, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
+IMU_BNO055::IMU_BNO055(I2C& i2c, Serial& pc)
+    : imu(i2c, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF),
     working(IMU_DEBUG_PIN) {
 
     imu.set_mounting_position(IMU_MOUNT_POSITION);
