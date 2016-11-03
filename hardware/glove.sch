@@ -2400,6 +2400,9 @@ JST PH 2-pin thru-home side entry</description>
 <part name="MOSI" library="wirepad" deviceset="WIREPAD" device="1,6/0,9" value="WIREPAD1,6/0,9"/>
 <part name="P+12" library="supply1" deviceset="VCC" device=""/>
 <part name="GND26" library="supply1" deviceset="GND" device=""/>
+<part name="R25" library="passives" deviceset="RESISTOR" device="0603_RES" value="470"/>
+<part name="PWR" library="leds" deviceset="LED" device="0603"/>
+<part name="GND27" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3216,6 +3219,9 @@ JST PH 2-pin thru-home side entry</description>
 <instance part="R24" gate="G$1" x="91.44" y="33.02" rot="R180"/>
 <instance part="P1" gate="G$1" x="60.96" y="25.4" rot="MR270"/>
 <instance part="D1" gate="G$1" x="83.82" y="17.78" rot="R270"/>
+<instance part="R25" gate="G$1" x="83.82" y="-27.94" rot="R90"/>
+<instance part="PWR" gate="G$1" x="83.82" y="-20.32" rot="R270"/>
+<instance part="GND27" gate="1" x="83.82" y="-35.56"/>
 </instances>
 <busses>
 </busses>
@@ -3330,6 +3336,10 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="101.6" y1="30.48" x2="101.6" y2="33.02" width="0.1524" layer="91"/>
 <junction x="101.6" y="33.02"/>
 </segment>
+<segment>
+<pinref part="R25" gate="G$1" pin="1"/>
+<pinref part="GND27" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="N$4" class="0">
 <segment>
@@ -3350,8 +3360,9 @@ JST PH 2-pin thru-home side entry</description>
 <junction x="129.54" y="12.7"/>
 <pinref part="U5" gate="A" pin="VIN"/>
 <wire x1="137.16" y1="12.7" x2="137.16" y2="-17.78" width="0.1524" layer="91"/>
-<wire x1="137.16" y1="-17.78" x2="55.88" y2="-17.78" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="-17.78" x2="83.82" y2="-17.78" width="0.1524" layer="91"/>
 <pinref part="C22" gate="G$1" pin="2"/>
+<wire x1="83.82" y1="-17.78" x2="55.88" y2="-17.78" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="-17.78" x2="50.8" y2="-17.78" width="0.1524" layer="91"/>
 <junction x="55.88" y="-17.78"/>
 <pinref part="U5" gate="A" pin="~SD"/>
@@ -3359,6 +3370,8 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="48.26" y1="-12.7" x2="50.8" y2="-12.7" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="-12.7" x2="50.8" y2="-17.78" width="0.1524" layer="91"/>
 <junction x="50.8" y="-17.78"/>
+<pinref part="PWR" gate="G$1" pin="ANODE"/>
+<junction x="83.82" y="-17.78"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -3408,6 +3421,13 @@ JST PH 2-pin thru-home side entry</description>
 <junction x="48.26" y="20.32"/>
 <pinref part="CN1" gate="G$1" pin="2"/>
 <wire x1="68.58" y1="15.24" x2="48.26" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
+<pinref part="PWR" gate="G$1" pin="CATHODE"/>
+<pinref part="R25" gate="G$1" pin="2"/>
+<wire x1="83.82" y1="-22.86" x2="83.82" y2="-25.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
