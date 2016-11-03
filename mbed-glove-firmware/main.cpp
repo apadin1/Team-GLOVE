@@ -6,8 +6,9 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
-const PinName GLOVE_I2C_SDA = I2C_SDA0; // p30
-const PinName GLOVE_I2C_SCL = I2C_SCL0; // p7
+const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
+const PinName GLOVE_I2C_SCL = p7; //I2C_SCL0; // p7
+
 I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 
 Serial pc(USBTX, USBRX);
@@ -32,7 +33,7 @@ void touch_sensor_test() {
     key_states_t keys;
     key_states_t last_keys;
 
-    TouchSensor touch_sensor;
+    TouchSensor touch_sensor(i2c);
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
 
@@ -42,8 +43,7 @@ void touch_sensor_test() {
         touch_sensor.writeKeys(&keys);
 
         if (last_keys.pack() != keys.pack()) {
-            pc.printf("Key States: %hu %hu %hu %hu",
-                    keys.a, keys.b, keys.c, keys.d);
+            TouchSensor::print(pc, keys);
         }
         led = !led;
         Thread::wait(200);
@@ -93,7 +93,7 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
 
-    imu_test();
+    touch_sensor_test();
 
     // Just in case the above returns
     Thread::wait(osWaitForever);

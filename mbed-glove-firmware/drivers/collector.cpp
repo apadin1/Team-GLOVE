@@ -33,8 +33,9 @@ void Collector::transmitData() {
 
     if (pc != NULL)
     pc->printf("[T]: %hu %hu %hu %hu | [F]: %hu %hu %hu %hu | [O]: %f %f %f \r\n",
-            glove_data.touch_sensor.a, glove_data.touch_sensor.b,
-            glove_data.touch_sensor.c, glove_data.touch_sensor.d,
+            //glove_data.touch_sensor.a, glove_data.touch_sensor.b,
+            //glove_data.touch_sensor.c, glove_data.touch_sensor.d,
+            1,1,1,1,
             glove_data.flex_sensors[0], glove_data.flex_sensors[1],
             glove_data.flex_sensors[2], glove_data.flex_sensors[3],
             glove_data.imu.orient_pitch, glove_data.imu.orient_roll,
