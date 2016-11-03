@@ -119,6 +119,14 @@ public:
                 PinName intr=TOUCH_INTERRUPT);
 
     /*
+     * Alternate constructor - takes refrecne to mbed::I2C object
+     *
+     * Writes all the static config settings to the sensor
+     * Assosciates the update() method with the CHANGE event line
+     */
+    TouchSensor(I2C& i2c, PinName intr=TOUCH_INTERRUPT);
+
+    /*
      * Write the configuration values defined above
      */
     void writeStaticConfig();
@@ -148,6 +156,9 @@ public:
      *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
      */
     void updateTask();
+
+private:
+    void initialize();
 
 private:
     AT42QT1070 qt;
