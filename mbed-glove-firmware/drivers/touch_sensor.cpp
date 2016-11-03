@@ -24,7 +24,7 @@ const PinName TOUCH_DEBUG_PIN = p14;
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl), change_event(intr), working(TOUCH_DEBUG_PIN) {
 
-    initialize()
+    initialize();
 }
 
 TouchSensor::TouchSensor(I2C& i2c, PinName intr)
