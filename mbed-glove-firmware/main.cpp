@@ -26,7 +26,7 @@ void imu_test() {
 
     IMU_BNO055 imu(i2c);
 
-    imu.startUpdateTask(0.5);
+    imu.startUpdateTask(500);
 
     for (;;) {
         imu.print(pc);
@@ -61,11 +61,11 @@ void touch_sensor_test() {
 void flex_test() {
 
     FlexSensors flex_sensors;
-    //flex_sensors.startUpdateTask(400);
+    flex_sensors.startUpdateTask(200);
 
     for (;;) {
 
-        flex_sensors.update();
+        //flex_sensors.update();
         flex_sensors.printSingle(pc, 0);
 
 
@@ -78,19 +78,40 @@ void launch_periodic() {
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    key_states_t keys;
+    key_states_t last_keys;
 
-    //FlexSensors flex_sensors;
-    //flex_sensors.startUpdateTask();
+    FlexSensors flex_sensors;
+    IMU_BNO055 imu(i2c);
 
-    //IMU_BNO055 imu(i2c);
-    //imu.startUpdateTask();
+    flex_sensors.startUpdateTask(10);
+    wait_ms(2); // to offset the timers
+    imu.startUpdateTask(10);
 
     //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     //collector.startUpdateTask(1); // 1 sec period for serial out
 
+    uint8_t print_limit = 0;
     for (;;) {
         led = !led; // just so we know its running
-        Thread::wait(500);
+
+        // Flex
+        flex_sensors.printSingle(pc, 0);
+
+        // Touch
+        last_keys = keys;
+        touch_sensor.writeKeys(&keys);
+
+        if (last_keys.pack() != keys.pack()) {
+            TouchSensor::print(pc, keys);
+        }
+
+        if (print_limit++ == 5) {
+            imu.print(pc);
+            print_limit = 0;
+        }
+
+        Thread::wait(1000);
     }
 }
 
@@ -102,7 +123,7 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    flex_test();
+    launch_periodic();
 
     blink();
 }
