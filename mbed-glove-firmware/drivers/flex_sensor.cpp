@@ -64,11 +64,8 @@ void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
 
 void FlexSensors::print(Serial& pc) {
     mutex.lock();
-    pc.printf("%hu 0x%hx, %hu 0x%hx, %hu 0x%hx, %hu 0x%hx\r\n",
-            values[0], values[0],
-            values[1], values[1],
-            values[2], values[2],
-            values[3], values[3]);
+    pc.printf("Flex: %hu, %hu, %hu, %hu\r\n",
+            values[0], values[1], values[2], values[3]);
     mutex.unlock();
 }
 

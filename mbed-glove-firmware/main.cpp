@@ -84,9 +84,9 @@ void launch_periodic() {
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
 
-    flex_sensors.startUpdateTask(10);
-    wait_ms(2); // to offset the timers
-    imu.startUpdateTask(10);
+    flex_sensors.startUpdateTask(100);
+    wait_ms(20); // to offset the timers
+    imu.startUpdateTask(100);
 
     //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     //collector.startUpdateTask(1); // 1 sec period for serial out
@@ -96,7 +96,8 @@ void launch_periodic() {
         led = !led; // just so we know its running
 
         // Flex
-        flex_sensors.printSingle(pc, 0);
+        //flex_sensors.printSingle(pc, 0);
+        flex_sensors.print(pc);
 
         // Touch
         last_keys = keys;
