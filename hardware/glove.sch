@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.6.0">
+<eagle version="7.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -2311,8 +2311,6 @@ JST PH 2-pin thru-home side entry</description>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
 <part name="P+1" library="supply1" deviceset="VCC" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
-<part name="GND8" library="supply1" deviceset="GND" device=""/>
-<part name="R7" library="passives" deviceset="RESISTOR" device="0603_RES" value="150"/>
 <part name="R8" library="passives" deviceset="RESISTOR" device="0603_RES" value="12 k"/>
 <part name="U4" library="SparkFun-PowerIC" deviceset="MCP73831" device=""/>
 <part name="J2" library="connector" deviceset="MICRO_USB_B_JST_MC5BR3-M404-4S" device=""/>
@@ -2345,7 +2343,7 @@ JST PH 2-pin thru-home side entry</description>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
-<part name="J1" library="connector" deviceset="TC2030-JLINK" device="-NL"/>
+<part name="J1" library="connector" deviceset="TC2030-JLINK" device="-L" value="TC2030-JLINK-L"/>
 <part name="R2" library="passives" deviceset="RESISTOR" device="0603_RES" value="1 k"/>
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
 <part name="R5" library="passives" deviceset="RESISTOR" device="0603_RES" value="1 k"/>
@@ -2442,8 +2440,6 @@ JST PH 2-pin thru-home side entry</description>
 <instance part="GND14" gate="1" x="91.44" y="-58.42"/>
 <instance part="P+1" gate="VCC" x="-2.54" y="76.2"/>
 <instance part="GND9" gate="1" x="-33.02" y="-58.42"/>
-<instance part="GND8" gate="1" x="-48.26" y="-58.42"/>
-<instance part="R7" gate="G$1" x="-48.26" y="-35.56" rot="R90"/>
 <instance part="R8" gate="G$1" x="-33.02" y="-35.56" rot="R90"/>
 <instance part="LED2" gate="G$1" x="-73.66" y="-5.08" rot="R270"/>
 <instance part="P+3" gate="VCC" x="-91.44" y="-15.24"/>
@@ -2538,11 +2534,6 @@ JST PH 2-pin thru-home side entry</description>
 <pinref part="R8" gate="G$1" pin="1"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="-33.02" y1="-40.64" x2="-33.02" y2="-55.88" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R7" gate="G$1" pin="1"/>
-<pinref part="GND8" gate="1" pin="GND"/>
-<wire x1="-48.26" y1="-40.64" x2="-48.26" y2="-55.88" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND6" gate="1" pin="GND"/>
@@ -2739,11 +2730,7 @@ JST PH 2-pin thru-home side entry</description>
 <net name="N$19" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="SWDIO/!RESET"/>
-<pinref part="R7" gate="G$1" pin="2"/>
-<wire x1="-22.86" y1="-22.86" x2="-48.26" y2="-22.86" width="0.1524" layer="91"/>
-<wire x1="-48.26" y1="-22.86" x2="-48.26" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="-60.96" y1="-22.86" x2="-48.26" y2="-22.86" width="0.1524" layer="91"/>
-<junction x="-48.26" y="-22.86"/>
+<wire x1="-22.86" y1="-22.86" x2="-60.96" y2="-22.86" width="0.1524" layer="91"/>
 <pinref part="J1" gate="G$1" pin="SWDIO"/>
 </segment>
 </net>
