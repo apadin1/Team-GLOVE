@@ -74,6 +74,6 @@ void FlexSensors::print(Serial& pc) {
 
 void FlexSensors::printSingle(Serial& pc, uint8_t index) {
     if (index < FLEX_SENSORS_COUNT) {
-        pc.printf("Flex %hu: %hu", index, values[index]);
+        pc.printf("Flex %hu: %hu\r\n", index, values[index]);
     }
 }
