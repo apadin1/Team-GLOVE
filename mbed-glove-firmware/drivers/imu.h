@@ -32,10 +32,11 @@ const PinName IMU_RST = p12;
 const uint32_t IMU_UPDATE_PERIOD = 10;
 
 /*
- * TODO depending on layout for the PCB, figure this out
- * RTD
+ * Section 3.4 Axis Remap, p.25
+ * On prototype in P0
+ * On PCB in P?
  */
-const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P6;
+const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P0;
 
 /* bno_imu_t
  *
