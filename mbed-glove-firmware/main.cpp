@@ -6,6 +6,8 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
+#define INCLUDE_TOUCH 1
+
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
 const PinName GLOVE_I2C_SCL = p7; //I2C_SCL0; // p7
 
@@ -75,18 +77,20 @@ void flex_test() {
 }
 
 void launch_periodic() {
+#if defined(INCL_TOUCH)
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
+#endif
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
 
-    flex_sensors.startUpdateTask(100);
-    wait_ms(20); // to offset the timers
-    imu.startUpdateTask(100);
+    flex_sensors.startUpdateTask(10);
+    wait_ms(2); // to offset the timers
+    imu.startUpdateTask(10);
 
     //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     //collector.startUpdateTask(1); // 1 sec period for serial out
@@ -100,14 +104,15 @@ void launch_periodic() {
         flex_sensors.print(pc);
 
         // Touch
+#if defined(INCL_TOUCH)
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
-
         if (last_keys.pack() != keys.pack()) {
             TouchSensor::print(pc, keys);
         }
+#endif
 
-        if (print_limit++ == 5) {
+        if (print_limit++ == 3) {
             imu.print(pc);
             print_limit = 0;
         }
