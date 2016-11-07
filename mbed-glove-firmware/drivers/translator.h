@@ -58,12 +58,12 @@ class Translator {
 public:
   /*
    * Constructor for translator. Takes pointer to collector type
-   * for access to the glove_raw data. 
+   * for access to the glove_raw data.
    * TODO: Implement function to report glove_raw data in collector class
    */
   Translator(collector* gloveptr);
   /*
-   * Update gesture mapping via new configuration vector. 
+   * Update gesture mapping via new configuration vector.
    * Transciever to send the new Vector to bluetooth class,
    * which should then call this function
    */
@@ -81,8 +81,8 @@ private:
   std::vector<string> gestureHID; //Contains gesture to HID mapping
   std::vector<uint8_t> isPressed; //Contains HID input
   //TODO: Determine best way to access raw collector data
+  //NOTE: Changes proposed in collector files
   collector* GLOVE; //Pointer to collector instance
-  
 };
 
 #endif /* TRANSLATOR_H_ */
