@@ -26,9 +26,8 @@ class KeyboardMouse {
 
 public:
 
-    /* Constructor and destructor */
+    /* Constructor */
     KeyboardMouse();
-    ~KeyboardMouse();
     
     /******************** MOUSE INTERFACE ********************/
 
@@ -55,8 +54,15 @@ public:
      * Parameters:
      *   speed - speed of the scroll wheel (range -127 to 127)
      */
-    void setScrollSpeed(int8_t speed);
+    void setMouseScroll(int8_t speed);
     
+    /* Set the x, y, and scroll speed of the mouse
+     * Parameters:
+     *   x - speed of the cursor in x (range -127 to 127)
+     *   y - speed of the cursor in y (range -127 to 127)
+     *   scroll - speed of the scroll wheel (range -127 to 127)
+     */
+    void setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll);
     
     /******************** KEYBOARD INTERFACE ********************/
     
@@ -66,8 +72,24 @@ public:
      */
     void sendChar(char c);
     
-    /* Set a keyboard button to be 'pressed' */
-    void keyPress()
+    /* Set a keyboard button to be 'pressed' 
+     * Parameters:
+     *
+     *   key - the key which is being pressed. This can either be
+     *      an ASCII character (must be one which is represented
+     *      on a standard keyboard) or a function key, such as 
+     *      RIGHT_ARROW or KEY_HOME.
+     *
+     *   modifier - a command which modifies the key being pressed.
+     *      Modifiers which are currently supported are:
+     *      - KEY_CTRL
+     *      - KEY_SHIFT
+     *      - KEY_ALT
+     *
+     *      See keyboard_types.h for more information on function
+     *      keys and modifiers.
+     */
+    void keyPress(uint8_t key, uint8_t modifier);
     
     /* Set the keyboard to be all buttons released */
     void keyRelease();
@@ -76,7 +98,7 @@ public:
     /******************** BLE INTERFACE ********************/    
 
     /* Check if the device is paired to a computer */
-    void isConnected() { return connected; }
+    bool isConnected() { return hid_service.connected; }
     
     /* Wait to be interrupted */
     void waitForEvent() { ble.gap().waitForEvent(); }
@@ -87,6 +109,5 @@ private:
     /******************** HIDDEN VARIABLES ********************/
     KeyboardMouseService hid_service;
     BLE ble;
-    bool connected;
 };
 
