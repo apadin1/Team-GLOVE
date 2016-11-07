@@ -15,15 +15,17 @@
 
 #include "translator.h"
 
-translator::translator(*glove_raw_data gloveptr) {
+Translator::translator(collector* gloveptr) {
   GLOVE = gloveptr;
+  //TODO: Determine default glove mapping
+  //gestureHID[] = { TBD };
 }
 
-translator::updateGestureMap(std::vector<string>* newMap) {
-  HIDinput = *newMap;
+Translator::updateGestureMap(std::vector<string>* newMap) {
+  gestureHID = *newMap;
 }
 
-translator::gestureCheck() {
+Translator::gestureCheck() {
   //check to see which gestures are active
   //relay to HID input
 }

@@ -19,6 +19,15 @@
 #include "mbed.h"
 #include <vector>
 
+//TODO: Include #defines for sensor analysis
+
+/* GESTURE
+ *
+ * enum used to index vectors contained
+ * within Translator class. Also used to
+ * provide consistency between data structures
+ * used both in gloves and transciever
+ */
 enum class GESTURE {
                      FLEX1,
                      FLEX2,
@@ -36,16 +45,35 @@ enum class GESTURE {
                      YAWRIGHT
                    };
 
-class translator {
-  std::vector<string> HIDinput;
-  std::vector<uint8_t> isPressed;
-  *glove_raw_data GLOVE;
+/* Translator
+ *
+ * Single class to handle data interpretation between
+ * glove data and HID input. Methods are written
+ * to update internally, and to write all methods into a
+ * data structure
+ */
+class Translator {
 public:
-  translator(*glove_raw_data gloveptr);
+  /*
+   * Constructor for collector
+   */
+  Translator(collector* gloveptr);
 
+  /*
+   * Update gesture mapping via new configuration vector
+   */
   void updateGestureMap(std::vector<string>* newMap);
 
+  /*
+   * Analyze collector data, and send HID input
+   */
   void gestureCheck();
+
+private:
+  //NOTE: Vectors indexed by GESTURE enum
+  std::vector<string> gestureHID; //Contains gesture to HID mapping
+  std::vector<uint8_t> isPressed; //Contains HID input
+  collector* GLOVE; //Pointer to collector instance
 };
 
  #endif /* TRANSLATOR_H_ */
