@@ -13,7 +13,6 @@ show_help() { echo "$pre A shell script for Team GLOVE by Tim Schumacher";
 			echo "      -b Board, compile to the board target instead of dev kit";
 			echo "      -n Dry-run, won't copy the hex file to the board";
 			echo "      -c Compile, will also run the default compile command";
-			echo "      -t no Touch, exclude touch sensor code";
 			echo "      -s Screen, drop into a screen on the serial debug port";
 			echo "      -u Do Not Unmount, will not unmount the board when finished";
 			echo "      -d <sda|sdb|sdc|...> Device file that is the board's JLINK USB filesystem (no /dev/ needed)";
@@ -32,11 +31,10 @@ OPTIND=1 # A POSIX variable
 opt_v= # unset is falsy for [ $opt_v ]
 opt_n=
 opt_c=
-opt_t=
 opt_s=
 opt_u=
 dev_file=
-while getopts "h?vbnctsud:" opt; do
+while getopts "h?vbncsud:" opt; do
 	case "$opt" in
 		h|\?)
 			show_help
@@ -49,8 +47,6 @@ while getopts "h?vbnctsud:" opt; do
 		n)  opt_n=0
 			;;
 		c)  opt_c=0
-			;;
-		t)  opt_t=0
 			;;
 		s)  opt_s=0
 			;;
@@ -68,11 +64,7 @@ if [ $opt_v ]; then set -x; fi
 
 # compile option
 if [ $opt_c ]; then
-    if [ $opt_t ]; then
-        run mbed compile -t $toolchain -m $target
-    else
-        run mbed compile -t $toolchain -m $target -DINCL_TOUCH
-    fi
+    run mbed compile -t $toolchain -m $target
     echo "$pre Compilation successful"
 fi
 
