@@ -26,19 +26,19 @@ Translator::updateGestureMap(std::vector<string>* newMap) {
 
 //TODO: Speak with Adrian about HID input
 //TODO: Determine what registers as "press" versus "not pressed"
-//TODO: Change the way glove data is accessed (private mem cant be accessed through '.')
+//TODO: Review/Revise updated collector files
 Translator::gestureCheck() {
   /* Flex Sensors */
-  isPressed[FLEX1] = GLOVE.glove_data.flex_sensors[0];
-  isPressed[FLEX2] = GLOVE.glove_data.flex_sensors[1];
-  isPressed[FLEX3] = GLOVE.glove_data.flex_sensors[2];
-  isPressed[FLEX4] = GLOVE.glove_data.flex_sensors[3];
+  isPressed[FLEX1] = GLOVE->readFlex(0);
+  isPressed[FLEX2] = GLOVE->readFlex(1);
+  isPressed[FLEX3] = GLOVE->readFlex(2);
+  isPressed[FLEX4] = GLOVE->readFlex(3);
 
   /* Touch Sensors */
-  isPressed[TOUCH1] = GLOVE.glove_data.keys.a;
-  isPressed[TOUCH2] = GLOVE.glove_data.keys.b;
-  isPressed[TOUCH3] = GLOVE.glove_data.keys.c;
-  isPressed[TOUCH4] = GLOVE.glove_data.keys.d;
+  isPressed[TOUCH1] = GLOVE->readTouch().a;
+  isPressed[TOUCH2] = GLOVE->readTouch().b;
+  isPressed[TOUCH3] = GLOVE->readTouch().c;
+  isPressed[TOUCH4] = GLOVE->readTouch().d;
 
   /* IMU */
   isPressed[PITCHUP] = 0;

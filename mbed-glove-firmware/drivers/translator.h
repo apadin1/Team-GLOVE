@@ -59,7 +59,7 @@ public:
   /*
    * Constructor for translator. Takes pointer to collector type
    * for access to the glove_raw data.
-   * TODO: Implement function to report glove_raw data in collector class
+   *
    */
   Translator(collector* gloveptr);
   /*
@@ -80,8 +80,6 @@ private:
   //NOTE: Vectors indexed by GESTURE enum
   std::vector<string> gestureHID; //Contains gesture to HID mapping
   std::vector<uint8_t> isPressed; //Contains HID input
-  //TODO: Determine best way to access raw collector data
-  //NOTE: Changes proposed in collector files
   collector* GLOVE; //Pointer to collector instance
 };
 

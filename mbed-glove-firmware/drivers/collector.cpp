@@ -40,16 +40,16 @@ void Collector::transmitData() {
             glove_data.imu.orient_yaw);
 }
 
-flex_sensor_t* Collector::readFlex(uint8_t flexNum) {
-  return &glove_data.flex_sensors[flexNum];
+flex_sensor_t Collector::readFlex(uint8_t flexNum) {
+  return glove_data.flex_sensors[flexNum];
 }
 
-key_states_t* Collector::readTouch() {
-  return &glove_data.touch_sensor;
+key_states_t Collector::readTouch() {
+  return glove_data.touch_sensor;
 }
 
-bno_imu_t* Collector::readIMU() {
-  return *glove_data.imu;
+bno_imu_t Collector::readIMU() {
+  return glove_data.imu;
 }
 
 void Collector::update() {

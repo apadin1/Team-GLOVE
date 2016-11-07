@@ -49,9 +49,9 @@ public:
 
     //NOTE: Proposed changes to collector class for
     //      translator class
-    flex_sensor_t* readFlex(uint8_t flexNum);
-    key_states_t* readTouch();
-    bno_imu_t* readIMU();
+    flex_sensor_t readFlex(uint8_t flexNum);
+    key_states_t readTouch();
+    bno_imu_t readIMU();
 
     /*
      * Update the data contained in the collector
