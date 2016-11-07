@@ -97,14 +97,12 @@ void boot_delay(uint8_t t) {
 
 void launch_periodic() {
     /*
-#if defined(INCL_TOUCH)
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
-#endif
-*/
+    */
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
@@ -127,13 +125,11 @@ void launch_periodic() {
 
         // Touch
         /*
-#if defined(INCL_TOUCH)
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
         if (last_keys.pack() != keys.pack()) {
             TouchSensor::print(pc, keys);
         }
-#endif
         */
 
         if (print_limit++ == 3) {
