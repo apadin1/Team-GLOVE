@@ -37,7 +37,7 @@ void Collector::transmitData() {
             glove_data.flex_sensors[0], glove_data.flex_sensors[1],
             glove_data.flex_sensors[2], glove_data.flex_sensors[3],
             glove_data.imu.orient_pitch, glove_data.imu.orient_roll,
-            glove_data.imu.orient_yaw);
+            glove_data.imu.orient_yaw); 
 
 }
 

@@ -18,9 +18,11 @@
 
 #include "mbed.h"
 #include <vector>
+#include <cstdint>
+#include <string>
 
 //TODO: Include #defines for sensor analysis
-
+#define GESTURE_COUNT 14
 /* GESTURE
  *
  * enum used to index vectors contained
@@ -28,7 +30,7 @@
  * provide consistency between data structures
  * used both in gloves and transciever
  */
-enum class GESTURE {
+enum GESTURE : uint8_t {
                      FLEX1,
                      FLEX2,
                      FLEX3,
@@ -55,17 +57,22 @@ enum class GESTURE {
 class Translator {
 public:
   /*
-   * Constructor for collector
+   * Constructor for translator. Takes pointer to collector type
+   * for access to the glove_raw data. 
+   * TODO: Implement function to report glove_raw data in collector class
    */
   Translator(collector* gloveptr);
-
   /*
-   * Update gesture mapping via new configuration vector
+   * Update gesture mapping via new configuration vector. 
+   * Transciever to send the new Vector to bluetooth class,
+   * which should then call this function
    */
   void updateGestureMap(std::vector<string>* newMap);
 
   /*
-   * Analyze collector data, and send HID input
+   * Analyze current glove_raw data to determine if gesture
+   * is occuring. If so, generate proper HID data to be sent to HID class.
+   * This function designed to be set up as a periodic task.
    */
   void gestureCheck();
 
@@ -75,6 +82,7 @@ private:
   std::vector<uint8_t> isPressed; //Contains HID input
   //TODO: Determine best way to access raw collector data
   collector* GLOVE; //Pointer to collector instance
+  
 };
 
 #endif /* TRANSLATOR_H_ */

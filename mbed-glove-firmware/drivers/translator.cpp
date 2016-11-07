@@ -15,8 +15,7 @@
 
 #include "translator.h"
 
-Translator::translator(collector* gloveptr) {
-  GLOVE = gloveptr;
+Translator::translator(collector* gloveptr) :gestureHID(GESTURE_COUNT,0), isPressed(GESTURE_COUNT, 0), GLOVE(gloveptr) {
   //TODO: Determine default glove mapping
   //gestureHID[] = { TBD };
 }
@@ -27,6 +26,7 @@ Translator::updateGestureMap(std::vector<string>* newMap) {
 
 //TODO: Speak with Adrian about HID input
 //TODO: Determine what registers as "press" versus "not pressed"
+//TODO: Change the way glove data is accessed (private mem cant be accessed through '.')
 Translator::gestureCheck() {
   /* Flex Sensors */
   isPressed[FLEX1] = GLOVE.glove_data.flex_sensors[0];
