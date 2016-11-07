@@ -2228,7 +2228,7 @@ JST PH 2-pin thru-home side entry</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="DMP1045U" prefix="P">
+<deviceset name="DMP1045U" prefix="Q">
 <gates>
 <gate name="G$1" symbol="PMOS" x="-7.62" y="0"/>
 </gates>
@@ -2336,8 +2336,8 @@ JST PH 2-pin thru-home side entry</description>
 <part name="SW1" library="adafruit" deviceset="DPDT" device="-EG1390"/>
 <part name="U5" library="LP3855EMP-ADJ" deviceset="LP3855EMP-ADJ" device=""/>
 <part name="C21" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="8 nF"/>
-<part name="R19" library="passives" deviceset="RESISTOR" device="0603_RES" value="440"/>
-<part name="R18" library="passives" deviceset="RESISTOR" device="0603_RES" value="250"/>
+<part name="R19" library="passives" deviceset="RESISTOR" device="0603_RES" value="10 k"/>
+<part name="R18" library="passives" deviceset="RESISTOR" device="0603_RES" value="5.6 k"/>
 <part name="C22" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="10 uF"/>
 <part name="C23" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="10 uF"/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
@@ -2389,7 +2389,7 @@ JST PH 2-pin thru-home side entry</description>
 <part name="C18" library="passives" deviceset="CAPACITOR" device="0603_CAP" value="1uF"/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
 <part name="R15" library="passives" deviceset="RESISTOR" device="0603_RES" value="100k"/>
-<part name="P1" library="load_balance" deviceset="DMP1045U" device=""/>
+<part name="Q1" library="load_balance" deviceset="DMP1045U" device=""/>
 <part name="D1" library="load_balance" deviceset="B130LAW" device=""/>
 <part name="SPI+" library="wirepad" deviceset="WIREPAD" device="1,6/0,9" value="WIREPAD1,6/0,9"/>
 <part name="SPI-" library="wirepad" deviceset="WIREPAD" device="1,6/0,9" value="WIREPAD1,6/0,9"/>
@@ -3196,7 +3196,7 @@ JST PH 2-pin thru-home side entry</description>
 <instance part="C18" gate="G$1" x="101.6" y="27.94"/>
 <instance part="GND18" gate="1" x="111.76" y="40.64" rot="R180"/>
 <instance part="R15" gate="G$1" x="91.44" y="33.02" rot="R180"/>
-<instance part="P1" gate="G$1" x="60.96" y="25.4" rot="MR270"/>
+<instance part="Q1" gate="G$1" x="60.96" y="25.4" rot="MR270"/>
 <instance part="D1" gate="G$1" x="83.82" y="17.78" rot="R270"/>
 <instance part="R20" gate="G$1" x="10.16" y="-35.56" rot="R90"/>
 <instance part="PWR" gate="G$1" x="10.16" y="-27.94" rot="R270"/>
@@ -3220,7 +3220,7 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="-50.8" y1="17.78" x2="-50.8" y2="20.32" width="0.1524" layer="91"/>
 <junction x="-50.8" y="20.32"/>
 <wire x1="-40.64" y1="20.32" x2="-40.64" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="P1" gate="G$1" pin="GATE"/>
+<pinref part="Q1" gate="G$1" pin="GATE"/>
 <wire x1="-40.64" y1="33.02" x2="60.96" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="R15" gate="G$1" pin="2"/>
 <wire x1="83.82" y1="33.02" x2="88.9" y2="33.02" width="0.1524" layer="91"/>
@@ -3245,7 +3245,7 @@ JST PH 2-pin thru-home side entry</description>
 <junction x="114.3" y="22.86"/>
 <wire x1="101.6" y1="15.24" x2="101.6" y2="22.86" width="0.1524" layer="91"/>
 <junction x="101.6" y="22.86"/>
-<pinref part="P1" gate="G$1" pin="SOURCE"/>
+<pinref part="Q1" gate="G$1" pin="SOURCE"/>
 <wire x1="71.12" y1="20.32" x2="76.2" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="76.2" y1="20.32" x2="76.2" y2="15.24" width="0.1524" layer="91"/>
 </segment>
@@ -3371,7 +3371,7 @@ JST PH 2-pin thru-home side entry</description>
 <wire x1="40.64" y1="20.32" x2="40.64" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="U4" gate="G$1" pin="VBAT"/>
 <wire x1="12.7" y1="20.32" x2="40.64" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="P1" gate="G$1" pin="DRAIN"/>
+<pinref part="Q1" gate="G$1" pin="DRAIN"/>
 <wire x1="40.64" y1="20.32" x2="48.26" y2="20.32" width="0.1524" layer="91"/>
 <junction x="40.64" y="20.32"/>
 <wire x1="48.26" y1="20.32" x2="50.8" y2="20.32" width="0.1524" layer="91"/>
