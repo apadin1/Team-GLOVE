@@ -73,7 +73,8 @@ private:
   //NOTE: Vectors indexed by GESTURE enum
   std::vector<string> gestureHID; //Contains gesture to HID mapping
   std::vector<uint8_t> isPressed; //Contains HID input
+  //TODO: Determine best way to access raw collector data
   collector* GLOVE; //Pointer to collector instance
 };
 
- #endif /* TRANSLATOR_H_ */
+#endif /* TRANSLATOR_H_ */
