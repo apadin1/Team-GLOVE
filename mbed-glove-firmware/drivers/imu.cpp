@@ -99,8 +99,13 @@ void IMU_BNO055::writeSensors(bno_imu_t* _imu) {
 }
 
 void IMU_BNO055::print(Serial& pc) {
+    pc.printf("Y%+6.1f, P%+6.1f, R%+6.1f\r\n",
+            imu_data.orient_yaw, imu_data.orient_pitch, imu_data.orient_roll);
+
+    /*
     pc.printf("[E] %+6.1f Yaw, %+6.1f Pitch, %+6.1f Roll, ",
             imu_data.orient_yaw, imu_data.orient_pitch, imu_data.orient_roll);
     pc.printf(" [L] %+6.1f X, %+6.1f Y, %+6.1f Z\r\n",
             imu_data.accel_x, imu_data.accel_y, imu_data.accel_z);
+    */
 }

@@ -6,6 +6,8 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
+#define INCLUDE_TOUCH 1
+
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
 const PinName GLOVE_I2C_SCL = p7; //I2C_SCL0; // p7
 
@@ -57,7 +59,6 @@ void touch_sensor_test() {
     }
 }
 
-
 void flex_test() {
 
     FlexSensors flex_sensors;
@@ -74,23 +75,48 @@ void flex_test() {
     }
 }
 
+void boot_delay(uint8_t t) {
+    // this loop is to prevent the strange fatal state
+    led = 1;
+    DigitalOut l2(LED2); l2 = 1;
+    DigitalOut l3(LED3); l3 = 1;
+    DigitalOut l4(LED4); l4 = 1;
+    for (uint8_t i = 0; i < t; ++i) {
+        led = 0;
+        l2 = 0;
+        l3 = 0;
+        l4 = 0;
+        wait(0.25);
+        led = 1;
+        l2 = 1;
+        l3 = 1;
+        l4 = 1;
+        wait(0.75);
+    }
+}
+
 void launch_periodic() {
+    /*
+#if defined(INCL_TOUCH)
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
+#endif
+*/
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
 
-    flex_sensors.startUpdateTask(100);
-    wait_ms(20); // to offset the timers
-    imu.startUpdateTask(100);
+    flex_sensors.startUpdateTask(10);
+    wait_ms(2); // to offset the timers
+    imu.startUpdateTask(10);
 
     //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
     //collector.startUpdateTask(1); // 1 sec period for serial out
 
+    boot_delay(5);
     uint8_t print_limit = 0;
     for (;;) {
         led = !led; // just so we know its running
@@ -100,14 +126,17 @@ void launch_periodic() {
         flex_sensors.print(pc);
 
         // Touch
+        /*
+#if defined(INCL_TOUCH)
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
-
         if (last_keys.pack() != keys.pack()) {
             TouchSensor::print(pc, keys);
         }
+#endif
+        */
 
-        if (print_limit++ == 5) {
+        if (print_limit++ == 3) {
             imu.print(pc);
             print_limit = 0;
         }
@@ -126,5 +155,4 @@ int main() {
      */
     launch_periodic();
 
-    blink();
 }
