@@ -1,31 +1,72 @@
-/* Copyright (c) 2010-2011 mbed.org, MIT License
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-* and associated documentation files (the "Software"), to deal in the Software without
-* restriction, including without limitation the rights to use, copy, modify, merge, publish,
-* distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-* Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or
-* substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-* BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+/* mbed Microcontroller Library
+ * Copyright (c) 2015 ARM Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #ifndef KEYBOARD_MOUSE_SVC_H
 #define KEYBOARD_MOUSE_SVC_H
 
 #include "mbed.h"
 #include "HIDServiceBase.h"
-#include "Keyboard_types.h"
+#include "keyboard_types.h"
+
+
+/******************** DEFINITIONS ********************/
 
 #define REPORT_ID_KEYBOARD 1
 #define REPORT_ID_MOUSE 2
 #define REPORT_ID_VOLUME 3
+
+#define MOUSE_REPORT_LENGTH 5
+#define KBD_REPORT_LENGTH 9
+#define MAX_REPORT_LENGTH 9
+
+/* Useful definitions for sending and receiving */
+static const uint8_t emptyInputReport[MAX_REPORT_LENGTH] = {0};
+static uint8_t outputReportData[] = {0};
+
+
+/******************** ENUMERATIONS ********************/
+
+/* Mouse button state */
+enum ButtonState { UP, DOWN };
+
+/* Mouse button select */
+enum MouseButton {
+    LEFT   = 0x1,
+    RIGHT  = 0x2,
+    MIDDLE = 0x4
+};
+
+/* Mouse direction select */
+enum MouseDirection { X, Y, SCROLL };
+
+
+
+/******************** REPORT DESCRIPTOR ********************/
+
+/* Initialize security manager, and set callback functions and
+ * required security level
+ */
+void initializeSecurity(BLE &ble);
+
+/* Initialize common GAP advertizement and services required by the
+ * HID-over-GATT Profile.
+ */
+void initializeHOGP(BLE &ble);
+
+
 
 
 /******************** REPORT DESCRIPTOR ********************/
@@ -120,32 +161,6 @@ report_map_t KB_MOUSE_REPORT_MAP = {
 };
 
 
-/******************** DEFINITIONS ********************/
-
-#define MOUSE_REPORT_LENGTH 5
-#define KBD_REPORT_LENGTH 9
-#define MAX_REPORT_LENGTH 9
-
-/* Useful definitions for sending and receiving */
-static const uint8_t emptyInputReport[MAX_REPORT_LENGTH] = {0};
-static uint8_t outputReportData[] = {0};
-
-
-/******************** ENUMERATIONS ********************/
-
-/* Mouse button state */
-enum ButtonState {
-    UP, DOWN
-};
-
-/* Mouse button select */
-enum MouseButton {
-    LEFT   = 0x1,
-    RIGHT  = 0x2,
-    MIDDLE = 0x4
-};
-
-
 /******************** STRUCTURES AND CLASSES ********************/
 
 /* Represent the report descriptor as an array of bytes and
@@ -199,6 +214,8 @@ public:
         
     }
     
+    /******************** KEYBOARD INTERFACE ********************/
+    
     /* Send a keyboard report */
     ble_error_t sendKbd(uint8_t usage, uint8_t modifier) {
         hid_report.keyboard.report_id = REPORT_ID_KEYBOARD;
@@ -211,12 +228,10 @@ public:
     }
     
     /* Send an empty report, indicating a key was released */
-    ble_error_t keyUp(void) {
-        return sendKbd(0, 0);
-    }
+    ble_error_t keyboardRelease(void) { return sendKbd(0, 0); }
 
     /* Send a report indicating that a keybaord key is being pressed */
-    ble_error_t keyDown(uint8_t key, uint8_t modifier) {
+    ble_error_t keyboardPress(uint8_t key, uint8_t modifier) {
         return sendKbd(keymap[key].usage, keymap[key].modifier);
     }
 
@@ -225,6 +240,9 @@ public:
         sendKbd(keymap[c].usage, keymap[c].modifier); // pressed
         sendKbd(0, 0); // released
     }
+    
+
+    /******************** MOUSE INTERFACE ********************/
 
     /* Send a mouse button press or release */
     virtual void sendCallback() {
@@ -238,15 +256,27 @@ public:
         send(hid_report.report);
     }
     
-    /* Speed to send in the next report */
-    void setSpeed(int8_t x, int8_t y, int8_t scroll) {
+    /* Set a button to be pressed or released */
+    void setMouseButton(MouseButton button, ButtonState state);
+    
+    /* Set the speed of the mouse cursor in the x direction */
+    void setMouseSpeedX(int8_t speed) { x_speed = speed; }
+    
+    /* Set the speed of the mouse cursor in the y direction */
+    void setMouseSpeedY(int8_t speed) { y_speed = speed; }
+    
+    /* Set the scroll value of the mouse scroll wheel */
+    void setMouseScroll(int8_t speed) { scroll_speed = speed; }
+    
+    /* Set the x, y, and scroll speed of the mouse */
+    void setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
         x_speed = x;
         y_speed = y;
         scroll_speed = scroll;
     }
 
     /* Set mouse button status */
-    void setButton(MouseButton button, ButtonState state) {
+    void setMouseButton(MouseButton button, ButtonState state) {
         if (state == UP)
             mouse_buttons &= ~(button);
         else /*state == DOWN */
