@@ -17,6 +17,18 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 #include "KeyboardMouseService.h"
+#include "ble/services/BatteryService.h"
+#include "ble/services/DeviceInformationService.h"
+
+/* IO capabilities of the device. */
+#ifndef HID_SECURITY_IOCAPS
+#define HID_SECURITY_IOCAPS (SecurityManager::IO_CAPS_NONE)
+#endif
+
+/* Security level. */
+#ifndef HID_SECURITY_REQUIRE_MITM
+#define HID_SECURITY_REQUIRE_MITM false
+#endif
 
 static const char DEVICE_NAME[] = "TeamGLOVE";
 static const char SHORT_NAME[] = "glove1"; 
@@ -26,8 +38,9 @@ class KeyboardMouse {
 
 public:
 
-    /* Constructor */
+    /* Constructor and Destructor*/
     KeyboardMouse();
+    ~KeyboardMouse();
     
     /******************** MOUSE INTERFACE ********************/
 
@@ -98,23 +111,16 @@ public:
     /******************** BLE INTERFACE ********************/    
 
     /* Check if the device is paired to a computer */
-    bool isConnected() { return hid_service.connected; }
+    bool isConnected() { return service_ptr->isConnected(); }
     
     /* Wait to be interrupted */
-    void waitForEvent() { ble.gap().waitForEvent(); }
+    void waitForEvent() { ble.waitForEvent(); }
     
 
 private:
 
-    /******************** CALLBACKS ********************/
-
-    void onConnect(const Gap::ConnectionCallbackParams_t *params);
-    void onDisconnect(Gap::Handle_t a, Gap::DisconnectionReason_t);
-    
-
-    /******************** HIDDEN VARIABLES ********************/
-
-    KeyboardMouseService hid_service;
+    /******************** PRIVATE VARIABLES ********************/
+    KeyboardMouseService * service_ptr;
     BLE ble;
 };
 
