@@ -18,26 +18,42 @@
  */
  
 enum class hidType {
-    KEYBOARRD,
+    KEYBOARD,
     MOUSE,
     JOYSTICK
 }
 
-enum class clickType {
-    NONE,
-    LEFT,
-    RIGHT,
-    BOTH
+enum class mousePart {
+    LBUTTON,
+    RBUTTON,
+    SCROLL,
+    XAXIS,
+    YAXIS
+}
+
+struct keyboardData {
+    bool changed,
+    char key,
+    bool digital_value,
+}
+
+struct mouseData {
+    bool changed,
+    mousePart part,
+    bool digital_value,
+    int8_t speed
 }
 
 template <class T>
 class AnalogButton {
 public:
 
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=1)
-        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_) {
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=1, hidType hid, char key)
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), key_input(key), click(NONE) {
 
         update_threshold(transition_band);
+        calc_analog_state();
+        calc_binary_state();
     }
 
     void update_threshold(float transition_band) {
@@ -46,7 +62,7 @@ public:
             return;
         }
 
-        T range = max_abs - min_abs;
+        range = max_abs - min_abs;
         float valid_band = range * ((1-transition_band) / 2.0);
 
         min_thresh = min_abs + valid_band;
@@ -66,7 +82,7 @@ public:
      *
      * Active low for now cuz sure
      */
-    bool get_binary_state() {
+    void calc_binary_state() {
 
         // in the lowest range
         if (*data < min_thresh) {
@@ -80,14 +96,32 @@ public:
         else {
             binary_state = ! active_low;
         }
-
-        return binary_state;
     }
-
+    
+    void calc_analog_state() { 
+        uint8_t temp = 255 * (*data / range);
+        analog_state = temp - 128
+    }
+    
+    bool is_keyboard() {
+        return HID == KEYBOARD;
+    }
+    bool is_mouse() {
+        return HID == MOUSE;
+    }
+    bool is_joystick() {
+        return HID == JOYSTICK
+    }
+    
 private:
     bool binary_state;
     bool active_low;
     T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
+    T range;
+    hidType HID;
+    char key_input;
+    clickType click;
+    int8_t analog_state;
 };
