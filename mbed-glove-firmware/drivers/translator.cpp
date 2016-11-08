@@ -16,6 +16,7 @@
 #include "translator.h"
 
 Translator::translator() {
+  //TODO: Initialization
   //TODO: Determine default glove mapping
   //sensors[] = { TBD }
 
@@ -36,7 +37,7 @@ void Translator::gestureCheck() {
 
     /* Keyboard functionality */
     if (sensors[i].is_keyboard()) {
-      keyboardData keyboard = sensors[i].getKeyData();
+      keyboardData keyboard = sensors[i].get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.digital_value) {
           HIDinput.keyPress(keyboard.key);
@@ -50,7 +51,7 @@ void Translator::gestureCheck() {
 
     /* Mouse functionality */
     else if (sensors[i].is_mouse()) {
-      mouseData mouse = sensors[i].getMouseData(); //Grab mouse data
+      mouseData mouse = sensors[i].get_mouse_data(); //Grab mouse data
       //if (changed == 1)
       if (mouse.changed && mouse.valid) {
 
