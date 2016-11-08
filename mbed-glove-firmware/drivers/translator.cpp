@@ -15,10 +15,65 @@
 
 #include "translator.h"
 
-Translator::translator() {
+Translator::translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch) {
   //TODO: Initialization
-  //TODO: Determine default glove mapping
-  //sensors[] = { TBD }
+  //TODO: Determine default glove mapping (Minecraft?)
+
+  /* FLEX1 */
+  //AnalogButton flex1;
+  //sensors.push_back(flex1);
+
+  /* FLEX2 */
+  //AnalogButton flex2;
+  //sensors.push_back(flex2);
+
+  /* FLEX3 */
+  //AnalogButton flex3;
+  //sensors.push_back(flex3);
+
+  /* FLEX4 */
+  //AnalogButton flex4;
+  //sensors.push_back(flex4);
+
+  /* TOUCH1 */
+  //AnalogButton touch1;
+  //sensors.push_back(touch1);
+
+  /* TOUCH2 */
+  //AnalogButton touch2;
+  //sensors.push_back(touch2);
+
+  /* TOUCH3 */
+  //AnalogButton touch3;
+  //sensors.push_back(touch3);
+
+  /* TOUCH4 */
+  //AnalogButton touch4;
+  //sensors.push_back(touch4);
+
+  /* PITCHUP */
+  //AnalogButton pitchup;
+  //sensors.push_back(pitchup);
+
+  /* PITCHDOWN */
+  //AnalogButton pitchdown;
+  //sensors.push_back(pitchdown);
+
+  /* ROLLLEFT */
+  //AnalogButton rollleft;
+  //sensors.push_back(rollleft);
+
+  /* ROLLRIGHT */
+  //AnalogButton rollright;
+  //sensors.push_back(rollright);
+
+  /* YAWLEFT */
+  //AnalogButton yawleft;
+  //sensors.push_back(yawleft);
+
+  /* YAWRIGHT */
+  //AnalogButton yawright;
+  //sensors.push_back(yawright);
 
   update_task_timer = new RtosTimer(this, &Collector::update, osTimerPeriodic);
 }

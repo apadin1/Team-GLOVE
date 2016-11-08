@@ -65,7 +65,7 @@ public:
    * Constructor for translator
    *
    */
-  Translator();
+  Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
 
   /*
    * Update gesture mapping via new configuration vector.
