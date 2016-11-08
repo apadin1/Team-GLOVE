@@ -15,9 +15,12 @@
 
 #include "translator.h"
 
-Translator::translator(collector* gloveptr) :gestureHID(GESTURE_COUNT,0), isPressed(GESTURE_COUNT, 0), GLOVE(gloveptr) {
+Translator::translator(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch)
+: flex(_flex), imu(_imu), touch(_touch) {
   //TODO: Determine default glove mapping
   //gestureHID[] = { TBD };
+
+  update_task_timer = new RtosTimer(this, &Collector::update, osTimerPeriodic);
 }
 
 Translator::updateGestureMap(std::vector<string>* newMap) {
@@ -28,6 +31,13 @@ Translator::updateGestureMap(std::vector<string>* newMap) {
 //TODO: Determine what registers as "press" versus "not pressed"
 //TODO: Review/Revise updated collector files
 Translator::gestureCheck() {
+  working = 1;
+
+  /* Update Sensors */
+  flex->writeSensors(glove_data.flex_sensors);
+  touch->writeKeys(&glove_data.touch_sensor);
+  imu->writeSensors(&glove_data.imu);
+
   /* Flex Sensors */
   isPressed[FLEX1] = GLOVE->readFlex(0);
   isPressed[FLEX2] = GLOVE->readFlex(1);
@@ -47,4 +57,16 @@ Translator::gestureCheck() {
   isPressed[ROLLRIGHT] = 0;
   isPressed[YAWLEFT] = 0;
   isPressed[YAWRIGHT] = 0;
+
+  //Evaluate data and output to HID
+
+  working = 0;
+}
+
+void Translator::startUpdateTask(uint32_t ms) {
+    update_task_timer->start(ms);
+}
+
+void Translator::stopUpdateTask() {
+    update_task_timer->stop();
 }

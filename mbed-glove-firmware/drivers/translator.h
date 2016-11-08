@@ -17,12 +17,19 @@
  #define TRANSLATOR_H_
 
 #include "mbed.h"
+#include "glove_sensors.h"
 #include <vector>
 #include <cstdint>
 #include <string>
 
 //TODO: Include #defines for sensor analysis
 #define GESTURE_COUNT 14
+
+/*
+ * Update Period (in milliseconds)
+ */
+const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
+
 /* GESTURE
  *
  * enum used to index vectors contained
@@ -57,11 +64,11 @@ enum GESTURE : uint8_t {
 class Translator {
 public:
   /*
-   * Constructor for translator. Takes pointer to collector type
-   * for access to the glove_raw data.
+   * Constructor for translator. Takes pointers to FlexSensors,
+   * IMU_BNO055, and TouchSensor to update glove_raw data.
    *
    */
-  Translator(collector* gloveptr);
+  Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
   /*
    * Update gesture mapping via new configuration vector.
    * Transciever to send the new Vector to bluetooth class,
@@ -76,11 +83,30 @@ public:
    */
   void gestureCheck();
 
+  /*
+   * Calls the start() method on the periodic update task,
+   * an internal timer is set up in the constructor
+   */
+  void startUpdateTask(uint32_t ms=COLLECTOR_UPDATE_PERIOD);
+
+  /*
+   * Calls the stop() method on the periodic update timer,
+   */
+  void stopUpdateTask();
+
 private:
   //NOTE: Vectors indexed by GESTURE enum
   std::vector<string> gestureHID; //Contains gesture to HID mapping
   std::vector<uint8_t> isPressed; //Contains HID input
-  collector* GLOVE; //Pointer to collector instance
+
+  FlexSensors* flex;  //Pointer to flex sensor
+  IMU_BNO055* imu;    //Pointer to imu
+  TouchSensor* touch; //Pointer to touch sensor
+
+  glove_sensors_raw_t glove_data; //Glove data
+  RtosTimer* update_task_timer;
+
+  DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */
