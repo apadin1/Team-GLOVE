@@ -6,6 +6,9 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
+#include "drivers/analog_button.h"
+#include "drivers/dot_star_leds.h"
+
 #define INCLUDE_TOUCH 1
 
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
@@ -95,6 +98,19 @@ void boot_delay(uint8_t t) {
     }
 }
 
+void flex_to_lights() {
+
+    DotStarLeds ds_leds(2);
+
+    while (true) {
+        ds_leds.set_RGB(0, 100, 0, 100);
+        ds_leds.set_RGB(1, 0, 0, 100);
+        wait(0.8);
+        ds_leds.set_RGB(1, 100, 0, 100);
+        ds_leds.set_RGB(0, 0, 0, 100);
+        wait(0.8);
+}
+
 void launch_periodic() {
     /*
     TouchSensor touch_sensor;
@@ -149,6 +165,9 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
+    do_lights();
+
+
     launch_periodic();
 
 }
