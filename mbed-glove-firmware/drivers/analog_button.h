@@ -13,8 +13,22 @@
  *
  *  Simple wrapper around an analog sensor value,
  *  to translate to a binary value on threshold.
+ *  Also encapsulates some HID Functionality.
  *
  */
+ 
+enum class hidType {
+    KEYBOARRD,
+    MOUSE,
+    JOYSTICK
+}
+
+enum class clickType {
+    NONE,
+    LEFT,
+    RIGHT,
+    BOTH
+}
 
 template <class T>
 class AnalogButton {
@@ -72,6 +86,7 @@ public:
 
 private:
     bool binary_state;
+    hidType HID
     T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
