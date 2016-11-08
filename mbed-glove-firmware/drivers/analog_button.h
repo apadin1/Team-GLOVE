@@ -33,15 +33,22 @@ enum class mousePart {
 
 struct keyboardData {
     bool changed,
-    char key,
+    bool valid,
     bool digital_value,
+    char key
+    bool operator==(const keyboardData& a) {
+        return (digital_value == a.digital_value);
+    }
 }
 
 struct mouseData {
     bool changed,
+    bool valid,
     mousePart part,
-    bool digital_value,
-    int8_t speed
+    int8_t value
+    bool operator==(const mouseData& a){
+        return (value == a.value);
+    }
 }
 
 template <class T>
@@ -110,18 +117,64 @@ public:
         return HID == MOUSE;
     }
     bool is_joystick() {
-        return HID == JOYSTICK
+        return HID == JOYSTICK;
+    }
+    void change_hid_profile(hidType hid) {
+        if (HID == KEYBOARD){
+            HID = hid;
+        }
+        else if (HID == MOUSE){
+            
+        }
+        else if (HID == JOYSTICK){
+            
+        }
+    }
+    keyboardData get_keyboard_data () {
+        keyboardData current = keyboardData();
+        if (HID != KEYBOARD)
+            return current;
+        calc_binary_state();
+        current.binary_state = binary_state;
+        current.key = prev_keyboard.key;
+        current.valid = true;
+        if (current.binary_state != prev_keyboard.binary_state)
+            current.changed = true;
+        return current;
+    }
+    
+    mouseData get_mouse_data () {
+        mouseData current = mouseData();
+        if (HID != MOUSE)
+            return current;
+        if (prev_mouse.part == RBUTTON || prev_mouse.part == LBUTTON){
+            calc_binary_state();
+            current.value = binary_state;
+            current.part = prev_mouse.part;
+            current.valid = true;
+            if (current != prev_mouse)
+                current.changed = true;
+            return current;
+        }
+        else {
+            calc_analog_state();
+            
+        }
+        
     }
     
 private:
-    bool binary_state;
     bool active_low;
     T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
     T range;
+    
     hidType HID;
     char key_input;
     clickType click;
+    bool binary_state;
     int8_t analog_state;
+    keyboardData prev_keyboard;
+    mouseData prev_mouse;
 };
