@@ -16,6 +16,7 @@
 #ifndef TRANSLATOR_H_
 #define TRANSLATOR_H_
 
+#include "analog_button.h"
 #include "keyboard_mouse.h"
 #include "mbed.h"
 #include <vector>
@@ -71,7 +72,7 @@ public:
    * Transciever to send the new Vector to bluetooth class,
    * which should then call this function
    */
-  void updateGestureMap();
+  void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
 
   /*
    * Analyze sensors to determine if gesture
