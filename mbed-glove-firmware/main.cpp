@@ -98,17 +98,59 @@ void boot_delay(uint8_t t) {
     }
 }
 
+float convert_analog_percent(uint16_t min_, uint16_t max_, uint16_t val) {
+    return (val - min_) / float(max_ - min_);
+}
+
+float map_float(float min_, float max_, float val) {
+    return (val - min_) / float(max_ - min_);
+}
+
+void analog_to_rgb(float analog, uint8_t& red, uint8_t& green, uint8_t& blue) {
+    red = 254*analog;
+    green = green;
+    blue = 254*(1-analog);
+}
+
 void flex_to_lights() {
 
     DotStarLeds ds_leds(2);
+    FlexSensors flex_sensors;
+    flex_sensor_t flex_vals[4];
+
+    uint8_t red, green, blue;
+    float analog_val;
+
+    uint16_t flex_min = 500;
+    uint16_t flex_max = 700;
+
+    IMU_BNO055 imu(i2c);
+    bno_imu_t imu_vals;
+
 
     while (true) {
-        ds_leds.set_RGB(0, 100, 0, 100);
-        ds_leds.set_RGB(1, 0, 0, 100);
-        wait(0.8);
-        ds_leds.set_RGB(1, 100, 0, 100);
-        ds_leds.set_RGB(0, 0, 0, 100);
-        wait(0.8);
+
+        flex_sensors.updateAndWriteSensors(flex_vals);
+        imu.update();
+
+        imu.writeSensors(&imu_vals);
+        green = 255*map_float(-90.0, 90.0, imu_vals.orient_roll);
+
+        for (uint8_t i = 0; i < 2; i++) {
+            if (flex_vals[i] < flex_min) {
+                flex_min = flex_vals[i];
+            }
+            else if (flex_vals[i] > flex_max) {
+                flex_max = flex_vals[i];
+            }
+
+            analog_val = convert_analog_percent(flex_min, flex_max, flex_vals[i]);
+            analog_to_rgb(analog_val, red, green, blue);
+            ds_leds.set_RGB(i, red, green, blue);
+        }
+
+        Thread::wait(50);
+    }
 }
 
 void launch_periodic() {
@@ -148,7 +190,7 @@ void launch_periodic() {
         }
         */
 
-        if (print_limit++ == 3) {
+        if (print_limit++ == 2) {
             imu.print(pc);
             print_limit = 0;
         }
@@ -165,9 +207,8 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    do_lights();
+    flex_to_lights();
 
-
-    launch_periodic();
+    //launch_periodic();
 
 }
