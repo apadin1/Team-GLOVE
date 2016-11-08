@@ -13,6 +13,9 @@
  *   Interface to the DotStar LEDs
  *
  */
+#ifndef DOT_STAR_LEDS_H_
+#define DOT_STAR_LEDS_H_
+
 #include "mbed.h"
 
 const PinName DOT_STAR_MOSI = p17;
@@ -58,40 +61,11 @@ private:
     void flush_to_spi();
 };
 
-int do_lights() {
+/*
+ * Given the upper and lower bound on unsigned analog values,
+ * map the value into the range and return as a percent
+ */
+float map_unsigned_analog_to_percent(uint16_t min_, uint16_t max_, uint16_t val);
+float map_float_analog_to_percent(float min_, float max_, float val);
 
-    DotStarLEDs ds_leds(2);
-
-    while (true) {
-        ds_leds.set_RGB(0, 100, 0, 100);
-        ds_leds.set_RGB(1, 0, 0, 100);
-        wait(0.8);
-        ds_leds.set_RGB(1, 100, 0, 100);
-        ds_leds.set_RGB(0, 0, 0, 100);
-        wait(0.8);
-        /*
-
-        spi.write(0x00);
-        spi.write(0x00);
-        spi.write(0x00);
-        spi.write(0x00);
-
-        spi.write(0xEF);
-        spi.write(0x0F);
-        spi.write(0x0F);
-        spi.write(0x0F);
-
-        spi.write(0xE7);
-        spi.write(0x00);
-        spi.write(0x00);
-        spi.write(0xFF);
-
-        spi.write(0xFF);
-        spi.write(0xFF);
-        spi.write(0xFF);
-        spi.write(0xFF);
-
-        wait(1);
-        */
-    }
-}
+#endif /* DOT_STAR_LEDS_H_ */

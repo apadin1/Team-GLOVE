@@ -62,10 +62,6 @@ void DotStarLEDs::flush_to_spi() {
     }
 }
 
-/*
- * Given the upper and lower bound on unsigned analog values,
- * map the value into the range and return as a percent
- */
 float map_unsigned_analog_to_percent(uint16_t min_, uint16_t max_, uint16_t val) {
     return (val - min_) / float(max_ - min_);
 }
