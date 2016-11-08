@@ -20,8 +20,8 @@ template <class T>
 class AnalogButton {
 public:
 
-    AnalogButton(T* data_, T min_, T max_, float transition_band)
-        : data(data_), min_abs(min_), max_abs(max_) {
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=1)
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_) {
 
         update_threshold(transition_band);
     }
@@ -56,7 +56,7 @@ public:
 
         // in the lowest range
         if (*data < min_thresh) {
-            binary_state = True;
+            binary_state = active_low;
         }
         // in the transition band
         else if (*data < max_thresh) {
@@ -64,7 +64,7 @@ public:
         }
         // in the upper range
         else {
-            binary_state = False;
+            binary_state = ! active_low;
         }
 
         return binary_state;
@@ -72,7 +72,8 @@ public:
 
 private:
     bool binary_state;
+    bool active_low;
     T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
-}
+};
