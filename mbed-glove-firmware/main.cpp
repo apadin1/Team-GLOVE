@@ -114,7 +114,7 @@ void analog_to_rgb(float analog, uint8_t& red, uint8_t& green, uint8_t& blue) {
 
 void flex_to_lights() {
 
-    DotStarLeds ds_leds(2);
+    DotStarLEDs ds_leds(2);
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
