@@ -18,16 +18,12 @@
 
 template <class T>
 class AnalogButton {
-
-    T* data;
-    T min_abs, max_abs;
-    T min_thresh, max_thresh;
+public:
 
     AnalogButton(T* data_, T min_, T max_, float transition_band)
         : data(data_), min_abs(min_), max_abs(max_) {
 
         update_threshold(transition_band);
-
     }
 
     void update_threshold(float transition_band) {
@@ -43,4 +39,40 @@ class AnalogButton {
         max_thresh = max_abs - valid_band;
     }
 
+    void update_bounds(T min_, T max_) {
+        min_abs = min_;
+        max_abs = max_;
+        update_threshold();
+    }
+
+    /*
+     * This is the thing that does the threshold arithmatic
+     *
+     * Counts on the data changing spurriously
+     *
+     * Active low for now cuz sure
+     */
+    bool get_binary_state() {
+
+        // in the lowest range
+        if (*data < min_thresh) {
+            binary_state = True;
+        }
+        // in the transition band
+        else if (*data < max_thresh) {
+            //binary_state = binary_state;
+        }
+        // in the upper range
+        else {
+            binary_state = False;
+        }
+
+        return binary_state;
+    }
+
+private:
+    bool binary_state;
+    T* data;
+    T min_abs, max_abs;
+    T min_thresh, max_thresh;
 }
