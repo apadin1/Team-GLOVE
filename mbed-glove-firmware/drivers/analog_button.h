@@ -39,10 +39,10 @@ public:
         max_thresh = max_abs - valid_band;
     }
 
-    void update_bounds(T min_, T max_) {
+    void update_bounds(T min_, T max_, float transition_band) {
         min_abs = min_;
         max_abs = max_;
-        update_threshold();
+        update_threshold(transition_band);
     }
 
     /*
