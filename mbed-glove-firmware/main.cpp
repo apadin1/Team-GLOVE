@@ -72,7 +72,6 @@ void flex_test() {
         //flex_sensors.update();
         flex_sensors.printSingle(pc, 0);
 
-
         led = !led;
         Thread::wait(1000);
     }
@@ -98,6 +97,28 @@ void boot_delay(uint8_t t) {
     }
 }
 
+void imu_to_lights() {
+
+    DotStarLEDs ds_leds(2);
+    uint8_t red, green, blue;
+
+    IMU_BNO055 imu(i2c);
+    bno_imu_t imu_vals;
+
+    for (;;) {
+        imu.update();
+        imu.writeSensors(&imu_vals);
+
+        red = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
+        green = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
+        blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
+
+        ds_leds.set_RGB_all(red, green, blue);
+
+        Thread::wait(30);
+    }
+}
+
 void flex_to_lights() {
 
     DotStarLEDs ds_leds(2);
@@ -105,21 +126,13 @@ void flex_to_lights() {
     flex_sensor_t flex_vals[4];
 
     uint8_t red, green, blue;
-    float analog_val;
+    float flex_val;
 
     uint16_t flex_min = 500;
     uint16_t flex_max = 700;
 
-    IMU_BNO055 imu(i2c);
-    bno_imu_t imu_vals;
-
     for (;;) {
-
         flex_sensors.updateAndWriteSensors(flex_vals);
-        imu.update();
-
-        imu.writeSensors(&imu_vals);
-        green = 255*map_float(-90.0, 90.0, imu_vals.orient_roll);
 
         for (uint8_t i = 0; i < 2; i++) {
             if (flex_vals[i] < flex_min) {
@@ -137,7 +150,6 @@ void flex_to_lights() {
 
             ds_leds.set_RGB(i, red, green, blue);
         }
-
         Thread::wait(50);
     }
 }

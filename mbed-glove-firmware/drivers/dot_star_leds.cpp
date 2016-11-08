@@ -37,7 +37,19 @@ void DotStarLEDs::set_RGB(uint8_t led, uint8_t red,
         uint8_t green, uint8_t blue, uint8_t brightness) {
 
     leds[led+1] = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
+    flush_to_spi();
+}
 
+void DotStarLEDs::set_RGB_all(uint8_t red, uint8_t green, uint8_t blue,
+        uint8_t brightness) {
+
+    for (uint8_t led = 0; led < num_leds; ++led) {
+        leds[led+1] = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
+    }
+    flush_to_spi();
+}
+
+void DotStarLEDs::flush_to_spi() {
     // for every 4-byte word in the buffer, write it
     // NOTE: tried to do the bytes but that was borked...
     uint32_t word;
@@ -49,7 +61,6 @@ void DotStarLEDs::set_RGB(uint8_t led, uint8_t red,
         spi.write((word) & 0x000000FF);
     }
 }
-
 
 /*
  * Given the upper and lower bound on unsigned analog values,

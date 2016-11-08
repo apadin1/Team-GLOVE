@@ -41,11 +41,21 @@ public:
     void set_RGB(uint8_t led, uint8_t red, uint8_t green, uint8_t blue,
             uint8_t brightness=DOT_STAR_DEFAULT_BRIGHTNESS);
 
+    /*
+     * Set all LEDs in the strand
+     * red, green, blue are 0-255
+     * birghtness is 0-31
+     */
+    void set_RGB_all(uint8_t red, uint8_t green, uint8_t blue,
+            uint8_t brightness=DOT_STAR_DEFAULT_BRIGHTNESS);
+
 private:
     uint8_t num_leds;
     SPI spi;
     // buffer with the packed led's values in it (plus start and stop codes)
     uint32_t* leds;
+
+    void flush_to_spi();
 };
 
 int do_lights() {
