@@ -98,20 +98,6 @@ void boot_delay(uint8_t t) {
     }
 }
 
-float convert_analog_percent(uint16_t min_, uint16_t max_, uint16_t val) {
-    return (val - min_) / float(max_ - min_);
-}
-
-float map_float(float min_, float max_, float val) {
-    return (val - min_) / float(max_ - min_);
-}
-
-void analog_to_rgb(float analog, uint8_t& red, uint8_t& green, uint8_t& blue) {
-    red = 254*analog;
-    green = green;
-    blue = 254*(1-analog);
-}
-
 void flex_to_lights() {
 
     DotStarLEDs ds_leds(2);
@@ -127,8 +113,7 @@ void flex_to_lights() {
     IMU_BNO055 imu(i2c);
     bno_imu_t imu_vals;
 
-
-    while (true) {
+    for (;;) {
 
         flex_sensors.updateAndWriteSensors(flex_vals);
         imu.update();
@@ -144,8 +129,12 @@ void flex_to_lights() {
                 flex_max = flex_vals[i];
             }
 
-            analog_val = convert_analog_percent(flex_min, flex_max, flex_vals[i]);
-            analog_to_rgb(analog_val, red, green, blue);
+            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[i]);
+
+            red = 255*flex_val;
+            green = 0;
+            blue = 255*(1-flex_val);
+
             ds_leds.set_RGB(i, red, green, blue);
         }
 
