@@ -19,64 +19,39 @@ const PinName DOT_STAR_MOSI = p17;
 const PinName DOT_STAR_MISO = p18; // not used, must be declared
 const PinName DOT_STAR_SCLK = p19;
 
-const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 0x9; // 5-bit value
+const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 4; // 5-bit value 0-31
 
-class DotStarLeds {
+class DotStarLEDs {
 public:
 
-    DotStarLeds(uint8_t num_leds=2, PinName mosi=DOT_STAR_MOSI,
-            PinName miso=DOT_STAR_MISO, PinName sclk=DOT_STAR_SCLK)
-        : n_leds(num_leds), spi(mosi, miso, sclk) {
-
-        // Setup the spi for 8 bit data, high steady state clock,
-        // second edge capture, with a 8MHz clock rate
-        spi.format(8,2);
-        spi.frequency(8000000);
-
-        // setup the leds buffer
-        // contains the start and stop words
-        // can still index as though it didn't have those
-        leds = new uint32_t[n_leds + 2];
-        leds[0] = 0x00;
-        leds[n_leds+1] = 0xFFFFFFFF;
-    }
-
     /*
-     * Set brightness, red, green, and blue
+     * Initialize a string of DotStar LEDs,
+     * given the number of the leds in the strand,
+     * and the pins for the SPI output
      *
-     * and select the led you are setting
+     * NOTE: MISO must be provided but is not used by the LEDs
+     */
+    DotStarLEDs(uint8_t num_leds=2, PinName mosi=DOT_STAR_MOSI,
+            PinName miso=DOT_STAR_MISO, PinName sclk=DOT_STAR_SCLK);
+    /*
+     * Select LED in the strand (zero indexed, do your own bounds check)
+     * red, green, blue are 0-255
+     * birghtness is 0-31
      */
     void set_RGB(uint8_t led, uint8_t red, uint8_t green, uint8_t blue,
-            uint8_t brightness=DOT_STAR_DEFAULT_BRIGHTNESS) {
+            uint8_t brightness=DOT_STAR_DEFAULT_BRIGHTNESS);
 
-        leds[led+1] = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
-        flush();
-    }
-
-    void flush() {
-        // for every 4-byte word in the buffer, write it
-        // NOTE: tried to do the bytes bit that was borked...
-        uint32_t word;
-        for (uint8_t i = 0; i < n_leds+2; ++i) {
-            word = leds[i];
-            spi.write((word >> 24) & 0x000000FF);
-            spi.write((word >> 16) & 0x000000FF);
-            spi.write((word >> 8) & 0x000000FF);
-            spi.write((word) & 0x000000FF);
-        }
-    }
 
 private:
-    uint8_t n_leds;
+    uint8_t num_leds;
     SPI spi;
-
-    // buffer with the packed led's values in it
+    // buffer with the packed led's values in it (plus start and stop codes)
     uint32_t* leds;
 };
 
 int do_lights() {
 
-    DotStarLeds ds_leds(2);
+    DotStarLEDs ds_leds(2);
 
     while (true) {
         ds_leds.set_RGB(0, 100, 0, 100);
