@@ -55,10 +55,12 @@ void FlexSensors::writeSensors(flex_sensor_t* buf) {
 
 void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
     mutex.lock();
+    working = 1;
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
         buf[i] = values[i];
     }
+    working = 0;
     mutex.unlock();
 }
 

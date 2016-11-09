@@ -8,7 +8,6 @@
 
 #include "drivers/analog_button.h"
 #include "drivers/dot_star_leds.h"
-
 #define INCLUDE_TOUCH 1
 
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
@@ -109,13 +108,20 @@ void imu_to_lights() {
         imu.update();
         imu.writeSensors(&imu_vals);
 
-        red = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
-        green = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
         blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
+        red = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
+        green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
 
-        ds_leds.set_RGB_all(red, green, blue);
+        ds_leds.set_RGB(0, red, green, blue, 1);
+        //ds_leds.set_RGB_all(red, green, blue, 1);
 
-        Thread::wait(30);
+        red = 255-red;
+        blue = 255-blue;
+        green = 255-green;
+
+        ds_leds.set_RGB(1, red, green, blue, 1);
+
+        Thread::wait(50);
     }
 }
 
@@ -208,8 +214,8 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    flex_to_lights();
+    //flex_to_lights();
+    imu_to_lights();
 
     //launch_periodic();
-
 }

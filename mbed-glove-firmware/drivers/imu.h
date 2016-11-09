@@ -33,10 +33,10 @@ const uint32_t IMU_UPDATE_PERIOD = 10;
 
 /*
  * Section 3.4 Axis Remap, p.25
- * On prototype in P0
+ * On prototype in P1
  * On PCB in P?
  */
-const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P0;
+const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P1;
 
 /* bno_imu_t
  *
