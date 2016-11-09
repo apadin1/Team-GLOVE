@@ -54,23 +54,23 @@ struct mouseData {
 template <class T>
 class AnalogButton {
 public:
-    //Use this cTor for flex sensors or IMU
+    //Use this cTor for analog input that may be mapped to analog or digital HID output
     AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key_=NULL, mousePart part_=NULL)
-        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid) {
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), is_analog(true) {
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
         change_hid_profile(hid, true);
         
     }
-    //Use this cTor for touch sensors
+    //Use this cTor for pure digital buttons
     AnalogButton(T* data_, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
-        :data(data_), active_low(active_low_), HID(hid), max_abs(0) {
+        :data(data_), active_low(active_low_), HID(hid), max_abs(0), is_analog(false) {
         cur_keyboard = keyboardData();
         update_value = digital_read();
         change_hid_profile(hid, false);
         }
-    
+    //these are functions to check the HID status of the sensor
     bool is_keyboard() {
         return HID == KEYBOARD;
     }
@@ -80,8 +80,8 @@ public:
     bool is_joystick() {
         return HID == JOYSTICK;
     }
-    
-    void change_hid_profile(hidType hid, bool is_analog) {
+    //call this function to change the hid status of the
+    void change_hid_profile(hidType hid, char key_ = NULL, mousePart part_=NULL) {
         HID = hid;
         if (is_analog){
             if (HID == KEYBOARD){
@@ -94,7 +94,7 @@ public:
                 cur_mouse.changed = true;
                 cur_mouse.valid = true;
                 cur_mouse.part = part_;
-                if (part == LBUTTON || part == RBUTTON)
+                if (part_ == LBUTTON || part_ == RBUTTON)
                     update_value = analog_to_digital_read;
                 else
                     update_value = analog_read;
@@ -136,8 +136,9 @@ public:
         return cur_mouse;
     }
     
-    std::function<void()> update_value;
 private:
+    std::function<void()> update_value;
+    bool is_analog;
     bool active_low;
     T* data;
     T min_abs, max_abs;

@@ -94,7 +94,7 @@ void Translator::gestureCheck() {
     if (sensors[i].is_keyboard()) {
       keyboardData keyboard = sensors[i].get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
-        if (keyboard.digital_value) {
+        if (keyboard.value) {
           HIDinput.keyPress(keyboard.key);
         }
         else {
@@ -112,7 +112,7 @@ void Translator::gestureCheck() {
 
         /* Left click */
         if (mouse.part == LBUTTON) {
-          if (mouse.digital_value) {
+          if (mouse.value) {
             HIDinput.setMouseButton(LEFT, DOWN);
           }
           else {
@@ -122,7 +122,7 @@ void Translator::gestureCheck() {
 
         /* Right click */
         else if (mouse.part == RBUTTON) {
-          if (mouse.digital_value) {
+          if (mouse.value) {
             HIDinput.setMouseButton(RIGHT, DOWN);
           }
           else {
@@ -132,17 +132,17 @@ void Translator::gestureCheck() {
 
         /* Scroll functionality */
         else if (mouse.part == SCROLL) {
-          HIDinput.setMouseScroll(mouse.speed);
+          HIDinput.setMouseScroll(mouse.value);
         }
 
         /* X-axis functionality */
         else if (mouse.part == XAXIS) {
-          HIDinput.setMouseSpeedX(mouse.speed);
+          HIDinput.setMouseSpeedX(mouse.value);
         }
 
         /* Y-axis functionality */
         else if (mouse.part == YAXIS) {
-          HIDinput.setMouseSpeedY(mouse.speed);
+          HIDinput.setMouseSpeedY(mouse.value);
         }
       }//for
     }//mouse
