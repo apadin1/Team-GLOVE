@@ -15,7 +15,7 @@
  */
 
 #include "mbed.h"
-#include "keyboard_mouse.h"
+#include "drivers/keyboard_mouse.h"
 
 #define LED_OFF 1
 #define LED_ON 0
@@ -25,6 +25,7 @@ DigitalOut led1(LED1);
 DigitalOut led2(LED2);
 DigitalOut led3(LED3);
 DigitalOut led4(LED4);
+DigitalOut db(p12);
 
 InterruptIn button1(BUTTON1);
 InterruptIn button2(BUTTON2);
@@ -46,7 +47,11 @@ static void waiting() {
 void button1pressed() { keyboard_ptr->keyPress(' ', 0); }
 void button1released() { keyboard_ptr->keyRelease(); }
 
-void button2pressed() { keyboard_ptr->keyPress(UP_ARROW, 0); }
+void button2pressed() {
+    db = 0;
+    keyboard_ptr->keyPress(UP_ARROW, 0);
+    db = 1;
+}
 void button2released() { keyboard_ptr->keyRelease(); }
 
 void button3pressed() { keyboard_ptr->setMouseSpeedAll(10, 0, 0); }
@@ -59,10 +64,11 @@ void button4released() { keyboard_ptr->setMouseSpeedAll(0, 0, 0); }
 // MAIN
 int main() {
 
+    db = 0;
     printf("start here\r\n");
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
-    
+
     printf("init ticker\r\n");
     Ticker waiting_tick;
     waiting_tick.attach(waiting, 1);
@@ -81,7 +87,7 @@ int main() {
     button3.rise(button3released);
     button4.fall(button4pressed);
     button4.rise(button4released);
-    
+
     while (true) {
         keyboard_ptr->waitForEvent();
     }
