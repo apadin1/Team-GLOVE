@@ -34,7 +34,7 @@ enum class mousePart {
 struct keyboardData {
     bool changed,
     bool valid,
-    bool digital_value,
+    bool value,
     char key
     bool operator==(const keyboardData& a) {
         return (digital_value == a.digital_value);
@@ -58,12 +58,11 @@ public:
     AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid) {
         update_threshold(transition_band);
-        prev_keyboard = keyboardData();
-        prev_mouse = mouseData();
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
         if (HID == KEYBOARD){
             update_value = analog_to_digital_read;
+            cur_keyboard
         }
         else if (HID == MOUSE){
             if (part == LBUTTON || part == RBUTTON)
@@ -72,11 +71,14 @@ public:
                 update_value = analog_read;
         }
         update_value();
+        
     }
     //Use this cTor for touch sensors
     AnalogButton(T* data_, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
-        :data(data_), active_low{active_low_), HID(hid) {
-    }
+        :data(data_), active_low(active_low_), HID(hid), max_abs(0) {
+        cur_keyboard = keyboardData();
+        update_value = digital_read();
+        }
     
     bool is_keyboard() {
         return HID == KEYBOARD;
@@ -87,6 +89,7 @@ public:
     bool is_joystick() {
         return HID == JOYSTICK;
     }
+    
     void change_hid_profile(hidType hid) {
         if (HID == KEYBOARD){
             HID = hid;
@@ -99,36 +102,23 @@ public:
         }
     }
     keyboardData get_keyboard_data () {
-        keyboardData current = keyboardData();
-        if (HID != KEYBOARD)
-            return current;
-        calc_binary_state();
-        current.binary_state = binary_state;
-        current.key = prev_keyboard.key;
-        current.valid = true;
-        if (current.binary_state != prev_keyboard.binary_state)
-            current.changed = true;
-        return current;
+        keyboardData prev = cur_keyboard;
+        prev.valid = false;
+        if (HID != KEYBOARD) return prev;
+        update_value();
+        if (cur_keyboard == prev) cur_keyboard.changed = false;
+        else cur_keyboard.changed = true;
+        return cur_keyboard;
     }
     
     mouseData get_mouse_data () {
-        mouseData current = mouseData();
-        if (HID != MOUSE)
-            return current;
-        if (prev_mouse.part == RBUTTON || prev_mouse.part == LBUTTON){
-            calc_binary_state();
-            current.value = binary_state;
-        }
-        else {
-            calc_analog_state();
-            current.value = analog_state;
-        }
-         current.part = prev_mouse.part;
-         current.valid = true;
-         if (current != prev_mouse)
-             current.changed = true;
-         return current;
-    
+        mouseData prev = cur_mouse;
+        prev.valid = false;
+        if (HID != MOUSE) return prev;
+        update_value();
+        if (cur_mouse == prev) cur_mouse.changed = false;
+        else cur_mouse.changed = true;
+        return cur_mouse;
     }
     
     std::function<void()> update_value();
@@ -140,8 +130,8 @@ private:
     T range;
     
     hidType HID;
-    keyboardData prev_keyboard, cur_keyboard;
-    mouseData prev_mouse, cur_mouse;
+    keyboardData cur_keyboard;
+    mouseData cur_mouse;
     
     void update_threshold(float transition_band) {
         if (transition_band < 0.0 || 1.0 < transition_band) {
@@ -173,7 +163,8 @@ private:
 
         // in the lowest range
         if (*data < min_thresh) {
-            binary_state = active_low;
+            if (HID == KEYBOARD) cur_keyboard.value = active_low;
+            else if (HID == MOUSE) cur_mouse.value = active_low;
         }
         // in the transition band
         else if (*data < max_thresh) {
@@ -181,16 +172,23 @@ private:
         }
         // in the upper range
         else {
-            binary_state = ! active_low;
+            if (HID == KEYBOARD) cur_keyboard.value = !active_low;
+            else if (HID == MOUSE) cur_mouse.value = !active_low;
         }
     }
     
     void analog_read() { 
         uint8_t temp = 255 * (*data / range);
-        analog_state = temp - 128
+        temp = temp - 128;
+        if (temp > 10 || temp < -10)
+            cur_mouse.value = temp;
+        else 
+            cur_mouse.value = 0;
+        
     }
     
     void digital_read() {
-        
+        if (*data > 0) cur_keyboard.value = 1;
+        else cur_keyboard.value = 0;
     }
 };
