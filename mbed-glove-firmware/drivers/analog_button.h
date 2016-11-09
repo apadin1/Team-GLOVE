@@ -16,7 +16,7 @@
  *  Also encapsulates some HID Functionality.
  *
  */
- 
+ #include <functional>
 enum class hidType {
     KEYBOARD,
     MOUSE,
@@ -54,60 +54,28 @@ struct mouseData {
 template <class T>
 class AnalogButton {
 public:
-
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=1, hidType hid, char key)
-        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), key_input(key), click(NONE) {
-
+    //Use this cTor for flex sensors or IMU
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid) {
         update_threshold(transition_band);
-        calc_analog_state();
-        calc_binary_state();
-    }
-
-    void update_threshold(float transition_band) {
-        if (transition_band < 0.0 || 1.0 < transition_band) {
-            // fail
-            return;
+        prev_keyboard = keyboardData();
+        prev_mouse = mouseData();
+        cur_keyboard = keyboardData();
+        cur_mouse = mouseData();
+        if (HID == KEYBOARD){
+            update_value = analog_to_digital_read;
         }
-
-        range = max_abs - min_abs;
-        float valid_band = range * ((1-transition_band) / 2.0);
-
-        min_thresh = min_abs + valid_band;
-        max_thresh = max_abs - valid_band;
-    }
-
-    void update_bounds(T min_, T max_, float transition_band) {
-        min_abs = min_;
-        max_abs = max_;
-        update_threshold(transition_band);
-    }
-
-    /*
-     * This is the thing that does the threshold arithmatic
-     *
-     * Counts on the data changing spurriously
-     *
-     * Active low for now cuz sure
-     */
-    void calc_binary_state() {
-
-        // in the lowest range
-        if (*data < min_thresh) {
-            binary_state = active_low;
+        else if (HID == MOUSE){
+            if (part == LBUTTON || part == RBUTTON)
+                update_value = analog_to_digital_read;
+            else
+                update_value = analog_read;
         }
-        // in the transition band
-        else if (*data < max_thresh) {
-            //binary_state = binary_state;
-        }
-        // in the upper range
-        else {
-            binary_state = ! active_low;
-        }
+        update_value();
     }
-    
-    void calc_analog_state() { 
-        uint8_t temp = 255 * (*data / range);
-        analog_state = temp - 128
+    //Use this cTor for touch sensors
+    AnalogButton(T* data_, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
+        :data(data_), active_low{active_low_), HID(hid) {
     }
     
     bool is_keyboard() {
@@ -150,19 +118,20 @@ public:
         if (prev_mouse.part == RBUTTON || prev_mouse.part == LBUTTON){
             calc_binary_state();
             current.value = binary_state;
-            current.part = prev_mouse.part;
-            current.valid = true;
-            if (current != prev_mouse)
-                current.changed = true;
-            return current;
         }
         else {
             calc_analog_state();
-            
+            current.value = analog_state;
         }
-        
+         current.part = prev_mouse.part;
+         current.valid = true;
+         if (current != prev_mouse)
+             current.changed = true;
+         return current;
+    
     }
     
+    std::function<void()> update_value();
 private:
     bool active_low;
     T* data;
@@ -171,10 +140,57 @@ private:
     T range;
     
     hidType HID;
-    char key_input;
-    clickType click;
-    bool binary_state;
-    int8_t analog_state;
-    keyboardData prev_keyboard;
-    mouseData prev_mouse;
+    keyboardData prev_keyboard, cur_keyboard;
+    mouseData prev_mouse, cur_mouse;
+    
+    void update_threshold(float transition_band) {
+        if (transition_band < 0.0 || 1.0 < transition_band) {
+            // fail
+            return;
+        }
+
+        range = max_abs - min_abs;
+        float valid_band = range * ((1-transition_band) / 2.0);
+
+        min_thresh = min_abs + valid_band;
+        max_thresh = max_abs - valid_band;
+    }
+
+    void update_bounds(T min_, T max_, float transition_band) {
+        min_abs = min_;
+        max_abs = max_;
+        update_threshold(transition_band);
+    }
+
+    /*
+     * This is the thing that does the threshold arithmatic
+     *
+     * Counts on the data changing spurriously
+     *
+     * Active low for now cuz sure
+     */
+    void analog_to_digital_read() {
+
+        // in the lowest range
+        if (*data < min_thresh) {
+            binary_state = active_low;
+        }
+        // in the transition band
+        else if (*data < max_thresh) {
+            //binary_state = binary_state;
+        }
+        // in the upper range
+        else {
+            binary_state = ! active_low;
+        }
+    }
+    
+    void analog_read() { 
+        uint8_t temp = 255 * (*data / range);
+        analog_state = temp - 128
+    }
+    
+    void digital_read() {
+        
+    }
 };
