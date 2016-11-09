@@ -60,22 +60,7 @@ public:
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
-        if (HID == KEYBOARD){
-            update_value = analog_to_digital_read;
-            cur_keyboard.changed = true;
-            cur_keyboard.valid = true;
-            cur_keyboard.key = key_;
-        }
-        else if (HID == MOUSE){
-            cur_mouse.changed = true;
-            cur_mouse.valid = true;
-            cur_mouse.part = part_;
-            if (part == LBUTTON || part == RBUTTON)
-                update_value = analog_to_digital_read;
-            else
-                update_value = analog_read;
-        }
-        update_value();
+        change_hid_profile(hid, true);
         
     }
     //Use this cTor for touch sensors
@@ -83,6 +68,7 @@ public:
         :data(data_), active_low(active_low_), HID(hid), max_abs(0) {
         cur_keyboard = keyboardData();
         update_value = digital_read();
+        change_hid_profile(hid, false);
         }
     
     bool is_keyboard() {
@@ -95,16 +81,40 @@ public:
         return HID == JOYSTICK;
     }
     
-    void change_hid_profile(hidType hid) {
-        if (HID == KEYBOARD){
-            HID = hid;
+    void change_hid_profile(hidType hid, bool is_analog) {
+        HID = hid;
+        if (is_analog){
+            if (HID == KEYBOARD){
+                update_value = analog_to_digital_read;
+                cur_keyboard.changed = true;
+                cur_keyboard.valid = true;
+                cur_keyboard.key = key_;
+            }
+            else if (HID == MOUSE){
+                cur_mouse.changed = true;
+                cur_mouse.valid = true;
+                cur_mouse.part = part_;
+                if (part == LBUTTON || part == RBUTTON)
+                    update_value = analog_to_digital_read;
+                else
+                    update_value = analog_read;
+            }
         }
-        else if (HID == MOUSE){
-            
+        else {
+            if (HID == KEYBOARD){
+                update_value = digital_read;
+                cur_keyboard.changed = true;
+                cur_keyboard.valid = true;
+                cur_keyboard.key = key_;
+            }
+            else if (HID == MOUSE){
+                cur_mouse.changed = true;
+                cur_mouse.valid = true;
+                cur_mouse.part = part_;
+                update_value = digital_read;
+            }
         }
-        else if (HID == JOYSTICK){
-            
-        }
+        update_value();
     }
     keyboardData get_keyboard_data () {
         keyboardData prev = cur_keyboard;
@@ -126,7 +136,7 @@ public:
         return cur_mouse;
     }
     
-    std::function<void()> update_value();
+    std::function<void()> update_value;
 private:
     bool active_low;
     T* data;
