@@ -6,6 +6,8 @@
 #include "drivers/touch_sensor.h"
 #include "drivers/collector.h"
 
+#include "drivers/analog_button.h"
+#include "drivers/dot_star_leds.h"
 #define INCLUDE_TOUCH 1
 
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
@@ -69,7 +71,6 @@ void flex_test() {
         //flex_sensors.update();
         flex_sensors.printSingle(pc, 0);
 
-
         led = !led;
         Thread::wait(1000);
     }
@@ -92,6 +93,70 @@ void boot_delay(uint8_t t) {
         l3 = 1;
         l4 = 1;
         wait(0.75);
+    }
+}
+
+void imu_to_lights() {
+
+    DotStarLEDs ds_leds(2);
+    uint8_t red, green, blue;
+
+    IMU_BNO055 imu(i2c);
+    bno_imu_t imu_vals;
+
+    for (;;) {
+        imu.update();
+        imu.writeSensors(&imu_vals);
+
+        blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
+        red = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
+        green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
+
+        ds_leds.set_RGB(0, red, green, blue, 1);
+        //ds_leds.set_RGB_all(red, green, blue, 1);
+
+        red = 255-red;
+        blue = 255-blue;
+        green = 255-green;
+
+        ds_leds.set_RGB(1, red, green, blue, 1);
+
+        Thread::wait(50);
+    }
+}
+
+void flex_to_lights() {
+
+    DotStarLEDs ds_leds(2);
+    FlexSensors flex_sensors;
+    flex_sensor_t flex_vals[4];
+
+    uint8_t red, green, blue;
+    float flex_val;
+
+    uint16_t flex_min = 500;
+    uint16_t flex_max = 700;
+
+    for (;;) {
+        flex_sensors.updateAndWriteSensors(flex_vals);
+
+        for (uint8_t i = 0; i < 2; i++) {
+            if (flex_vals[i] < flex_min) {
+                flex_min = flex_vals[i];
+            }
+            else if (flex_vals[i] > flex_max) {
+                flex_max = flex_vals[i];
+            }
+
+            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[i]);
+
+            red = 255*flex_val;
+            green = 0;
+            blue = 255*(1-flex_val);
+
+            ds_leds.set_RGB(i, red, green, blue);
+        }
+        Thread::wait(50);
     }
 }
 
@@ -132,7 +197,7 @@ void launch_periodic() {
         }
         */
 
-        if (print_limit++ == 3) {
+        if (print_limit++ == 2) {
             imu.print(pc);
             print_limit = 0;
         }
@@ -149,6 +214,8 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    launch_periodic();
+    //flex_to_lights();
+    imu_to_lights();
 
+    //launch_periodic();
 }
