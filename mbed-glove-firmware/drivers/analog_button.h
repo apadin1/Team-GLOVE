@@ -55,16 +55,21 @@ template <class T>
 class AnalogButton {
 public:
     //Use this cTor for flex sensors or IMU
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key_=NULL, mousePart part_=NULL)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid) {
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
         if (HID == KEYBOARD){
             update_value = analog_to_digital_read;
-            cur_keyboard
+            cur_keyboard.changed = true;
+            cur_keyboard.valid = true;
+            cur_keyboard.key = key_;
         }
         else if (HID == MOUSE){
+            cur_mouse.changed = true;
+            cur_mouse.valid = true;
+            cur_mouse.part = part_;
             if (part == LBUTTON || part == RBUTTON)
                 update_value = analog_to_digital_read;
             else
