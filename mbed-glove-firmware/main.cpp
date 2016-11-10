@@ -26,6 +26,27 @@ void blink() {
     }
 }
 
+
+void boot_delay(uint8_t t) {
+    // this loop is to prevent the strange fatal state
+    led = 1;
+    DigitalOut l2(LED2); l2 = 1;
+    DigitalOut l3(LED3); l3 = 1;
+    DigitalOut l4(LED4); l4 = 1;
+    for (uint8_t i = 0; i < t; ++i) {
+        led = 0;
+        l2 = 0;
+        l3 = 0;
+        l4 = 0;
+        wait(0.25);
+        led = 1;
+        l2 = 1;
+        l3 = 1;
+        l4 = 1;
+        wait(0.75);
+    }
+}
+
 void imu_test() {
 
     IMU_BNO055 imu(i2c);
@@ -48,16 +69,26 @@ void touch_sensor_test() {
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
 
+    boot_delay(3);
+
+    DigitalOut l2(LED2);
+    DigitalOut l3(LED3);
+    DigitalOut l4(LED4);
+
     for (;;) {
 
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
 
-        if (last_keys.pack() != keys.pack()) {
-            TouchSensor::print(pc, keys);
-        }
-        led = !led;
-        Thread::wait(200);
+        led = !keys.a;
+        l2 = !keys.b;
+        l3 = !keys.c;
+        l4 = !keys.d;
+
+        //if (last_keys.pack() != keys.pack()) {
+            //TouchSensor::print(pc, keys);
+        //}
+        Thread::wait(50);
     }
 }
 
@@ -73,26 +104,6 @@ void flex_test() {
 
         led = !led;
         Thread::wait(1000);
-    }
-}
-
-void boot_delay(uint8_t t) {
-    // this loop is to prevent the strange fatal state
-    led = 1;
-    DigitalOut l2(LED2); l2 = 1;
-    DigitalOut l3(LED3); l3 = 1;
-    DigitalOut l4(LED4); l4 = 1;
-    for (uint8_t i = 0; i < t; ++i) {
-        led = 0;
-        l2 = 0;
-        l3 = 0;
-        l4 = 0;
-        wait(0.25);
-        led = 1;
-        l2 = 1;
-        l3 = 1;
-        l4 = 1;
-        wait(0.75);
     }
 }
 
@@ -215,7 +226,8 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
     //flex_to_lights();
-    imu_to_lights();
+    //imu_to_lights();
+    touch_sensor_test();
 
     //launch_periodic();
 }
