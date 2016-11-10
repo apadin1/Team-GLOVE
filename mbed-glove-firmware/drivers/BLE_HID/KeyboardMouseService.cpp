@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
  #include "KeyboardMouseService.h"
 
 /******************** REPORT DESCRIPTOR ********************/
@@ -125,13 +125,13 @@ KeyboardMouseService::KeyboardMouseService(BLE &_ble) :
         outputReportLength  = sizeof(outputReportData),
         featureReportLength = 0,
         reportTickerDelay   = REPORT_TICKER_PERIOD),
-            
+
     /* Mouse variables */
     mouse_buttons(0),
     x_speed(0),
     y_speed(0),
     scroll_speed(0),
-    
+
     /* Keyboard variables */
     usage(0),
     modifier(0)
@@ -191,7 +191,7 @@ ble_error_t KeyboardMouseService::keyRelease() {
 }
 
 /* Send a single keyboard character */
-void KeyboardMouseService::sendChar(char c) {
+ble_error_t KeyboardMouseService::sendChar(char c) {
 
     /* Key pressed */
     this->usage = keymap[c].usage;
@@ -201,7 +201,7 @@ void KeyboardMouseService::sendChar(char c) {
     /* Key released */
     this->usage = 0;
     this->modifier = 0;
-    sendKeyboardReport();
+    return sendKeyboardReport();
 }
 
 

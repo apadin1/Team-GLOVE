@@ -136,43 +136,43 @@ KeyboardMouse::~KeyboardMouse() {
 /******************** MOUSE INTERFACE ********************/
 
 /* Set a button to be pressed or released */
-void KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
-    service_ptr->setMouseButton(button, state);
+ble_error_t KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
+    return service_ptr->setMouseButton(button, state);
 }
 
 /* Set the speed of the mouse cursor in the x direction */
-void KeyboardMouse::setMouseSpeedX(int8_t speed) {
-    service_ptr->setMouseSpeedX(speed);
+ble_error_t KeyboardMouse::setMouseSpeedX(int8_t speed) {
+    return service_ptr->setMouseSpeedX(speed);
 }
 
 /* Set the speed of the mouse cursor in the y direction */
-void KeyboardMouse::setMouseSpeedY(int8_t speed) {
-    service_ptr->setMouseSpeedY(speed);
+ble_error_t KeyboardMouse::setMouseSpeedY(int8_t speed) {
+    return service_ptr->setMouseSpeedY(speed);
 }
 
 /* Set the scroll value of the mouse scroll wheel */
-void KeyboardMouse::setMouseScroll(int8_t speed) {
-    service_ptr->setMouseScroll(speed);
+ble_error_t KeyboardMouse::setMouseScroll(int8_t speed) {
+    return service_ptr->setMouseScroll(speed);
 }
 
-void KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
-    service_ptr->setMouseSpeedAll(x, y, scroll);
+ble_error_t KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
+    return service_ptr->setMouseSpeedAll(x, y, scroll);
 }
 
 /******************** KEYBOARD INTERFACE ********************/
 
 /* Send a character to the keyboard */
-void KeyboardMouse::sendChar(char c) {
-    service_ptr->sendChar(c);
+ble_error_t KeyboardMouse::sendChar(char c) {
+    return service_ptr->sendChar(c);
 }
 
 /* Set a keyboard button to be 'pressed' */
-void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
-    service_ptr->keyPress(key, modifier);
+ble_error_t KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
+    return service_ptr->keyPress(key, modifier);
 }
 
 
 /* Set the keyboard to be all buttons released */
-void KeyboardMouse::keyRelease() {
-    service_ptr->keyRelease();
+ble_error_t KeyboardMouse::keyRelease() {
+    return service_ptr->keyRelease();
 }

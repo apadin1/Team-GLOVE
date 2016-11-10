@@ -141,6 +141,8 @@ void launch_periodic() {
     }
 }
 
+extern void keyboard_mouse_demo(void);
+
 int main() {
 
     /*
@@ -149,6 +151,6 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    launch_periodic();
-
+    //launch_periodic();
+    keyboard_mouse_demo();
 }
