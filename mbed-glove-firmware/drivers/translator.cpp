@@ -21,60 +21,76 @@ Translator::translator(FlexSensors* _flex, IMU_BNO055* _imu,
   //TODO: Determine default glove mapping (Minecraft?)
 
   /* FLEX1 */
-  AnalogButton flex1(&glove_data.flex_sensors[0], 300, 800, 20, NONE);
+  AnalogButton flex1(&glove_data.flex_sensors[0], 300, 800, 20, false, false);
   sensors.push_back(flex1);
 
   /* FLEX2 */
-  AnalogButton flex2(&glove_data.flex_sensors[1], 300, 800, 20, NONE);
+  AnalogButton flex2(&glove_data.flex_sensors[1], 300, 800, 20, false, false);
   sensors.push_back(flex2);
 
   /* FLEX3 */
-  AnalogButton flex3(&glove_data.flex_sensors[2], 300, 800, 20, NONE);
+  AnalogButton flex3(&glove_data.flex_sensors[2], 300, 800, 20, false, false);
   sensors.push_back(flex3);
 
   /* FLEX4 */
-  AnalogButton flex4(&glove_data.flex_sensors[3], 300, 800, 20, NONE);
+  AnalogButton flex4(&glove_data.flex_sensors[3], 300, 800, 20, false, false);
   sensors.push_back(flex4);
 
   /* TOUCH1 */
-  AnalogButton touch1(&glove_data.touch_sensor.a, NONE);
+  AnalogButton touch1(&glove_data.touch_sensor.a);
   sensors.push_back(touch1);
 
   /* TOUCH2 */
-  AnalogButton touch2(&glove_data.touch_sensor.b, NONE);
+  AnalogButton touch2(&glove_data.touch_sensor.b);
   sensors.push_back(touch2);
 
   /* TOUCH3 */
-  AnalogButton touch3(&glove_data.touch_sensor.c, NONE);
+  AnalogButton touch3(&glove_data.touch_sensor.c);
   sensors.push_back(touch3);
 
   /* TOUCH4 */
-  AnalogButton touch4(&glove_data.touch_sensor.d, NONE);
+  AnalogButton touch4(&glove_data.touch_sensor.d);
   sensors.push_back(touch4);
 
   /* PITCHUP */
-  AnalogButton pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, NONE);
+  AnalogButton pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true, true);
   sensors.push_back(pitchup);
 
   /* PITCHDOWN */
-  AnalogButton pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20, NONE);
+  AnalogButton pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20, true, false);
   sensors.push_back(pitchdown);
 
   /* ROLLLEFT */
-  AnalogButton rollleft(&glove_data.imu.orient_roll, 0, 20, 20, NONE);
+  AnalogButton rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true, true);
   sensors.push_back(rollleft);
 
   /* ROLLRIGHT */
-  AnalogButton rollright(&glove_data.imu.orient_roll, -20, 0, 20, NONE);
+  AnalogButton rollright(&glove_data.imu.orient_roll, -20, 0, 20, true, false);
   sensors.push_back(rollright);
 
   /* YAWLEFT */
-  AnalogButton yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, NONE);
+  AnalogButton yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true, true);
   sensors.push_back(yawleft);
 
   /* YAWRIGHT */
-  AnalogButton yawright(&glove_data.imu.orient_yaw, -20, 0, 0, NONE);
+  AnalogButton yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true, false);
   sensors.push_back(yawright);
+
+  /* BUTTON MAPPING */
+  //AnalogButton[FLEX1].change_hid_profile();
+  //AnalogButton[FLEX2].change_hid_profile();
+  //AnalogButton[FLEX3].change_hid_profile();
+  //AnalogButton[FLEX4].change_hid_profile();
+  //AnalogButton[TOUCH1].change_hid_profile();
+  //AnalogButton[TOUCH2].change_hid_profile();
+  //AnalogButton[TOUCH3].change_hid_profile();
+  //AnalogButton[TOUCH4].change_hid_profile();
+  //AnalogButton[PITCHUP].change_hid_profile();
+  //AnalogButton[PITCHDOWN].change_hid_profile();
+  //AnalogButton[ROLLLEFT].change_hid_profile();
+  //AnalogButton[ROLLRIGHT].change_hid_profile();
+  //AnalogButton[YAWLEFT].change_hid_profile();
+  //AnalogButton[YAWRIGHT].change_hid_profile();
 
   update_task_timer = new RtosTimer(this, &Collector::update, osTimerPeriodic);
 }
