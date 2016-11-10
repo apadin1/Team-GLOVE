@@ -96,6 +96,13 @@ private:
   //NOTE: Vector indexed by GESTURE enum
   std::vector<AnalogButton> sensors; //Sensor data/HID mapping
   KeyboardMouse HIDinput; //KeyboardMouse object
+
+  //Glove data
+  FlexSensors* flex;
+  IMU_BNO055* imu;
+  TouchSensor* touch;
+  glove_sensors_raw_t glove_data;
+
   RtosTimer* update_task_timer;
   DigitalOut working;
 };
