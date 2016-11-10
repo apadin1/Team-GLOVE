@@ -78,19 +78,19 @@ static void connectedCallback(KeyboardMouseService * new_ptr, bool connected) {
     }
     else {
         my_ptr->setConnected(connected);
-    }    
+    }
 }
 
-static void onConnect() { 
+static void onConnect(const Gap::ConnectionCallbackParams_t* params=NULL) {
     connectedCallback(NULL, true);
 }
-static void onDisconnect() {
+static void onDisconnect(const Gap::DisconnectionCallbackParams_t* params=NULL) {
     connectedCallback(NULL, false);
 }
 
 /* Wrapper class for Keyboard Mouse BLE Service */
 KeyboardMouse::KeyboardMouse() {
-            
+
     /* Prepare to connect and set callbacks */
     printf("init ble\r\n");
     ble.init();
@@ -100,22 +100,22 @@ KeyboardMouse::KeyboardMouse() {
     /* Security is required to pair */
     printf("init security\r\n");
     initializeSecurity(ble);
-    
+
     /* Initialize service pointer and connection callbacks */
     service_ptr = new KeyboardMouseService(ble);
     connectedCallback(service_ptr, true);
-    
+
     /* Initialize GAP transmission */
     printf("init gap\r\n");
     initializeHOGP(ble);
-    
+
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
-    
+
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::COMPLETE_LOCAL_NAME,
         (const uint8_t *) DEVICE_NAME,
         sizeof(DEVICE_NAME));
-    
+
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::SHORTENED_LOCAL_NAME,
         (const uint8_t *) SHORT_NAME,
@@ -137,7 +137,7 @@ KeyboardMouse::~KeyboardMouse() {
 
 /* Set a button to be pressed or released */
 void KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
-    service_ptr->setMouseButton(button, state);        
+    service_ptr->setMouseButton(button, state);
 }
 
 /* Set the speed of the mouse cursor in the x direction */
