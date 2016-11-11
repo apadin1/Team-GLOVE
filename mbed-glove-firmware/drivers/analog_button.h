@@ -16,6 +16,8 @@
  *  Also encapsulates some HID Functionality.
  *
  */
+ #ifndef ANALOG_BUTTON_H_
+ #define ANALOG_BUTTON_H_
  #include <stdint.h>
 enum hidType {
     KEYBOARD,
@@ -85,7 +87,7 @@ public:
         HID = hid;
         if (is_analog){
             if (HID == KEYBOARD){
-                update_value = &analog_to_digital_read;
+                update_value = &AnalogButton<T>::analog_to_digital_read;
                 cur_keyboard.changed = true;
                 cur_keyboard.valid = true;
                 cur_keyboard.key = key_;
@@ -95,14 +97,14 @@ public:
                 cur_mouse.valid = true;
                 cur_mouse.part = part_;
                 if (part_ == LBUTTON || part_ == RBUTTON)
-                    update_value = &analog_to_digital_read;
+                    update_value = &AnalogButton<T>::analog_to_digital_read;
                 else
-                    update_value = &analog_read;
+                    update_value = &AnalogButton<T>::analog_read;
             }
         }
         else {
             if (HID == KEYBOARD){
-                update_value = &digital_read;
+                update_value = &AnalogButton<T>::digital_read;
                 cur_keyboard.changed = true;
                 cur_keyboard.valid = true;
                 cur_keyboard.key = key_;
@@ -111,16 +113,16 @@ public:
                 cur_mouse.changed = true;
                 cur_mouse.valid = true;
                 cur_mouse.part = part_;
-                update_value = &digital_read;
+                update_value = &AnalogButton<T>::digital_read;
             }
         }
-        update_value();
+        //this.*update_value();
     }
     keyboardData get_keyboard_data () {
         keyboardData prev = cur_keyboard;
         prev.valid = false;
         if (HID != KEYBOARD) return prev;
-        update_value();
+        //update_value();
         if (cur_keyboard == prev) cur_keyboard.changed = false;
         else cur_keyboard.changed = true;
         return cur_keyboard;
@@ -130,7 +132,7 @@ public:
         mouseData prev = cur_mouse;
         prev.valid = false;
         if (HID != MOUSE) return prev;
-        update_value();
+        //update_value();
         if (cur_mouse == prev) cur_mouse.changed = false;
         else cur_mouse.changed = true;
         return cur_mouse;
@@ -142,7 +144,7 @@ public:
     }
     
 private:
-    void (*update_value) ();
+    void (AnalogButton::*update_value) ();
     bool is_analog;
     bool active_low;
     bool imu;
@@ -229,3 +231,4 @@ private:
         else cur_keyboard.value = 0;
     }
 };
+#endif /*ANALOG_BUTTON_H_*/

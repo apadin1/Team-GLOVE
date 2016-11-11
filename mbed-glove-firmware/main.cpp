@@ -7,6 +7,7 @@
 
 #include "drivers/analog_button.h"
 #include "drivers/dot_star_leds.h"
+#include "translator.h"
 #define INCLUDE_TOUCH 1
 
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
@@ -160,13 +161,13 @@ void flex_to_lights() {
 }
 
 void launch_periodic() {
-    /*
+    
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
-    */
+    
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
@@ -175,8 +176,8 @@ void launch_periodic() {
     wait_ms(2); // to offset the timers
     imu.startUpdateTask(10);
 
-    //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
-    //collector.startUpdateTask(1); // 1 sec period for serial out
+    Translator translator(&flex_sensors, &imu, &touch_sensor);
+    translator.startUpdateTask(1); // 1 sec period for serial out
 
     boot_delay(5);
     uint8_t print_limit = 0;
