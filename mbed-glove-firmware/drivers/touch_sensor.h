@@ -95,10 +95,10 @@ const uint8_t TOUCH_AKS[] = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
  * the desired keys as struct members
  */
 typedef struct {
-    uint8_t a : 1;
-    uint8_t b : 1;
-    uint8_t c : 1;
-    uint8_t d : 1;
+    uint8_t a;
+    uint8_t b;
+    uint8_t c;
+    uint8_t d;
 
     uint8_t pack() {
         return a << 3 | b << 2 | c << 1 | d;

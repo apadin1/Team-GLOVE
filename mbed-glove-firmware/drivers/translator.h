@@ -32,6 +32,29 @@
  */
 const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
 
+enum FLEX {
+                     FLEX1,
+                     FLEX2,
+                     FLEX3,
+                     FLEX4
+                   };
+
+enum TOUCH {
+                     TOUCH1,
+                     TOUCH2,
+                     TOUCH3,
+                     TOUCH4
+                   };
+
+enum IMU {
+                     PITCHUP,
+                     PITCHDOWN,
+                     ROLLLEFT,
+                     ROLLRIGHT,
+                     YAWLEFT,
+                     YAWRIGHT
+                   };
+
 /* GESTURE
  *
  * enum used to index vectors contained
@@ -39,7 +62,7 @@ const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
  * provide consistency between data structures
  * used both in gloves and transciever
  */
-enum GESTURE {
+/*enum GESTURE {
                      FLEX1,
                      FLEX2,
                      FLEX3,
@@ -54,7 +77,7 @@ enum GESTURE {
                      ROLLRIGHT,
                      YAWLEFT,
                      YAWRIGHT
-                   };
+                   };*/
 
 /* Translator
  *
@@ -98,9 +121,9 @@ public:
 
 private:
   //NOTE: Vector indexed by GESTURE enum
-  AnalogButton<T>* flex_sensors[FLEX_COUNT];
-  AnalogButton<T>* touch_sensors[TOUCH_COUNT];
-  AnalogButton<T>* imu_axis[IMU_COUNT];
+  AnalogButton<flex_sensor_t>* flex_sensors[FLEX_COUNT];
+  AnalogButton<uint8_t>* touch_sensors[TOUCH_COUNT];
+  AnalogButton<float>* imu_axis[IMU_COUNT];
   KeyboardMouse HIDinput; //KeyboardMouse object
 
   //Glove data
