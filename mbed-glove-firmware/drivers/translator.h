@@ -18,6 +18,7 @@
 
 #include "analog_button.h"
 #include "keyboard_mouse.h"
+#include "glove_sensors.h"
 #include "mbed.h"
 #include <vector>
 
@@ -35,7 +36,7 @@ const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
  * provide consistency between data structures
  * used both in gloves and transciever
  */
-enum GESTURE : uint8_t {
+enum GESTURE {
                      FLEX1,
                      FLEX2,
                      FLEX3,
@@ -72,7 +73,7 @@ public:
    * Transciever to send the new Vector to bluetooth class,
    * which should then call this function
    */
-  void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
+  //void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
 
   /*
    * Analyze sensors to determine if gesture
@@ -94,7 +95,7 @@ public:
 
 private:
   //NOTE: Vector indexed by GESTURE enum
-  std::vector<AnalogButton> sensors; //Sensor data/HID mapping
+  std::vector<AnalogButton*> sensors; //Sensor data/HID mapping
   KeyboardMouse HIDinput; //KeyboardMouse object
 
   //Glove data

@@ -22,59 +22,59 @@ Translator::translator(FlexSensors* _flex, IMU_BNO055* _imu,
 
   /* FLEX1 */
   AnalogButton flex1(&glove_data.flex_sensors[0], 300, 800, 20, false, false);
-  sensors.push_back(flex1);
+  sensors.push_back(&flex1);
 
   /* FLEX2 */
   AnalogButton flex2(&glove_data.flex_sensors[1], 300, 800, 20, false, false);
-  sensors.push_back(flex2);
+  sensors.push_back(&flex2);
 
   /* FLEX3 */
   AnalogButton flex3(&glove_data.flex_sensors[2], 300, 800, 20, false, false);
-  sensors.push_back(flex3);
+  sensors.push_back(&flex3);
 
   /* FLEX4 */
   AnalogButton flex4(&glove_data.flex_sensors[3], 300, 800, 20, false, false);
-  sensors.push_back(flex4);
+  sensors.push_back(&flex4);
 
   /* TOUCH1 */
   AnalogButton touch1(&glove_data.touch_sensor.a);
-  sensors.push_back(touch1);
+  sensors.push_back(&touch1);
 
   /* TOUCH2 */
   AnalogButton touch2(&glove_data.touch_sensor.b);
-  sensors.push_back(touch2);
+  sensors.push_back(&touch2);
 
   /* TOUCH3 */
   AnalogButton touch3(&glove_data.touch_sensor.c);
-  sensors.push_back(touch3);
+  sensors.push_back(&touch3);
 
   /* TOUCH4 */
   AnalogButton touch4(&glove_data.touch_sensor.d);
-  sensors.push_back(touch4);
+  sensors.push_back(&touch4);
 
   /* PITCHUP */
   AnalogButton pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true, true);
-  sensors.push_back(pitchup);
+  sensors.push_back(&pitchup);
 
   /* PITCHDOWN */
   AnalogButton pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20, true, false);
-  sensors.push_back(pitchdown);
+  sensors.push_back(&pitchdown);
 
   /* ROLLLEFT */
   AnalogButton rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true, true);
-  sensors.push_back(rollleft);
+  sensors.push_back(&rollleft);
 
   /* ROLLRIGHT */
   AnalogButton rollright(&glove_data.imu.orient_roll, -20, 0, 20, true, false);
-  sensors.push_back(rollright);
+  sensors.push_back(&rollright);
 
   /* YAWLEFT */
   AnalogButton yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true, true);
-  sensors.push_back(yawleft);
+  sensors.push_back(&yawleft);
 
   /* YAWRIGHT */
   AnalogButton yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true, false);
-  sensors.push_back(yawright);
+  sensors.push_back(&yawright);
 
   /* BUTTON MAPPING */
   //AnalogButton[FLEX1].change_hid_profile();
@@ -96,9 +96,9 @@ Translator::translator(FlexSensors* _flex, IMU_BNO055* _imu,
 }
 
 //TODO: Determine FINAL process w/ transciever
-void Translator::updateGestureMap(std::vector<AnalogButton>* updatedMapping) {
+//void Translator::updateGestureMap(std::vector<AnalogButton>* updatedMapping) {
    //sensors = *updatedMapping;
-}
+//}
 
 void Translator::gestureCheck() {
   working = 1;

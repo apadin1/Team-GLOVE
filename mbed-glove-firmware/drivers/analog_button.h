@@ -16,48 +16,49 @@
  *  Also encapsulates some HID Functionality.
  *
  */
- #include <functional>
-enum class hidType {
+ #include <stdint.h>
+enum hidType {
     KEYBOARD,
     MOUSE,
     JOYSTICK, 
-    NONE
-}
+    DISABLED
+};
 
-enum class mousePart {
+enum mousePart {
     LBUTTON,
     RBUTTON,
-    SCROLL,
+    SCROLLAXIS,
     XAXIS,
-    YAXIS
-}
+    YAXIS,
+    NONE
+};
 
 struct keyboardData {
-    bool changed,
-    bool valid,
-    bool value,
-    char key
+    bool changed;
+    bool valid;
+    bool value;
+    char key;
     bool operator==(const keyboardData& a) {
-        return (digital_value == a.digital_value);
+        return (value == a.value);
     }
-}
+};
 
 struct mouseData {
-    bool changed,
-    bool valid,
-    mousePart part,
-    int8_t value
+    bool changed;
+    bool valid;
+    mousePart part;
+    int8_t value;
     bool operator==(const mouseData& a){
         return (value == a.value);
     }
-}
+};
 //TODO: implement po/neg range in analog read
 template <class T>
 class AnalogButton {
 public:
     //Use this cTor for analog input that may be mapped to analog or digital HID output
     AnalogButton(T* data_, T min_, T max_, float transition_band, bool imu_=true, bool positive_range=true, bool active_low_=0)
-        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), is_analog(true), imu(imu_), pos_range(positive_range) {
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), is_analog(true), imu(imu_), pos_range(positive_range) {
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
@@ -65,9 +66,9 @@ public:
     }
     //Use this cTor for pure digital buttons
     AnalogButton(T* data_, bool active_low_=0)
-        :data(data_), active_low(active_low_), HID(hid), max_abs(0), is_analog(false) {
+        :data(data_), active_low(active_low_), max_abs(0), is_analog(false) {
         cur_keyboard = keyboardData();
-        update_value = digital_read();
+        update_value = &digital_read();
         }
     //these are functions to check the HID status of the sensor
     bool is_keyboard() {
@@ -80,11 +81,11 @@ public:
         return HID == JOYSTICK;
     }
     //call this function to change the hid status of the
-    void change_hid_profile(hidType hid, char key_ = NULL, mousePart part_=NULL) {
+    void change_hid_profile(hidType hid, char key_ = 0, mousePart part_=NONE) {
         HID = hid;
         if (is_analog){
             if (HID == KEYBOARD){
-                update_value = analog_to_digital_read;
+                update_value = &analog_to_digital_read;
                 cur_keyboard.changed = true;
                 cur_keyboard.valid = true;
                 cur_keyboard.key = key_;
@@ -94,14 +95,14 @@ public:
                 cur_mouse.valid = true;
                 cur_mouse.part = part_;
                 if (part_ == LBUTTON || part_ == RBUTTON)
-                    update_value = analog_to_digital_read;
+                    update_value = &analog_to_digital_read;
                 else
-                    update_value = analog_read;
+                    update_value = &analog_read;
             }
         }
         else {
             if (HID == KEYBOARD){
-                update_value = digital_read;
+                update_value = &digital_read;
                 cur_keyboard.changed = true;
                 cur_keyboard.valid = true;
                 cur_keyboard.key = key_;
@@ -110,7 +111,7 @@ public:
                 cur_mouse.changed = true;
                 cur_mouse.valid = true;
                 cur_mouse.part = part_;
-                update_value = digital_read;
+                update_value = &digital_read;
             }
         }
         update_value();
@@ -141,7 +142,7 @@ public:
     }
     
 private:
-    std::function<void()> update_value;
+    void (*update_value) ();
     bool is_analog;
     bool active_low;
     bool imu;
@@ -158,7 +159,7 @@ private:
     //TODO: make sensor able to be deactivated so that analog imu axis can be handled by one sensor and not both
     void update_threshold(float transition_band) {
         float div;
-        uint8_t mult
+        uint8_t mult;
         if (imu){
             mult = 3 ;
             div = 4.0;
@@ -217,7 +218,7 @@ private:
                 cur_mouse.value = 0; 
         }
         else {
-            temp; = 127 * (value / range);
+            int8_t temp = 127 * (value / range);
         }
 
         
