@@ -95,7 +95,7 @@ public:
 
 private:
   //NOTE: Vector indexed by GESTURE enum
-  std::vector<AnalogButton*> sensors; //Sensor data/HID mapping
+  AnalogButton sensors[GESTURE_COUNT];
   KeyboardMouse HIDinput; //KeyboardMouse object
 
   //Glove data
