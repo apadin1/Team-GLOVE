@@ -15,14 +15,14 @@
 
 #include "translator.h"
 
-Translator::translator(FlexSensors* _flex, IMU_BNO055* _imu,
+Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
         TouchSensor* _touch)
      : flex(_flex), imu(_imu), touch(_touch) {
   //TODO: Determine default glove mapping (Minecraft?)
 
   /* FLEX1 */
-  AnalogButton flex1(&glove_data.flex_sensors[0], 300, 800, 20, false, false);
-  sensors[FLEX1] = flex1;
+  AnalogButton flex1 (&glove_data.flex_sensors[0], 300, 800, 0.2, false, false, false);
+  sensors[FLEX1] = &flex1;
 
   /* FLEX2 */
   AnalogButton flex2(&glove_data.flex_sensors[1], 300, 800, 20, false, false);
@@ -151,7 +151,7 @@ void Translator::gestureCheck() {
         }
 
         /* Scroll functionality */
-        else if (mouse.part == SCROLL) {
+        else if (mouse.part == SCROLLAXIS) {
           HIDinput.setMouseScroll(mouse.value);
         }
 

@@ -57,7 +57,8 @@ template <class T>
 class AnalogButton {
 public:
     //Use this cTor for analog input that may be mapped to analog or digital HID output
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool imu_=true, bool positive_range=true, bool active_low_=0)
+    AnalogButton() {}
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool imu_=true, bool positive_range=true, bool active_low_=false)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), is_analog(true), imu(imu_), pos_range(positive_range) {
         update_threshold(transition_band);
         cur_keyboard = keyboardData();

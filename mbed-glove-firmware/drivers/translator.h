@@ -23,6 +23,9 @@
 #include <vector>
 
 #define GESTURE_COUNT 14
+#define FLEX_COUNT 4
+#define TOUCH_COUNT 4
+#define IMU_COUNT 6
 
 /*
  * Update Period (in milliseconds)
@@ -95,7 +98,9 @@ public:
 
 private:
   //NOTE: Vector indexed by GESTURE enum
-  AnalogButton sensors[GESTURE_COUNT];
+  AnalogButton<T>* flex_sensors[FLEX_COUNT];
+  AnalogButton<T>* touch_sensors[TOUCH_COUNT];
+  AnalogButton<T>* imu_axis[IMU_COUNT];
   KeyboardMouse HIDinput; //KeyboardMouse object
 
   //Glove data
