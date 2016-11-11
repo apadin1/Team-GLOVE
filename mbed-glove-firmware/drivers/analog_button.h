@@ -69,7 +69,6 @@ public:
     AnalogButton(T* data_, bool active_low_=0)
         :data(data_), active_low(active_low_), max_abs(0), is_analog(false) {
         cur_keyboard = keyboardData();
-        update_value = &digital_read();
         }
     //these are functions to check the HID status of the sensor
     bool is_keyboard() {
