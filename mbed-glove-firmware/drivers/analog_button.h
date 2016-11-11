@@ -20,7 +20,8 @@
 enum class hidType {
     KEYBOARD,
     MOUSE,
-    JOYSTICK
+    JOYSTICK, 
+    NONE
 }
 
 enum class mousePart {
@@ -50,25 +51,23 @@ struct mouseData {
         return (value == a.value);
     }
 }
-
+//TODO: implement po/neg range in analog read
 template <class T>
 class AnalogButton {
 public:
     //Use this cTor for analog input that may be mapped to analog or digital HID output
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=0, hidType hid=NULL, char key_=NULL, mousePart part_=NULL)
-        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), is_analog(true) {
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool imu_=true, bool positive_range=true, bool active_low_=0)
+        : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_), HID(hid), is_analog(true), imu(imu_), pos_range(positive_range) {
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
-        change_hid_profile(hid, true);
         
     }
     //Use this cTor for pure digital buttons
-    AnalogButton(T* data_, bool active_low_=0, hidType hid=NULL, char key=NULL, mousePart part=NULL)
+    AnalogButton(T* data_, bool active_low_=0)
         :data(data_), active_low(active_low_), HID(hid), max_abs(0), is_analog(false) {
         cur_keyboard = keyboardData();
         update_value = digital_read();
-        change_hid_profile(hid, false);
         }
     //these are functions to check the HID status of the sensor
     bool is_keyboard() {
@@ -135,11 +134,19 @@ public:
         else cur_mouse.changed = true;
         return cur_mouse;
     }
+    void update_bounds(T min_, T max_, float transition_band) {
+        min_abs = min_;
+        max_abs = max_;
+        update_threshold(transition_band);
+    }
     
 private:
     std::function<void()> update_value;
     bool is_analog;
     bool active_low;
+    bool imu;
+    bool pos_range;
+    bool enabled;
     T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
@@ -148,31 +155,37 @@ private:
     hidType HID;
     keyboardData cur_keyboard;
     mouseData cur_mouse;
-    
+    //TODO: make sensor able to be deactivated so that analog imu axis can be handled by one sensor and not both
     void update_threshold(float transition_band) {
+        float div;
+        uint8_t mult
+        if (imu){
+            mult = 3 ;
+            div = 4.0;
+        }
+        else {
+            mult = 1;
+            div = 2.0;
+        }
         if (transition_band < 0.0 || 1.0 < transition_band) {
             // fail
             return;
         }
-
+        float valid_band;
         range = max_abs - min_abs;
-        float valid_band = range * ((1-transition_band) / 2.0);
-
-        min_thresh = min_abs + valid_band;
-        max_thresh = max_abs - valid_band;
+        valid_band = range * ((1-transition_band) / div);      
+        if (pos_range) {
+            min_thresh = min_abs + valid_band;
+            max_thresh = max_abs - (mult * valid_band);
+        } 
+        else {
+            min_thresh = min_abs + (mult* valid_band);
+            max_thresh = max_abs - valid_band;
+        }
     }
-
-    void update_bounds(T min_, T max_, float transition_band) {
-        min_abs = min_;
-        max_abs = max_;
-        update_threshold(transition_band);
-    }
-
     /*
      * This is the thing that does the threshold arithmatic
-     *
      * Counts on the data changing spurriously
-     *
      * Active low for now cuz sure
      */
     void analog_to_digital_read() {
@@ -184,7 +197,7 @@ private:
         }
         // in the transition band
         else if (*data < max_thresh) {
-            //binary_state = binary_state;
+            //dont change state
         }
         // in the upper range
         else {
@@ -194,12 +207,19 @@ private:
     }
     
     void analog_read() { 
-        uint8_t temp = 255 * (*data / range);
-        temp = temp - 128;
-        if (temp > 10 || temp < -10)
-            cur_mouse.value = temp;
-        else 
-            cur_mouse.value = 0;
+        T value = (*data < max_abs) ? *data : max_abs;
+        value = (*data > min_abs) ? *data : min_abs;
+        if (imu){
+            int8_t temp = 127 * (value / range);
+            if (temp > 10 || temp < -10)
+                cur_mouse.value = temp;
+            else 
+                cur_mouse.value = 0; 
+        }
+        else {
+            temp; = 127 * (value / range);
+        }
+
         
     }
     

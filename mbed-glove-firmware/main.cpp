@@ -4,7 +4,6 @@
 #include "drivers/flex_sensor.h"
 #include "drivers/imu.h"
 #include "drivers/touch_sensor.h"
-#include "drivers/collector.h"
 
 #include "drivers/analog_button.h"
 #include "drivers/dot_star_leds.h"
