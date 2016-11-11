@@ -149,7 +149,7 @@ void sensors_to_lights() {
 
         touch_sensor.writeKeys(&keys);
         if (keys.pack()) {
-            ds_leds.set_RGB_all(255,255,255,9);
+            ds_leds.set_RGB(0,0,255,0);
         }
         else {
 
@@ -161,10 +161,10 @@ void sensors_to_lights() {
             ds_leds.set_RGB(0, red, green, blue);
 
             // set imu light
-            blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
-            red = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
+            blue = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_pitch);
+            red = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_roll);
             green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
-            ds_leds.set_RGB(1, red, green, blue, 1);
+            ds_leds.set_RGB(1, red, green, blue, 3);
         }
 
         Thread::wait(25);
