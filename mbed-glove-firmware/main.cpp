@@ -26,7 +26,6 @@ void blink() {
     }
 }
 
-
 void boot_delay(uint8_t t) {
     // this loop is to prevent the strange fatal state
     led = 1;
@@ -65,16 +64,17 @@ void touch_sensor_test() {
     key_states_t keys;
     key_states_t last_keys;
 
+    boot_delay(2);
+
     TouchSensor touch_sensor(i2c);
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-
-    boot_delay(3);
 
     DigitalOut l2(LED2);
     DigitalOut l3(LED3);
     DigitalOut l4(LED4);
 
+    boot_delay(2);
     for (;;) {
 
         last_keys = keys;
@@ -88,7 +88,7 @@ void touch_sensor_test() {
         //if (last_keys.pack() != keys.pack()) {
             //TouchSensor::print(pc, keys);
         //}
-        Thread::wait(50);
+        Thread::wait(60);
     }
 }
 
@@ -107,7 +107,7 @@ void flex_test() {
     }
 }
 
-void imu_to_lights() {
+void sensors_to_lights() {
 
     DotStarLEDs ds_leds(2);
     uint8_t red, green, blue;
@@ -115,70 +115,68 @@ void imu_to_lights() {
     IMU_BNO055 imu(i2c);
     bno_imu_t imu_vals;
 
-    for (;;) {
-        imu.update();
-        imu.writeSensors(&imu_vals);
-
-        blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
-        red = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
-        green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
-
-        ds_leds.set_RGB(0, red, green, blue, 1);
-        //ds_leds.set_RGB_all(red, green, blue, 1);
-
-        red = 255-red;
-        blue = 255-blue;
-        green = 255-green;
-
-        ds_leds.set_RGB(1, red, green, blue, 1);
-
-        Thread::wait(50);
-    }
-}
-
-void flex_to_lights() {
-
-    DotStarLEDs ds_leds(2);
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
-    uint8_t red, green, blue;
+    TouchSensor touch_sensor;
+    Thread touch_sensor_thread;
+    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    key_states_t keys;
+
     float flex_val;
 
-    uint16_t flex_min = 500;
-    uint16_t flex_max = 700;
+    uint16_t flex_min = 250;
+    uint16_t flex_max = 750;
+
+    /*
+     * Flex zero sets led 0 red/blue
+     *
+     * Any touch sets both lights to bright white
+     *
+     * Light one is the combined IMU status
+     */
 
     for (;;) {
+        imu.update();
+        imu.writeSensors(&imu_vals);
         flex_sensors.updateAndWriteSensors(flex_vals);
+        if (flex_vals[0] < flex_min) {
+            flex_min = flex_vals[0];
+        }
+        if (flex_vals[0] > flex_max) {
+            flex_max = flex_vals[0];
+        }
 
-        for (uint8_t i = 0; i < 2; i++) {
-            if (flex_vals[i] < flex_min) {
-                flex_min = flex_vals[i];
-            }
-            else if (flex_vals[i] > flex_max) {
-                flex_max = flex_vals[i];
-            }
+        touch_sensor.writeKeys(&keys);
+        if (keys.pack()) {
+            ds_leds.set_RGB_all(255,255,255,9);
+        }
+        else {
 
-            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[i]);
-
+            // set flex light
+            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[0]);
             red = 255*flex_val;
             green = 0;
             blue = 255*(1-flex_val);
+            ds_leds.set_RGB(0, red, green, blue);
 
-            ds_leds.set_RGB(i, red, green, blue);
+            // set imu light
+            blue = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_pitch);
+            red = 255*map_float_analog_to_percent(-90.0, 90.0, imu_vals.orient_roll);
+            green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
+            ds_leds.set_RGB(1, red, green, blue, 1);
         }
-        Thread::wait(50);
+
+        Thread::wait(25);
     }
 }
 
 void launch_periodic() {
-    /*
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
-    */
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
@@ -186,9 +184,6 @@ void launch_periodic() {
     flex_sensors.startUpdateTask(10);
     wait_ms(2); // to offset the timers
     imu.startUpdateTask(10);
-
-    //Collector collector(&flex_sensors, &imu, &touch_sensor, &pc);
-    //collector.startUpdateTask(1); // 1 sec period for serial out
 
     boot_delay(5);
     uint8_t print_limit = 0;
@@ -200,13 +195,11 @@ void launch_periodic() {
         flex_sensors.print(pc);
 
         // Touch
-        /*
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
         if (last_keys.pack() != keys.pack()) {
             TouchSensor::print(pc, keys);
         }
-        */
 
         if (print_limit++ == 2) {
             imu.print(pc);
@@ -225,9 +218,7 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    //flex_to_lights();
-    //imu_to_lights();
-    touch_sensor_test();
-
+    //touch_sensor_test();
+    sensors_to_lights();
     //launch_periodic();
 }
