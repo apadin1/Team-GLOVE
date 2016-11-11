@@ -94,6 +94,8 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
   //AnalogButton[YAWLEFT].change_hid_profile();
   //AnalogButton[YAWRIGHT].change_hid_profile();
 
+  while (!HIDinput.isConnected()) {} //Wait for connection
+
   update_task_timer = new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
 
