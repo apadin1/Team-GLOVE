@@ -205,6 +205,8 @@ void launch_periodic() {
     }
 }
 
+extern void keyboard_mouse_demo(void);
+
 int main() {
 
     /*
@@ -214,7 +216,8 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
     //flex_to_lights();
-    imu_to_lights();
+    //imu_to_lights();
 
     //launch_periodic();
+    keyboard_mouse_demo();
 }
