@@ -116,13 +116,13 @@ public:
                 update_value = &AnalogButton<T>::digital_read;
             }
         }
-        //this.*update_value();
+        (this->*update_value)();
     }
     keyboardData get_keyboard_data () {
         keyboardData prev = cur_keyboard;
         prev.valid = false;
         if (HID != KEYBOARD) return prev;
-        //update_value();
+        (this->*update_value)();
         if (cur_keyboard == prev) cur_keyboard.changed = false;
         else cur_keyboard.changed = true;
         return cur_keyboard;
@@ -132,7 +132,7 @@ public:
         mouseData prev = cur_mouse;
         prev.valid = false;
         if (HID != MOUSE) return prev;
-        //update_value();
+        (this->*update_value)();
         if (cur_mouse == prev) cur_mouse.changed = false;
         else cur_mouse.changed = true;
         return cur_mouse;
