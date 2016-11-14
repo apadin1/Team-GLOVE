@@ -118,7 +118,6 @@ void spacebar() {
   }
 }
 
-
 ble_error_t err;
 Serial dbg(USBTX, USBRX);
 

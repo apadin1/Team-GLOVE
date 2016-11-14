@@ -124,10 +124,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          HIDinput.keyPress(keyboard.key);
+          //HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease(keyboard.key);
+          //HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -140,10 +140,10 @@ void Translator::gestureCheck() {
         /* Left click */
         if (mouse.part == LBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(LEFT, DOWN);
+            //HIDinput.setMouseButton(LEFT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(LEFT, UP);
+            //HIDinput.setMouseButton(LEFT, UP);
           }
         }
 
@@ -188,10 +188,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          HIDinput.keyPress(keyboard.key);
+          //HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease(keyboard.key);
+          //HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -252,10 +252,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = imu_axis[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          HIDinput.keyPress(keyboard.key);
+          //HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease(keyboard.key);
+          //HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard

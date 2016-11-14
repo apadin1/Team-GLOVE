@@ -202,7 +202,7 @@ void launch_periodic() {
             //print_limit = 0;
         //}
 
-        //translator.waitForEvent();
+        translator.waitForEvent();
         Thread::wait(1000);
     }
 }
