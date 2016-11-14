@@ -16,6 +16,8 @@
 
 #include "mbed.h"
 #include "drivers/keyboard_mouse.h"
+//#include "drivers/translator.h"
+#include "glove_sensors.h"
 
 #define LED_OFF 1
 #define LED_ON 0
@@ -48,6 +50,8 @@ InterruptIn button2(BUTTON2);
 InterruptIn button3(BUTTON3);
 InterruptIn button4(BUTTON4);
 
+FlexSensors flex_sensors;
+flex_sensor_t flex[4];
 
 KeyboardMouse * keyboard_ptr;
 
@@ -100,6 +104,20 @@ void button4released() {
     db = 0;
 }
 
+void spacebar() {
+  led3 = !led3;
+  flex_sensors.update();
+  flex_sensors.writeSensors(flex);
+  if (flex[0] <= 600) {
+    led4 = LED_ON;
+    keyboard_ptr->keyPress(' ', 0);
+  }
+  else {
+    led4 = LED_OFF;
+    keyboard_ptr->keyRelease();
+  }
+}
+
 
 ble_error_t err;
 Serial dbg(USBTX, USBRX);
@@ -140,7 +158,7 @@ int keyboard_mouse_demo() {
     led4 = LED_OFF;
 
     Ticker keyboard_test;
-    keyboard_test.attach(auto_button, 3);
+    keyboard_test.attach(spacebar, 0.1);
 
     /*
     button1.fall(button1pressed);

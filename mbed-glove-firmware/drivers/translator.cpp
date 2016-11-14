@@ -94,7 +94,7 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
   //AnalogButton[YAWLEFT].change_hid_profile();
   //AnalogButton[YAWRIGHT].change_hid_profile();
 
-  while (!HIDinput.isConnected()) {} //Wait for connection
+  while (!HIDinput.isConnected()) {}
 
   update_task_timer = new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
@@ -103,6 +103,10 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
 //void Translator::updateGestureMap(std::vector<AnalogButton>* updatedMapping) {
    //sensors = *updatedMapping;
 //}
+
+void Translator::waitForEvent() {
+  HIDinput.waitForEvent();
+}
 
 void Translator::gestureCheck() {
   working = 1;
@@ -123,7 +127,7 @@ void Translator::gestureCheck() {
           HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease();
+          HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -187,7 +191,7 @@ void Translator::gestureCheck() {
           HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease();
+          HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -251,7 +255,7 @@ void Translator::gestureCheck() {
           HIDinput.keyPress(keyboard.key);
         }
         else {
-          HIDinput.keyRelease();
+          HIDinput.keyRelease(keyboard.key);
         }
       }
     }//keyboard

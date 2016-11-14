@@ -55,30 +55,6 @@ enum IMU {
                      YAWRIGHT
                    };
 
-/* GESTURE
- *
- * enum used to index vectors contained
- * within Translator class. Also used to
- * provide consistency between data structures
- * used both in gloves and transciever
- */
-/*enum GESTURE {
-                     FLEX1,
-                     FLEX2,
-                     FLEX3,
-                     FLEX4,
-                     TOUCH1,
-                     TOUCH2,
-                     TOUCH3,
-                     TOUCH4,
-                     PITCHUP,
-                     PITCHDOWN,
-                     ROLLLEFT,
-                     ROLLRIGHT,
-                     YAWLEFT,
-                     YAWRIGHT
-                   };*/
-
 /* Translator
  *
  * Single class to handle data interpretation between
@@ -100,6 +76,11 @@ public:
    * which should then call this function
    */
   //void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
+
+  /*
+   * Calls HIDinput waitForEvent function
+   */
+  void waitForEvent();
 
   /*
    * Analyze sensors to determine if gesture

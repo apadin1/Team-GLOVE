@@ -161,13 +161,13 @@ void flex_to_lights() {
 }
 
 void launch_periodic() {
-    
+
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
     key_states_t last_keys;
-    
+
 
     FlexSensors flex_sensors;
     IMU_BNO055 imu(i2c);
@@ -186,7 +186,7 @@ void launch_periodic() {
 
         // Flex
         //flex_sensors.printSingle(pc, 0);
-        flex_sensors.print(pc);
+        //flex_sensors.print(pc);
 
         // Touch
         /*
@@ -197,11 +197,12 @@ void launch_periodic() {
         }
         */
 
-        if (print_limit++ == 2) {
-            imu.print(pc);
-            print_limit = 0;
-        }
+        //if (print_limit++ == 2) {
+            //imu.print(pc);
+            //print_limit = 0;
+        //}
 
+        //translator.waitForEvent();
         Thread::wait(1000);
     }
 }
