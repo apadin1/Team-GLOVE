@@ -53,6 +53,10 @@ InterruptIn button4(BUTTON4);
 FlexSensors flex_sensors;
 flex_sensor_t flex[4];
 
+TouchSensor touch_sensor;
+key_states_t keys;
+key_states_t last_keys;
+
 KeyboardMouse * keyboard_ptr;
 
 /* Ticker callback, waiting for commands */
@@ -118,6 +122,34 @@ void spacebar() {
   }
 }
 
+void wasd() {
+    touch_sensor.writeKeys(&keys);
+    if (keys.a){
+        keyboard_ptr->keyPress('d',0);
+    }
+    else {
+        keyboard_ptr->keyRelease();
+    }
+    if (keys.b){
+        keyboard_ptr->keyPress('w',0);
+    }
+    else {
+        keyboard_ptr->keyRelease();
+    }
+    if (keys.c){
+        keyboard_ptr->keyPress('a',0);
+    }
+    else {
+        keyboard_ptr->keyRelease();
+    }
+    if (keys.d){
+        keyboard_ptr->keyPress('s',0);
+    }
+    else {
+        keyboard_ptr->keyRelease();
+    }aassswwwddddd    
+}
+
 ble_error_t err;
 Serial dbg(USBTX, USBRX);
 
@@ -142,13 +174,17 @@ int keyboard_mouse_demo() {
     wait(5);
 
     db = 0;
+    
+    Thread touch_sensor_thread;
+    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    
     //printf("start here\r\n");
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
-
     //printf("init ticker\r\n");
     Ticker waiting_tick;
     waiting_tick.attach(waiting, 1);
+    
 
     //printf("init buttons\r\n");
     led1 = LED_OFF;
@@ -156,8 +192,15 @@ int keyboard_mouse_demo() {
     led3 = LED_OFF;
     led4 = LED_OFF;
 
-    Ticker keyboard_test;
-    keyboard_test.attach(spacebar, 0.1);
+    Ticker flex_test;
+    flex_test.attach(spacebar, 0.1);
+    
+    Ticker touch_test;
+    touch_test.attach(wasd, 0.1);
+    
+    //RtosTimer* update_task_timer;
+    //update_task_timer = new RtosTimer(spacebar, osTimerPeriodic);
+    //update_task_timer->start(10);
 
     /*
     button1.fall(button1pressed);
