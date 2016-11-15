@@ -1,3 +1,8 @@
+#include <inttypes.h>
+
+extern void blink(void);
+extern void boot_delay(uint8_t);
+extern void sensors_to_lights(void);
 
 int main() {
 
@@ -7,8 +12,6 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    //touch_sensor_test();
     sensors_to_lights();
-    //launch_periodic();
     //blink();
 }
