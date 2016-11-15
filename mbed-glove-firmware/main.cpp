@@ -32,6 +32,7 @@ void blink() {
 
 void boot_delay(uint8_t t) {
     // this loop is to prevent the strange fatal state
+    // happening with serial debug
     led = 1;
     DigitalOut l2(LED2); l2 = 1;
     DigitalOut l3(LED3); l3 = 1;
@@ -50,45 +51,34 @@ void boot_delay(uint8_t t) {
     }
 }
 
+/*
 void imu_test() {
-
     IMU_BNO055 imu(i2c);
-
     imu.startUpdateTask(500);
-
     for (;;) {
         imu.print(pc);
-
         led = !led;
         Thread::wait(1000);
     }
 }
-
 void touch_sensor_test() {
     key_states_t keys;
     key_states_t last_keys;
-
     boot_delay(2);
-
     TouchSensor touch_sensor(i2c);
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-
     DigitalOut l2(LED2);
     DigitalOut l3(LED3);
     DigitalOut l4(LED4);
-
     boot_delay(2);
     for (;;) {
-
         last_keys = keys;
         touch_sensor.writeKeys(&keys);
-
         led = !keys.a;
         l2 = !keys.b;
         l3 = !keys.c;
         l4 = !keys.d;
-
         //if (last_keys.pack() != keys.pack()) {
             //TouchSensor::print(pc, keys);
         //}
@@ -97,19 +87,16 @@ void touch_sensor_test() {
 }
 
 void flex_test() {
-
     FlexSensors flex_sensors;
     flex_sensors.startUpdateTask(200);
-
     for (;;) {
-
         //flex_sensors.update();
         flex_sensors.printSingle(pc, 0);
-
         led = !led;
         Thread::wait(1000);
     }
 }
+*/
 
 void sensors_to_lights() {
 
@@ -174,7 +161,7 @@ void sensors_to_lights() {
         Thread::wait(25);
     }
 }
-
+/*
 void launch_periodic() {
     TouchSensor touch_sensor;
     Thread touch_sensor_thread;
@@ -213,6 +200,7 @@ void launch_periodic() {
         Thread::wait(1000);
     }
 }
+*/
 
 int main() {
 
