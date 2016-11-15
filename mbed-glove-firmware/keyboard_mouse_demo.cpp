@@ -110,8 +110,7 @@ void button4released() {
 
 void spacebar() {
   led3 = !led3;
-  flex_sensors.update();
-  flex_sensors.writeSensors(flex);
+  flex_sensors.updateAndWriteSensors(flex);
   if (flex[0] <= 600) {
     led4 = LED_ON;
     keyboard_ptr->keyPress(' ', 0);
@@ -147,7 +146,7 @@ void wasd() {
     }
     else {
         keyboard_ptr->keyRelease();
-    }aassswwwddddd    
+    }
 }
 
 ble_error_t err;
@@ -174,17 +173,18 @@ int keyboard_mouse_demo() {
     wait(5);
 
     db = 0;
-    
+
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-    
+
     //printf("start here\r\n");
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
     //printf("init ticker\r\n");
-    Ticker waiting_tick;
-    waiting_tick.attach(waiting, 1);
-    
+
+    //Ticker waiting_tick;
+    //waiting_tick.attach(waiting, 1);
+
 
     //printf("init buttons\r\n");
     led1 = LED_OFF;
@@ -192,12 +192,15 @@ int keyboard_mouse_demo() {
     led3 = LED_OFF;
     led4 = LED_OFF;
 
-    Ticker flex_test;
-    flex_test.attach(spacebar, 0.1);
-    
-    Ticker touch_test;
-    touch_test.attach(wasd, 0.1);
-    
+    Callback<void()> spaace(spacebar);
+    RtosTimer spacebar_timer(spaace, osTimerPeriodic);
+    spacebar_timer.start(100);
+    //Ticker flex_test;
+    //flex_test.attach(spacebar, 0.1);
+
+    //Ticker touch_test;
+    //touch_test.attach(wasd, 0.1);
+
     //RtosTimer* update_task_timer;
     //update_task_timer = new RtosTimer(spacebar, osTimerPeriodic);
     //update_task_timer->start(10);
