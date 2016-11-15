@@ -19,16 +19,14 @@
 
 #include "touch_sensor.h"
 
-const PinName TOUCH_DEBUG_PIN = p14;
-
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl), change_event(intr), working(TOUCH_DEBUG_PIN) {
+    : qt(sda, scl), change_event(intr) {
 
     initialize();
 }
 
 TouchSensor::TouchSensor(I2C& i2c, PinName intr)
-    : qt(i2c), change_event(intr), working(TOUCH_DEBUG_PIN) {
+    : qt(i2c), change_event(intr) {
 
     initialize();
 }
@@ -58,28 +56,22 @@ void TouchSensor::writeStaticConfig() {
 }
 
 void TouchSensor::writeKeys(key_states_t* key_states) {
-    keys_mutex.lock();
     key_states->a = keys.a;
     key_states->b = keys.b;
     key_states->c = keys.c;
     key_states->d = keys.d;
-    keys_mutex.unlock();
 }
 
 void TouchSensor::update() {
-    working = 1;
-
     uint8_t buttons = qt.getButtonsState();
 
     // Check overflow flag
     if (buttons & 0x80) {
         // do something about it
-        working = 0;
         return;
     }
 
     // just get the keys we want
-    keys_mutex.lock();
     keys.a = (buttons & 0x01); // key 0
     keys.b = (buttons & 0x02) >> 1; // key 1
     keys.c = (buttons & 0x04) >> 2; // key 2
@@ -87,8 +79,6 @@ void TouchSensor::update() {
     //keys.e = buttons & 0x10; // key 4
     //keys.f = buttons & 0x20; // key 5
     //keys.g = buttons & 0x40; // key 6
-    keys_mutex.unlock();
-    working = 0;
 }
 
 void TouchSensor::changeEventHandler() {

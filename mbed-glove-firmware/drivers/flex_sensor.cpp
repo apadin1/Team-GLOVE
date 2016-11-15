@@ -16,27 +16,22 @@
 
 const PinName FLEX_DEBUG_PIN = p15;
 
-FlexSensors::FlexSensors()
-    : working(FLEX_DEBUG_PIN) {
-
+FlexSensors::FlexSensors() {
     pins[0] = new AnalogIn(FLEX_0);
     pins[1] = new AnalogIn(FLEX_1);
     pins[2] = new AnalogIn(FLEX_2);
     pins[3] = new AnalogIn(FLEX_3);
 
-    update_task_timer = new RtosTimer(this, &FlexSensors::update, osTimerPeriodic);
+    //update_task_timer = new RtosTimer(this, &FlexSensors::update, osTimerPeriodic);
 }
 
 void FlexSensors::update() {
-    mutex.lock();
-    working = 1;
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
     }
-    working = 0;
-    mutex.unlock();
 }
 
+/*
 void FlexSensors::startUpdateTask(uint32_t ms) {
     update_task_timer->start(ms);
 }
@@ -44,24 +39,19 @@ void FlexSensors::startUpdateTask(uint32_t ms) {
 void FlexSensors::stopUpdateTask() {
     update_task_timer->stop();
 }
+*/
 
 void FlexSensors::writeSensors(flex_sensor_t* buf) {
-    mutex.lock();
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         buf[i] = values[i];
     }
-    mutex.unlock();
 }
 
 void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
-    mutex.lock();
-    working = 1;
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
         buf[i] = values[i];
     }
-    working = 0;
-    mutex.unlock();
 }
 
 void FlexSensors::print(Serial& pc) {

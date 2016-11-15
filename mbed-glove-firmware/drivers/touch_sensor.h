@@ -8,8 +8,7 @@
  *     Adrian Padin
  *     Tim Schumacher
  *
- * Purpose:
- *   Top-level interface for working with capacitive sensor chip,
+ * Purpose: *   Top-level interface for working with capacitive sensor chip,
  *   which uses I2C and can communicate the values of up to 7 sensors
  *
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
@@ -36,7 +35,6 @@
 #include <inttypes.h>
 
 #include "mbed.h"
-#include "rtos.h"
 
 #include "at42qt1070.h"
 
@@ -104,7 +102,6 @@ typedef struct {
         return a << 3 | b << 2 | c << 1 | d;
     }
 } key_states_t;
-//typedef uint8_t key_states_t;
 
 class TouchSensor {
 public:
@@ -173,8 +170,6 @@ private:
     InterruptIn change_event;
     Semaphore do_update;
     key_states_t keys;
-    Mutex keys_mutex;
-    DigitalOut working;
 };
 
 #endif /* TOUCH_SENSOR_H_ */
