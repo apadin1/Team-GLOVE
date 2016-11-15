@@ -78,44 +78,45 @@ static void connectedCallback(KeyboardMouseService * new_ptr, bool connected) {
     }
     else {
         my_ptr->setConnected(connected);
-    }
+    }    
 }
 
-static void onConnect(const Gap::ConnectionCallbackParams_t* params=NULL) {
+static void onConnect() { 
     connectedCallback(NULL, true);
 }
-static void onDisconnect(const Gap::DisconnectionCallbackParams_t* params=NULL) {
+static void onDisconnect() {
     connectedCallback(NULL, false);
 }
 
 /* Wrapper class for Keyboard Mouse BLE Service */
 KeyboardMouse::KeyboardMouse() {
-
+    
+    /* Initialize keyboard variables */
+    len = 0;
+    memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
+            
     /* Prepare to connect and set callbacks */
-    printf("init ble\r\n");
     ble.init();
     ble.gap().onConnection((Gap::ConnectionEventCallback_t) onConnect);
     ble.gap().onDisconnection((Gap::DisconnectionEventCallback_t) onDisconnect);
 
     /* Security is required to pair */
-    printf("init security\r\n");
     initializeSecurity(ble);
-
+    
     /* Initialize service pointer and connection callbacks */
     service_ptr = new KeyboardMouseService(ble);
     connectedCallback(service_ptr, true);
-
+    
     /* Initialize GAP transmission */
-    printf("init gap\r\n");
     initializeHOGP(ble);
-
+    
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
-
+    
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::COMPLETE_LOCAL_NAME,
         (const uint8_t *) DEVICE_NAME,
         sizeof(DEVICE_NAME));
-
+    
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::SHORTENED_LOCAL_NAME,
         (const uint8_t *) SHORT_NAME,
@@ -124,7 +125,6 @@ KeyboardMouse::KeyboardMouse() {
     ble.gap().setDeviceName((const uint8_t *) DEVICE_NAME);
 
     /* Search for nearby devices to comminucate with */
-    printf("start advertising\r\n");
     ble.gap().startAdvertising();
 }
 
@@ -136,43 +136,64 @@ KeyboardMouse::~KeyboardMouse() {
 /******************** MOUSE INTERFACE ********************/
 
 /* Set a button to be pressed or released */
-ble_error_t KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
-    return service_ptr->setMouseButton(button, state);
+void KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
+    service_ptr->setMouseButton(button, state);        
 }
 
 /* Set the speed of the mouse cursor in the x direction */
-ble_error_t KeyboardMouse::setMouseSpeedX(int8_t speed) {
-    return service_ptr->setMouseSpeedX(speed);
+void KeyboardMouse::setMouseSpeedX(int8_t speed) {
+    service_ptr->setMouseSpeedX(speed);
 }
 
 /* Set the speed of the mouse cursor in the y direction */
-ble_error_t KeyboardMouse::setMouseSpeedY(int8_t speed) {
-    return service_ptr->setMouseSpeedY(speed);
+void KeyboardMouse::setMouseSpeedY(int8_t speed) {
+    service_ptr->setMouseSpeedY(speed);
 }
 
 /* Set the scroll value of the mouse scroll wheel */
-ble_error_t KeyboardMouse::setMouseScroll(int8_t speed) {
-    return service_ptr->setMouseScroll(speed);
+void KeyboardMouse::setMouseScroll(int8_t speed) {
+    service_ptr->setMouseScroll(speed);
 }
 
-ble_error_t KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
-    return service_ptr->setMouseSpeedAll(x, y, scroll);
+void KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
+    service_ptr->setMouseSpeedAll(x, y, scroll);
 }
 
 /******************** KEYBOARD INTERFACE ********************/
 
-/* Send a character to the keyboard */
-ble_error_t KeyboardMouse::sendChar(char c) {
-    return service_ptr->sendChar(c);
-}
-
 /* Set a keyboard button to be 'pressed' */
-ble_error_t KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
-    return service_ptr->keyPress(key, modifier);
+void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
+    
+    /* If the array is full, there is nothing to do */
+    if (len == KBD_USAGE_LENGTH) return;
+    
+    /* Make sure the key is not already pressed */
+    for (int i = 0; i < len; ++i) {
+        if (keyboard_keys[i] == key) return;
+    }
+    
+    /* Not already pressed - add it to the list */
+    keyboard_keys[len] = key;
+    len += 1;
+    service_ptr->keyPress(keyboard_keys, len, modifier);
 }
 
 
 /* Set the keyboard to be all buttons released */
-ble_error_t KeyboardMouse::keyRelease() {
-    return service_ptr->keyRelease();
+void KeyboardMouse::keyRelease(uint8_t key) {
+    
+    /* Check if it is actually there */
+    for (int i = 0; i < len; ++i) {
+        
+        /* If found, zero out and shift others down */
+        if (keyboard_keys[i] == key) {
+            len -= 1;
+            for (int j = i; j < len; ++j) {
+                keyboard_keys[j] = keyboard_keys[j+1];
+            }
+            service_ptr->keyPress(keyboard_keys, len);
+            return;
+        }
+    }
+    return; // If not found do nothing
 }
