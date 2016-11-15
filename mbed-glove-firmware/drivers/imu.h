@@ -61,11 +61,8 @@ public:
     /*
      * Constructor initializes the BNO055 and takes care
      * of the default configuration.
-     *
-     * XXX Use Serial& for debug
      */
     IMU_BNO055(I2C& i2c);
-    IMU_BNO055(I2C& i2c, Serial& debug_out);
 
     /*
      * Update the orientation and acceleration information
@@ -77,18 +74,24 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(uint32_t ms=IMU_UPDATE_PERIOD);
+    //void startUpdateTask(uint32_t ms=IMU_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
      */
-    void stopUpdateTask();
+    //void stopUpdateTask();
 
     /*
      * Write the imu orientation values to the given struct
      * This assumes no ownership or locking of the given container
      */
     void writeSensors(bno_imu_t*);
+
+    /*
+     * Single function call for manual polling
+     * Calls update then writes to the provided
+     */
+    void updateAndWriteSensors(bno_imu_t*);
 
     /*
      * something something do manual calibration
@@ -103,15 +106,12 @@ public:
 private:
     BNO055 imu;
     bno_imu_t imu_data;
-    Mutex mutex;
 
     BNO055_ID_INF_TypeDef bno055_id_inf;
     BNO055_EULER_TypeDef euler_angles;
     BNO055_LIN_ACC_TypeDef linear_acc;
 
-    RtosTimer* update_task_timer;
-
-    DigitalOut working;
+    //RtosTimer* update_task_timer;
 };
 
 /*
