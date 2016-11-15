@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include "KeyboardMouseService.h"
 
- #include "KeyboardMouseService.h"
 
 /******************** REPORT DESCRIPTOR ********************/
 
@@ -125,17 +126,18 @@ KeyboardMouseService::KeyboardMouseService(BLE &_ble) :
         outputReportLength  = sizeof(outputReportData),
         featureReportLength = 0,
         reportTickerDelay   = REPORT_TICKER_PERIOD),
-
+            
     /* Mouse variables */
     mouse_buttons(0),
-    x_speed(0),
-    y_speed(0),
-    scroll_speed(0),
-
+    mouse_x(0),
+    mouse_y(0),
+    mouse_scroll(0),
+    
     /* Keyboard variables */
-    usage(0),
     modifier(0)
-{}
+{
+    memset(usage, 0, KBD_USAGE_LENGTH);
+}
 
 
 /******************** SENDING REPORTS ********************/
@@ -146,14 +148,13 @@ ble_error_t KeyboardMouseService::sendKeyboardReport() {
     /* Build the report, specifying a keyboard report */
     hid_report.keyboard.report_id = REPORT_ID_KEYBOARD;
     hid_report.keyboard.modifier = modifier;
-    hid_report.keyboard.unused = 0;
-    hid_report.keyboard.usage = usage;
-    memset(hid_report.keyboard.unused2, 0, sizeof(hid_report.keyboard.unused2));
+    hid_report.keyboard.reserved = 0;
+    memcpy(hid_report.keyboard.usage, this->usage, KBD_USAGE_LENGTH);
 
     /* Send the report */
     inputReportLength = KBD_REPORT_LENGTH;
-    printf("Mouse send: %d %d\r\n", usage, modifier);
-    return send(hid_report.report);
+    ble_error_t ret = send(hid_report.report);
+    return ret;
 }
 
 /* Send a mouse report */
@@ -162,83 +163,77 @@ ble_error_t KeyboardMouseService::sendMouseReport() {
     /* Build the report, specifying a mouse report */
     hid_report.mouse.report_id = REPORT_ID_MOUSE;
     hid_report.mouse.buttons = mouse_buttons;
-    hid_report.mouse.x_speed = x_speed;
-    hid_report.mouse.y_speed = y_speed;
-    hid_report.mouse.scroll_speed = scroll_speed;
+    hid_report.mouse.x_speed = mouse_x;
+    hid_report.mouse.y_speed = mouse_y;
+    hid_report.mouse.scroll_speed = mouse_scroll;
     memset(hid_report.mouse.unused, 0, sizeof(hid_report.mouse.unused));
 
     /* Send the report */
-    printf("Mouse send: %d %d %d %d\r\n", x_speed, y_speed, scroll_speed, mouse_buttons);
     inputReportLength = MOUSE_REPORT_LENGTH;
-    return send(hid_report.report);
+    ble_error_t ret = send(hid_report.report);
+    return ret;
 }
 
 
 /******************** KEYBOARD INTERFACE ********************/
 
 /* Send a report indicating that a keybaord key is being pressed */
-ble_error_t KeyboardMouseService::keyPress(uint8_t key, uint8_t modifier) {
-    this->usage = keymap[key].usage;
+void KeyboardMouseService::keyPress(uint8_t * keys, int len, uint8_t modifier) {
+
+    /* Set the defined usages */
+    if (len > KBD_USAGE_LENGTH) { len = KBD_USAGE_LENGTH; }
+    for (int i = 0; i < len; ++i) {
+        this->usage[i] = keymap[keys[i]].usage;
+    }
+    /* Zero out the other usages */
+    for (int i = len; i < KBD_USAGE_LENGTH; ++i) {
+        this->usage[i] = 0;
+    }
     this->modifier = modifier;
-    return sendKeyboardReport();
 }
 
-/* Send an empty report, indicating a key was released */
-ble_error_t KeyboardMouseService::keyRelease() {
-    this->usage = 0;
+/* Send a key press without changing the modifier */
+void KeyboardMouseService::keyPress(uint8_t * keys, int len) {
+    return keyPress(keys, len, this->modifier);
+}
+
+/* Send an empty report, indicating all keys released */
+void KeyboardMouseService::keyRelease() {
+
+    /* Send an empy report (all zeros) */
+    memset(this->usage, 0, KBD_USAGE_LENGTH);
     this->modifier = 0;
-    return sendKeyboardReport();
 }
-
-/* Send a single keyboard character */
-ble_error_t KeyboardMouseService::sendChar(char c) {
-
-    /* Key pressed */
-    this->usage = keymap[c].usage;
-    this->modifier = keymap[c].modifier;
-    sendKeyboardReport();
-
-    /* Key released */
-    this->usage = 0;
-    this->modifier = 0;
-    return sendKeyboardReport();
-}
-
 
 /******************** MOUSE INTERFACE ********************/
 
 /* Set a button to be pressed or released */
-ble_error_t KeyboardMouseService::setMouseButton(MouseButton button, ButtonState state) {
+void KeyboardMouseService::setMouseButton(MouseButton button, ButtonState state) {
     if (state == UP)
         this->mouse_buttons &= ~(button);
-    else /*state == DOWN */
+    else /* state == DOWN */
         this->mouse_buttons |= button;
-    return sendMouseReport();
 }
 
 /* Set the speed of the mouse cursor in the x direction */
-ble_error_t KeyboardMouseService::setMouseSpeedX(int8_t speed) {
-    this->x_speed = speed;
-    return sendMouseReport();
+void KeyboardMouseService::setMouseSpeedX(int8_t speed) {
+    this->mouse_x = speed;
 }
 
 /* Set the speed of the mouse cursor in the y direction */
-ble_error_t KeyboardMouseService::setMouseSpeedY(int8_t speed) {
-    this->y_speed = speed;
-    return sendMouseReport();
+void KeyboardMouseService::setMouseSpeedY(int8_t speed) {
+    this->mouse_y = speed;
 }
 
 /* Set the scroll value of the mouse scroll wheel */
-ble_error_t KeyboardMouseService::setMouseScroll(int8_t speed) {
-    this->scroll_speed = speed;
-    return sendMouseReport();
+void KeyboardMouseService::setMouseScroll(int8_t speed) {
+    this->mouse_scroll = speed;
 }
 
 /* Set the x, y, and scroll speed of the mouse */
-ble_error_t KeyboardMouseService::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
-    this->x_speed = x;
-    this->y_speed = y;
-    this->scroll_speed = scroll;
-    return sendMouseReport();
+void KeyboardMouseService::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
+    this->mouse_x = x;
+    this->mouse_y = y;
+    this->mouse_scroll = scroll;
 }
 
