@@ -105,6 +105,8 @@ void Translator::gestureCheck() {
 
   /* Update Sensor Data */
   flex->updateAndWriteSensors(&glove_data.flex_sensors);
+  touch->writeKeys(&glove_data.touch_sensor);
+  imu->updateAndWriteSensors(&glove_data.imu);
 
   /* Flex Sensor functionality */
   for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -165,9 +167,6 @@ void Translator::gestureCheck() {
     }//mouse
   }//for
 
-  /* Grab Touch Sensor values */
-  touch->writeKeys(&glove_data.touch_sensor);
-
   /* Touch Sensor functionality */
   for (int i = 0; i < TOUCH_COUNT; ++i) {
 
@@ -226,9 +225,6 @@ void Translator::gestureCheck() {
       }//for
     }//mouse
   }//for
-
-  /* Update IMU values */
-  imu->updateAndWriteSensors(&glove_data.imu);
 
   /* IMU functionality */
   for (int i = 0; i < IMU_COUNT; ++i) {

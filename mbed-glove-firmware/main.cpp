@@ -5,8 +5,24 @@ extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 
 void launch() {
-  TouchSensor touch_sensor;
+  FlexSensors flex; //Initialize flex sensor object
+  I2C i2c(I2C_SDA0, I2C_SCL0); //Initialize i2c bus for imu and touch_sensor
+  IMU_BNO055 imu(i2c); //Initialize imu object
 
+  /* Start update thread for touch sensor */
+  TouchSensor touch_sensor(i2c); //Initialize touch sensor object
+  Thread touch_sensor_thread; //Initialize touch sensor thread (interrupt driven)
+  touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+
+  /* Initialize KeyboardMouse object */
+  KeyboardMouse input;
+
+  Translator translator(&flex, &imu, &touch_sensor, &input)
+  Translator.startUpdateTask(20);
+
+  for (;;) {
+    input.waitForEvent();
+  }
 
 }
 
