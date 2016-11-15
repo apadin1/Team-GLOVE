@@ -207,6 +207,12 @@ void launch_periodic() {
     }
 }
 
+void launch() {
+  TouchSensor touch_sensor;
+  
+
+}
+
 extern void keyboard_mouse_demo(void);
 
 int main() {
@@ -219,7 +225,6 @@ int main() {
      */
     //flex_to_lights();
     //imu_to_lights();
-
     //launch_periodic();
-    keyboard_mouse_demo();
+    //keyboard_mouse_demo();
 }

@@ -68,7 +68,7 @@ public:
    * Constructor for translator
    *
    */
-  Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
+  Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch, KeyboardMouse* input);
 
   /*
    * Update gesture mapping via new configuration vector.
@@ -76,11 +76,6 @@ public:
    * which should then call this function
    */
   //void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
-
-  /*
-   * Calls HIDinput waitForEvent function
-   */
-  void waitForEvent();
 
   /*
    * Analyze sensors to determine if gesture
@@ -105,7 +100,7 @@ private:
   AnalogButton<flex_sensor_t>* flex_sensors[FLEX_COUNT];
   AnalogButton<uint8_t>* touch_sensors[TOUCH_COUNT];
   AnalogButton<float>* imu_axis[IMU_COUNT];
-  KeyboardMouse HIDinput; //KeyboardMouse object
+  KeyboardMouse* HIDinput; //KeyboardMouse object
 
   //Glove data
   FlexSensors* flex;

@@ -18,9 +18,8 @@
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
 Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
-        TouchSensor* _touch)
-     : flex(_flex), imu(_imu), touch(_touch), working(TRANSLATOR_DEBUG_PIN) {
-  //TODO: Determine default glove mapping (Minecraft?)
+        TouchSensor* _touch, KeyboardMouse* _input)
+     : flex(_flex), imu(_imu), touch(_touch), HIDinput(_input), working(TRANSLATOR_DEBUG_PIN) {
 
   /* FLEX1 */
   AnalogButton<flex_sensor_t> flex1(&glove_data.flex_sensors[0], 300, 800, 0.2, false, false, false);
@@ -79,7 +78,7 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
   imu_axis[YAWRIGHT] = &yawright;
 
   /* BUTTON MAPPING */
-  flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
+  //flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
   //AnalogButton[FLEX2].change_hid_profile();
   //AnalogButton[FLEX3].change_hid_profile();
   //AnalogButton[FLEX4].change_hid_profile();
@@ -94,8 +93,6 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
   //AnalogButton[YAWLEFT].change_hid_profile();
   //AnalogButton[YAWRIGHT].change_hid_profile();
 
-  while (!HIDinput.isConnected()) {}
-
   update_task_timer = new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
 
@@ -104,17 +101,10 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
    //sensors = *updatedMapping;
 //}
 
-void Translator::waitForEvent() {
-  HIDinput.waitForEvent();
-}
-
 void Translator::gestureCheck() {
-  working = 1;
 
   /* Update Sensor Data */
-  flex->writeSensors(glove_data.flex_sensors);
-  touch->writeKeys(&glove_data.touch_sensor);
-  imu->writeSensors(&glove_data.imu);
+  flex->updateAndWriteSensors(&glove_data.flex_sensors);
 
   /* Flex Sensor functionality */
   for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -124,10 +114,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          //HIDinput.keyPress(keyboard.key);
+          HIDinput->keyPress(keyboard.key);
         }
         else {
-          //HIDinput.keyRelease(keyboard.key);
+          HIDinput->keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -140,45 +130,43 @@ void Translator::gestureCheck() {
         /* Left click */
         if (mouse.part == LBUTTON) {
           if (mouse.value) {
-            //HIDinput.setMouseButton(LEFT, DOWN);
+            HIDinput->setMouseButton(LEFT, DOWN);
           }
           else {
-            //HIDinput.setMouseButton(LEFT, UP);
+            HIDinput->setMouseButton(LEFT, UP);
           }
         }
 
         /* Right click */
         else if (mouse.part == RBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(RIGHT, DOWN);
+            HIDinput->setMouseButton(RIGHT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(RIGHT, UP);
+            HIDinput->setMouseButton(RIGHT, UP);
           }
         }
 
         /* Scroll functionality */
         else if (mouse.part == SCROLLAXIS) {
-          HIDinput.setMouseScroll(mouse.value);
+          HIDinput->setMouseScroll(mouse.value);
         }
 
         /* X-axis functionality */
         else if (mouse.part == XAXIS) {
-          HIDinput.setMouseSpeedX(mouse.value);
+          HIDinput->setMouseSpeedX(mouse.value);
         }
 
         /* Y-axis functionality */
         else if (mouse.part == YAXIS) {
-          HIDinput.setMouseSpeedY(mouse.value);
+          HIDinput->setMouseSpeedY(mouse.value);
         }
       }//for
     }//mouse
-    //TODO: Joystick implementation
-    //else if (sensors[i].is_joystick()) {
-      //getJoystickData()
-      //if (changed == 1)
-    //}//joystick
   }//for
+
+  /* Grab Touch Sensor values */
+  touch->writeKeys(&glove_data.touch_sensor);
 
   /* Touch Sensor functionality */
   for (int i = 0; i < TOUCH_COUNT; ++i) {
@@ -188,10 +176,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          //HIDinput.keyPress(keyboard.key);
+          HIDinput->keyPress(keyboard.key);
         }
         else {
-          //HIDinput.keyRelease(keyboard.key);
+          HIDinput->keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -204,45 +192,43 @@ void Translator::gestureCheck() {
         /* Left click */
         if (mouse.part == LBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(LEFT, DOWN);
+            HIDinput->setMouseButton(LEFT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(LEFT, UP);
+            HIDinput->setMouseButton(LEFT, UP);
           }
         }
 
         /* Right click */
         else if (mouse.part == RBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(RIGHT, DOWN);
+            HIDinput->setMouseButton(RIGHT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(RIGHT, UP);
+            HIDinput->setMouseButton(RIGHT, UP);
           }
         }
 
         /* Scroll functionality */
         else if (mouse.part == SCROLLAXIS) {
-          HIDinput.setMouseScroll(mouse.value);
+          HIDinput->setMouseScroll(mouse.value);
         }
 
         /* X-axis functionality */
         else if (mouse.part == XAXIS) {
-          HIDinput.setMouseSpeedX(mouse.value);
+          HIDinput->setMouseSpeedX(mouse.value);
         }
 
         /* Y-axis functionality */
         else if (mouse.part == YAXIS) {
-          HIDinput.setMouseSpeedY(mouse.value);
+          HIDinput->setMouseSpeedY(mouse.value);
         }
       }//for
     }//mouse
-    //TODO: Joystick implementation
-    //else if (sensors[i].is_joystick()) {
-      //getJoystickData()
-      //if (changed == 1)
-    //}//joystick
   }//for
+
+  /* Update IMU values */
+  imu->updateAndWriteSensors(&glove_data.imu);
 
   /* IMU functionality */
   for (int i = 0; i < IMU_COUNT; ++i) {
@@ -252,10 +238,10 @@ void Translator::gestureCheck() {
       keyboardData keyboard = imu_axis[i]->get_keyboard_data();
       if (keyboard.changed && keyboard.valid) {
         if (keyboard.value) {
-          //HIDinput.keyPress(keyboard.key);
+          HIDinput->keyPress(keyboard.key);
         }
         else {
-          //HIDinput.keyRelease(keyboard.key);
+          HIDinput->keyRelease(keyboard.key);
         }
       }
     }//keyboard
@@ -268,46 +254,46 @@ void Translator::gestureCheck() {
         /* Left click */
         if (mouse.part == LBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(LEFT, DOWN);
+            HIDinput->setMouseButton(LEFT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(LEFT, UP);
+            HIDinput->setMouseButton(LEFT, UP);
           }
         }
 
         /* Right click */
         else if (mouse.part == RBUTTON) {
           if (mouse.value) {
-            HIDinput.setMouseButton(RIGHT, DOWN);
+            HIDinput->setMouseButton(RIGHT, DOWN);
           }
           else {
-            HIDinput.setMouseButton(RIGHT, UP);
+            HIDinput->setMouseButton(RIGHT, UP);
           }
         }
 
         /* Scroll functionality */
         else if (mouse.part == SCROLLAXIS) {
-          HIDinput.setMouseScroll(mouse.value);
+          HIDinput->setMouseScroll(mouse.value);
         }
 
         /* X-axis functionality */
         else if (mouse.part == XAXIS) {
-          HIDinput.setMouseSpeedX(mouse.value);
+          HIDinput->setMouseSpeedX(mouse.value);
         }
 
         /* Y-axis functionality */
         else if (mouse.part == YAXIS) {
-          HIDinput.setMouseSpeedY(mouse.value);
+          HIDinput->setMouseSpeedY(mouse.value);
         }
       }//for
     }//mouse
-    //TODO: Joystick implementation
-    //else if (sensors[i].is_joystick()) {
-      //getJoystickData()
-      //if (changed == 1)
-    //}//joystick
   }//for
-  working = 0;
+
+  /* Send HID inputs */
+  HIDinput->sendKeyboard();
+  HIDinput->sendMouse();
+
+  return;
 }
 
 void Translator::startUpdateTask(uint32_t ms) {
