@@ -57,25 +57,29 @@ public:
     // HID output
     AnalogButton() {}
     AnalogButton(T* data_, T min_, T max_, float transition_band,
-                 bool imu_ = true, bool positive_range = true,
-                 bool active_low_ = false)
+                 bool imu_=true, bool positive_range=true,
+                 bool active_low_=false)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_),
           is_analog(true), imu(imu_), pos_range(positive_range) {
+
         update_threshold(transition_band);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
     }
+
     // Use this cTor for pure digital buttons
-    AnalogButton(T* data_, bool active_low_ = 0)
+    AnalogButton(T* data_, bool active_low_=0)
         : data(data_), active_low(active_low_), max_abs(0), is_analog(false) {
         cur_keyboard = keyboardData();
     }
+
     // these are functions to check the HID status of the sensor
     bool is_keyboard() { return HID == KEYBOARD; }
     bool is_mouse() { return HID == MOUSE; }
     bool is_joystick() { return HID == JOYSTICK; }
+
     // call this function to change the hid status of the
-    void change_hid_profile(hidType hid, char key_ = 0,
+    void change_hid_profile(hidType hid, char key_=0,
                             mousePart part_ = NONE) {
         HID = hid;
         if (is_analog) {

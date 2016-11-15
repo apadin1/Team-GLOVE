@@ -16,11 +16,13 @@
 #ifndef TRANSLATOR_H_
 #define TRANSLATOR_H_
 
+#include <vector>
+
+#include "mbed.h"
+
 #include "analog_button.h"
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
-#include "mbed.h"
-#include <vector>
 
 #define GESTURE_COUNT 14
 #define FLEX_COUNT 4
@@ -28,9 +30,9 @@
 #define IMU_COUNT 6
 
 /*
- * Update Period (in milliseconds)
+ * Default Update Period (in milliseconds)
  */
-const uint32_t COLLECTOR_UPDATE_PERIOD = 10;
+const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
 
 enum FLEX {
     FLEX1,
@@ -89,7 +91,7 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(uint32_t ms = COLLECTOR_UPDATE_PERIOD);
+    void startUpdateTask(uint32_t ms=COLLECTOR_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -99,8 +101,8 @@ public:
 private:
     // NOTE: Vector indexed by GESTURE enum
     AnalogButton<flex_sensor_t>* flex_sensors[FLEX_COUNT];
-    AnalogButton<uint8_t>* touch_sensors[TOUCH_COUNT];
     AnalogButton<float>* imu_axis[IMU_COUNT];
+    AnalogButton<uint8_t>* touch_sensors[TOUCH_COUNT];
     KeyboardMouse* HIDinput;  // KeyboardMouse object
 
     // Glove data
