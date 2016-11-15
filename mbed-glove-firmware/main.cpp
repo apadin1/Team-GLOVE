@@ -20,9 +20,13 @@ Serial pc(USBTX, USBRX);
 DigitalOut led(LED1);
 
 void blink() {
+    DigitalOut l2(LED2);
+    l2 = 1;
+    led = 0;
     for (;;) {
         led = !led;
-        Thread::wait(250);
+        l2 = !l2;
+        Thread::wait(520);
     }
 }
 
@@ -221,4 +225,5 @@ int main() {
     //touch_sensor_test();
     sensors_to_lights();
     //launch_periodic();
+    //blink();
 }
