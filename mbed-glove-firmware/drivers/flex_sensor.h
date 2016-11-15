@@ -70,12 +70,12 @@ public:
      *
      * Measured to take approximately 520us
      */
-    void startUpdateTask(uint32_t ms=FLEX_UPDATE_PERIOD);
+    //void startUpdateTask(uint32_t ms=FLEX_UPDATE_PERIOD);
 
     /*
      * Calls the stop() method on the periodic update timer,
      */
-    void stopUpdateTask();
+    //void stopUpdateTask();
 
     /*
      * Write the flex sensor values to the given array.
@@ -104,8 +104,6 @@ public:
 private:
     flex_sensor_t values[FLEX_SENSORS_COUNT];
     AnalogIn* pins[FLEX_SENSORS_COUNT];
-    Mutex mutex;
-    RtosTimer* update_task_timer;
-    DigitalOut working;
+    //RtosTimer* update_task_timer;
 };
 #endif /* FLEX_SENSOR_H_ */
