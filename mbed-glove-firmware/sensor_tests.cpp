@@ -129,9 +129,10 @@ void sensors_to_lights() {
      * Light one is the combined IMU status
      */
     for (;;) {
-        imu.updateAndWrite(&imu_vals);
-        flex_sensors.updateAndWrite(flex_vals);
         touch_sensor.updateAndWrite(&keys);
+        wait_ms(1);
+        flex_sensors.updateAndWrite(flex_vals);
+        imu.updateAndWrite(&imu_vals);
 
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];

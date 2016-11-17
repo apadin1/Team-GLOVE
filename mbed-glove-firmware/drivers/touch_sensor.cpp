@@ -82,8 +82,11 @@ void TouchSensor::update() {
     //keys.g = buttons & 0x40; // key 6
 }
 
+DigitalOut l4(LED4);
 void TouchSensor::updateAndWrite(key_states_t* key_states) {
+    l4 = 0;
     update();
+    l4 = 1;
     writeKeys(key_states);
 }
 
