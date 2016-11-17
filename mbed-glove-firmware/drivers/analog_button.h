@@ -234,6 +234,19 @@ private:
 };
 
 class flexToHID {
+    public:
+    flexToHID( uint16_t* data_, uint16_t min_, uint16_t max_, float transition_band, bool active_low_=false)
+        : active_low(active_low_) {
+        sensor_conversion = AnalogButton<uint16_t>(data_, min_, max_, transition_band_, active_low_);
+        cur_keyboard = keyboardData();
+        cur_mouse = mouseData();
+    }
+    private:
+    bool active_low;
+    AnalogButton <uint16_t> sensor_conversion;
+    hidType HID;
+    keyboardData cur_keyboard;
+    mouseData cur_mouse;
     
 };
 class imuToHID {
@@ -246,7 +259,7 @@ template <class T>
 class AnalogButton {
 public:
 
-    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_=1)
+    AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_) {
 
         update_threshold(transition_band);
