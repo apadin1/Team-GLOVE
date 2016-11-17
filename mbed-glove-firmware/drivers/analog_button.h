@@ -246,6 +246,12 @@ class flexToHID {
     }
 
     mouseData get_mouse_data() {
+        cur_mouse.valid = true;
+        if (cur_mouse.part == LBUTTON || cur_mouse.part == RBUTTON)
+            cur_mouse.value = sensor_conversion.get_binary_state();
+        else {
+            cur_mouse.valid = false;
+        }
         return cur_mouse;
     }
     
@@ -308,10 +314,12 @@ public:
   }
 
   keyboardData get_keyboard_data() {
+    cur_keyboard.value = *data;
     return cur_keyboard;
   }
 
   mouseData get_mouse_data() {
+    cur_mouse.value = *data;
     return cur_mouse;
   }
 
@@ -378,11 +386,24 @@ public:
 
         return binary_state;
     }
-
+    uint8_t analog_read() {
+        T value = (*data < max_abs) ? *data : max_abs;
+        value = (*data > min_abs) ? *data : min_abs;
+        if (imu) {
+            int8_t temp = 127 * (value / range);
+        if (temp > 10 || temp < -10)
+            cur_mouse.value = temp;
+        else
+            cur_mouse.value = 0;
+        } else {
+            int8_t temp = 127 * (value / range);
+        
+    }
+    T* data;
+    T range;
 private:
     bool binary_state;
     bool active_low;
-    T* data;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
 };
