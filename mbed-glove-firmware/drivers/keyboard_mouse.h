@@ -17,6 +17,18 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 #include "KeyboardMouseService.h"
+#include "ble/services/BatteryService.h"
+#include "ble/services/DeviceInformationService.h"
+
+/* IO capabilities of the device. */
+#ifndef HID_SECURITY_IOCAPS
+#define HID_SECURITY_IOCAPS (SecurityManager::IO_CAPS_NONE)
+#endif
+
+/* Security level. */
+#ifndef HID_SECURITY_REQUIRE_MITM
+#define HID_SECURITY_REQUIRE_MITM false
+#endif
 
 static const char DEVICE_NAME[] = "TeamGLOVE";
 static const char SHORT_NAME[] = "glove1"; 
@@ -26,8 +38,9 @@ class KeyboardMouse {
 
 public:
 
-    /* Constructor */
+    /* Constructor and Destructor*/
     KeyboardMouse();
+    ~KeyboardMouse();
     
     /******************** MOUSE INTERFACE ********************/
 
@@ -65,13 +78,7 @@ public:
     void setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll);
     
     /******************** KEYBOARD INTERFACE ********************/
-    
-    /* Send a given character to the keyboard
-     * Parameters:
-     *   c - character to send
-     */
-    void sendChar(char c);
-    
+
     /* Set a keyboard button to be 'pressed' 
      * Parameters:
      *
@@ -89,32 +96,33 @@ public:
      *      See keyboard_types.h for more information on function
      *      keys and modifiers.
      */
-    void keyPress(uint8_t key, uint8_t modifier);
+    void keyPress(uint8_t key, uint8_t modifier=0);
     
     /* Set the keyboard to be all buttons released */
-    void keyRelease();
+    void keyRelease(uint8_t key);
     
     
     /******************** BLE INTERFACE ********************/    
 
     /* Check if the device is paired to a computer */
-    bool isConnected() { return hid_service.connected; }
+    bool isConnected() { return service_ptr->isConnected(); }
     
     /* Wait to be interrupted */
-    void waitForEvent() { ble.gap().waitForEvent(); }
+    void waitForEvent() { ble.waitForEvent(); }
+    
+    /* Send the keyboard and mouse reports */
+    void sendKeyboard() { service_ptr->sendKeyboardReport(); }
+    void sendMouse() { service_ptr->sendMouseReport(); }
     
 
 private:
 
-    /******************** CALLBACKS ********************/
-
-    void onConnect(const Gap::ConnectionCallbackParams_t *params);
-    void onDisconnect(Gap::Handle_t a, Gap::DisconnectionReason_t);
-    
-
-    /******************** HIDDEN VARIABLES ********************/
-
-    KeyboardMouseService hid_service;
+    /******************** PRIVATE VARIABLES ********************/
+    KeyboardMouseService * service_ptr;
     BLE ble;
+
+    uint8_t keyboard_keys[KBD_USAGE_LENGTH];
+    int len; /* Current number of keys pressed */
+
 };
 
