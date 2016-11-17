@@ -18,9 +18,11 @@ I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 Serial pc(USBTX, USBRX);
 
 DigitalOut led(LED1);
+DigitalOut l2(LED2);
+DigitalOut l3(LED3);
+DigitalOut l4(LED4);
 
 void blink() {
-    DigitalOut l2(LED2);
     l2 = 1;
     led = 0;
     for (;;) {
@@ -34,9 +36,6 @@ void boot_delay(uint8_t t) {
     // this loop is to prevent the strange fatal state
     // happening with serial debug
     led = 1;
-    DigitalOut l2(LED2); l2 = 1;
-    DigitalOut l3(LED3); l3 = 1;
-    DigitalOut l4(LED4); l4 = 1;
     for (uint8_t i = 0; i < t; ++i) {
         led = 0;
         l2 = 0;
@@ -97,72 +96,6 @@ void flex_test() {
     }
 }
 */
-
-void sensors_to_lights() {
-
-    DotStarLEDs ds_leds(2);
-    uint8_t red, green, blue;
-
-    IMU_BNO055 imu(i2c);
-    bno_imu_t imu_vals;
-
-    FlexSensors flex_sensors;
-    flex_sensor_t flex_vals[4];
-
-    TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
-    /*
-    Thread touch_sensor_thread;
-    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-    */
-    key_states_t keys;
-
-    float flex_val;
-
-    uint16_t flex_min = 250;
-    uint16_t flex_max = 750;
-
-    /*
-     * Flex zero sets led 0 red/blue
-     *
-     * Any touch sets both lights to bright white
-     *
-     * Light one is the combined IMU status
-     */
-    for (;;) {
-        touch_sensor.updateAndWrite(&keys);
-        wait_ms(1);
-        flex_sensors.updateAndWrite(flex_vals);
-        imu.updateAndWrite(&imu_vals);
-
-        if (flex_vals[0] < flex_min) {
-            flex_min = flex_vals[0];
-        }
-        if (flex_vals[0] > flex_max) {
-            flex_max = flex_vals[0];
-        }
-
-        if (keys.pack()) {
-            ds_leds.set_RGB(0,0,255,0);
-        }
-        else {
-
-            // set flex light
-            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[0]);
-            red = 255*flex_val;
-            green = 0;
-            blue = 255*(1-flex_val);
-            ds_leds.set_RGB(0, red, green, blue);
-
-            // set imu light
-            blue = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_pitch);
-            red = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_roll);
-            green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
-            ds_leds.set_RGB(1, red, green, blue, 3);
-        }
-
-        Thread::wait(25);
-    }
-}
 /*
 void launch_periodic() {
     TouchSensor touch_sensor;
@@ -203,3 +136,88 @@ void launch_periodic() {
     }
 }
 */
+Thread touch_sensor_thread;
+TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
+
+void touch_term() {
+    l2=0;
+    // chekc something I guess
+    touch_sensor_thread.terminate();
+    wait_ms(1000);
+    // set a do_restart for the sem
+    l2=1;
+}
+
+void sensors_to_lights() {
+    led = 1;
+    l2 = 1;
+    l3 = 1;
+    l4 = 1;
+
+    DotStarLEDs ds_leds(2);
+    uint8_t red, green, blue;
+
+    IMU_BNO055 imu(i2c);
+    bno_imu_t imu_vals;
+
+    FlexSensors flex_sensors;
+    flex_sensor_t flex_vals[4];
+
+    //touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    key_states_t keys;
+    touch_sensor_thread.set_priority(osPriorityAboveNormal);
+
+    float flex_val;
+
+    uint16_t flex_min = 250;
+    uint16_t flex_max = 750;
+
+    /*
+     * Flex zero sets led 0 red/blue
+     *
+     * Any touch sets both lights to bright white
+     *
+     * Light one is the combined IMU status
+     */
+    Timeout kill_touch;
+    for (;;) {
+        kill_touch.attach(&touch_term, 1.0);
+        touch_sensor_thread.start(&touch_sensor, &TouchSensor::singleUpdate);
+        //Thread::yield();
+        //touch_sensor_thread.join();
+
+        led = 0;
+        touch_sensor.writeKeys(&keys);
+        flex_sensors.updateAndWrite(flex_vals);
+        imu.updateAndWrite(&imu_vals);
+
+        if (flex_vals[0] < flex_min) {
+            flex_min = flex_vals[0];
+        }
+        if (flex_vals[0] > flex_max) {
+            flex_max = flex_vals[0];
+        }
+
+        if (keys.pack()) {
+            ds_leds.set_RGB(0,0,255,0);
+        }
+        else {
+
+            // set flex light
+            flex_val = map_unsigned_analog_to_percent(flex_min, flex_max, flex_vals[0]);
+            red = 255*flex_val;
+            green = 0;
+            blue = 255*(1-flex_val);
+            ds_leds.set_RGB(0, red, green, blue);
+
+            // set imu light
+            blue = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_pitch);
+            red = 255*map_float_analog_to_percent(-45.0, 45.0, imu_vals.orient_roll);
+            green = 255*map_float_analog_to_percent(0.0, 360.0, imu_vals.orient_yaw);
+            ds_leds.set_RGB(1, red, green, blue, 3);
+        }
+
+        led = 1;
+        Thread::wait(500);
+    }
+}

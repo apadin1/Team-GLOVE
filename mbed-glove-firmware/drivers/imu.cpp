@@ -35,6 +35,8 @@ IMU_BNO055::IMU_BNO055(I2C& i2c)
 }
 
 void IMU_BNO055::update() {
+    wait_ms(4);
+    return;
     imu.get_Euler_Angles(&euler_angles);
     imu.get_linear_accel(&linear_acc);
 
@@ -66,7 +68,7 @@ void IMU_BNO055::writeSensors(bno_imu_t* imu_) {
     imu_->accel_z = imu_data.accel_z;
 }
 
-DigitalOut l3(LED3);
+extern DigitalOut l3;
 void IMU_BNO055::updateAndWrite(bno_imu_t* imu_) {
     l3 = 0;
     update();

@@ -63,7 +63,15 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
     key_states->d = keys.d;
 }
 
+extern DigitalOut l4;
+int faaiil = 0;
 void TouchSensor::update() {
+    faaiil += 1;
+    if (faaiil > 10) {
+        faaiil = 0;
+        wait_ms(5000);
+    }
+
     uint8_t buttons = qt.getButtonsState();
 
     // Check overflow flag
@@ -82,11 +90,8 @@ void TouchSensor::update() {
     //keys.g = buttons & 0x40; // key 6
 }
 
-DigitalOut l4(LED4);
 void TouchSensor::updateAndWrite(key_states_t* key_states) {
-    l4 = 0;
     update();
-    l4 = 1;
     writeKeys(key_states);
 }
 
@@ -105,6 +110,19 @@ void TouchSensor::updateTask() {
         do_update.wait(osWaitForever);
         update();
     }
+}
+
+void TouchSensor::singleUpdate() {
+    // TODO check restart
+    // maybe a semaphore
+    //  But what if that fails???
+    //  Okay because this will get killed again
+    l4 = 0;
+    update();
+    l4 = 1;
+    // yield???
+    // how to signal finished
+    //
 }
 
 void TouchSensor::print(Serial& pc, key_states_t& keys_) {

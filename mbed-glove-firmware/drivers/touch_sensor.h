@@ -171,6 +171,13 @@ public:
     void updateTask();
 
     /*
+     * This update task check to see if a reset is required,
+     * runs the update() function,
+     * then calls join()
+     */
+    void singleUpdate();
+
+    /*
      * Print out the given key states
      */
     static void print(Serial& pc, key_states_t&);
@@ -182,6 +189,7 @@ private:
     AT42QT1070 qt;
     InterruptIn* change_event;
     Semaphore do_update;
+    Semaphore do_restart;
     key_states_t keys;
 };
 
