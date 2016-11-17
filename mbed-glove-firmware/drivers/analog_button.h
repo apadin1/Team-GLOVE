@@ -281,7 +281,52 @@ class flexToHID {
 
 };
 class imuToHID {
+    public:
+    imuToHID( float* data_, float min_, float max_, float transition_band, bool active_low_=false)
+        : active_low(active_low_) {
+        sensor_conversion = AnalogButton<float>(data_, min_, max_, transition_band_, active_low_);
+        cur_keyboard = keyboardData();
+        cur_mouse = mouseData();
+    }
+    
+    keyboardData get_keyboard_data() {
+        cur_keyboard.value = sensor_conversion.get_binary_state();
+        return cur_keyboard;
+    }
 
+    mouseData get_mouse_data() {
+        cur_mouse.valid = true;
+        if (cur_mouse.part == LBUTTON || cur_mouse.part == RBUTTON)
+            cur_mouse.value = sensor_conversion.get_binary_state();
+        else {
+            cur_mouse.valid = false;
+        }
+        return cur_mouse;
+    }
+    
+    bool is_keyboard() { return HID == KEYBOARD; }
+    bool is_mouse() { return HID == MOUSE; }
+    bool is_joystick() { return HID == JOYSTICK; }
+
+    // call this function to change the hid status of the
+    void change_hid_profile(hidType hid, char key_=0,
+                            mousePart part_ = NONE) {
+        HID = hid;
+        if (HID == KEYBOARD) {
+            cur_keyboard.valid = true;
+            cur_keyboard.key = key_;
+        } else if (HID == MOUSE) {
+            cur_mouse.valid = true;
+            cur_mouse.part = part_;
+        } 
+    }
+
+    private:
+    bool active_low;
+    AnalogButton <uint16_t> sensor_conversion;
+    hidType HID;
+    keyboardData cur_keyboard;
+    mouseData cur_mouse;
 };
 
 class touchToHID {
