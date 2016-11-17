@@ -233,13 +233,13 @@ private:
     }
 };
 
-class flex {
+class flexToHID {
     
 };
-class imu {
+class imuToHID {
     
 };
-class touch {
+class touchToHID {
     
 };
 template <class T>
