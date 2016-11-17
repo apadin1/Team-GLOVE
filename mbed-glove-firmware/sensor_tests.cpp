@@ -165,7 +165,7 @@ void sensors_to_lights() {
 
     //touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     key_states_t keys;
-    touch_sensor_thread.set_priority(osPriorityAboveNormal);
+    //touch_sensor_thread.set_priority(osPriorityBelowNormal);
 
     float flex_val;
 
@@ -181,9 +181,9 @@ void sensors_to_lights() {
      */
     Timeout kill_touch;
     for (;;) {
-        kill_touch.attach(&touch_term, 1.0);
+        kill_touch.attach_us(&touch_term, 100000);
         touch_sensor_thread.start(&touch_sensor, &TouchSensor::singleUpdate);
-        //Thread::yield();
+        Thread::yield();
         //touch_sensor_thread.join();
 
         led = 0;

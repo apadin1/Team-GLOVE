@@ -3,6 +3,7 @@
 extern void blink(void);
 extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
+extern void thing_do(void);
 
 extern void keyboard_mouse_demo(void);
 

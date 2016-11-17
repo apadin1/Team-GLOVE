@@ -69,7 +69,7 @@ void TouchSensor::update() {
     faaiil += 1;
     if (faaiil > 10) {
         faaiil = 0;
-        wait_ms(5000);
+        wait_ms(3000);
     }
 
     uint8_t buttons = qt.getButtonsState();
@@ -120,6 +120,7 @@ void TouchSensor::singleUpdate() {
     l4 = 0;
     update();
     l4 = 1;
+    Thread::yield();
     // yield???
     // how to signal finished
     //
