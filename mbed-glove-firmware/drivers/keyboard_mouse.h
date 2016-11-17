@@ -31,7 +31,7 @@
 #endif
 
 static const char DEVICE_NAME[] = "TeamGLOVE";
-static const char SHORT_NAME[] = "glove1";
+static const char SHORT_NAME[] = "glove1"; 
 
 /* Wrapper class for Keyboard Mouse BLE Service */
 class KeyboardMouse {
@@ -41,56 +41,50 @@ public:
     /* Constructor and Destructor*/
     KeyboardMouse();
     ~KeyboardMouse();
-
+    
     /******************** MOUSE INTERFACE ********************/
 
     /* Set a button to be pressed or released
      * Parameters:
-     *   button - button selection (can be LEFT, RIGHT, or MIDDLE)
+     *   button - button selection (can be LEFT, RIGHT, or MIDDLE) 
      *   state - button status (can be UP or DOWN)
      */
-    ble_error_t setMouseButton(MouseButton button, ButtonState state);
-
+    void setMouseButton(MouseButton button, ButtonState state);
+    
     /* Set the speed of the mouse cursor in the x direction
      * Parameters:
      *   speed - speed of the cursor (range -127 to 127)
      */
-    ble_error_t setMouseSpeedX(int8_t speed);
-
+    void setMouseSpeedX(int8_t speed);
+    
     /* Set the speed of the mouse cursor in the y direction
      * Parameters:
      *   speed - speed of the cursor (range -127 to 127)
      */
-    ble_error_t setMouseSpeedY(int8_t speed);
-
-    /* Set the scroll value of the mouse scroll wheel
+    void setMouseSpeedY(int8_t speed);
+    
+    /* Set the scroll value of the mouse scroll wheel 
      * Parameters:
      *   speed - speed of the scroll wheel (range -127 to 127)
      */
-    ble_error_t setMouseScroll(int8_t speed);
-
+    void setMouseScroll(int8_t speed);
+    
     /* Set the x, y, and scroll speed of the mouse
      * Parameters:
      *   x - speed of the cursor in x (range -127 to 127)
      *   y - speed of the cursor in y (range -127 to 127)
      *   scroll - speed of the scroll wheel (range -127 to 127)
      */
-    ble_error_t setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll);
-
+    void setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll);
+    
     /******************** KEYBOARD INTERFACE ********************/
 
-    /* Send a given character to the keyboard
-     * Parameters:
-     *   c - character to send
-     */
-    ble_error_t sendChar(char c);
-
-    /* Set a keyboard button to be 'pressed'
+    /* Set a keyboard button to be 'pressed' 
      * Parameters:
      *
      *   key - the key which is being pressed. This can either be
      *      an ASCII character (must be one which is represented
-     *      on a standard keyboard) or a function key, such as
+     *      on a standard keyboard) or a function key, such as 
      *      RIGHT_ARROW or KEY_HOME.
      *
      *   modifier - a command which modifies the key being pressed.
@@ -98,30 +92,37 @@ public:
      *      - KEY_CTRL
      *      - KEY_SHIFT
      *      - KEY_ALT
-     *      - default is 0
      *
      *      See keyboard_types.h for more information on function
      *      keys and modifiers.
      */
-    ble_error_t keyPress(uint8_t key, uint8_t modifier=0);
-
+    void keyPress(uint8_t key, uint8_t modifier=0);
+    
     /* Set the keyboard to be all buttons released */
-    ble_error_t keyRelease();
-
-
-    /******************** BLE INTERFACE ********************/
+    void keyRelease(uint8_t key);
+    
+    
+    /******************** BLE INTERFACE ********************/    
 
     /* Check if the device is paired to a computer */
     bool isConnected() { return service_ptr->isConnected(); }
-
+    
     /* Wait to be interrupted */
     void waitForEvent() { ble.waitForEvent(); }
-
+    
+    /* Send the keyboard and mouse reports */
+    void sendKeyboard() { service_ptr->sendKeyboardReport(); }
+    void sendMouse() { service_ptr->sendMouseReport(); }
+    
 
 private:
 
     /******************** PRIVATE VARIABLES ********************/
     KeyboardMouseService * service_ptr;
     BLE ble;
+
+    uint8_t keyboard_keys[KBD_USAGE_LENGTH];
+    int len; /* Current number of keys pressed */
+
 };
 
