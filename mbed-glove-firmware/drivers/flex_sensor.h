@@ -87,7 +87,7 @@ public:
      * Alternative interface to both update each pin
      * And write it to the destination buffer
      */
-    void updateAndWriteSensors(flex_sensor_t* buf);
+    void updateAndWrite(flex_sensor_t* buf);
 
     /*
      * Print the value of all the flex sensors for debugging

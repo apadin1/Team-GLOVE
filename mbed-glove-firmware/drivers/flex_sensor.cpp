@@ -47,7 +47,7 @@ void FlexSensors::writeSensors(flex_sensor_t* buf) {
     }
 }
 
-void FlexSensors::updateAndWriteSensors(flex_sensor_t* buf) {
+void FlexSensors::updateAndWrite(flex_sensor_t* buf) {
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {
         values[i] = pins[i]->read_u16();
         buf[i] = values[i];
