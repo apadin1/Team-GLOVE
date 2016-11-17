@@ -10,9 +10,7 @@ void launch() {
   IMU_BNO055 imu(i2c); //Initialize imu object
 
   /* Start update thread for touch sensor */
-  TouchSensor touch_sensor(i2c); //Initialize touch sensor object
-  Thread touch_sensor_thread; //Initialize touch sensor thread (interrupt driven)
-  touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+  TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT); //Initialize touch sensor object
 
   /* Initialize KeyboardMouse object */
   KeyboardMouse input;

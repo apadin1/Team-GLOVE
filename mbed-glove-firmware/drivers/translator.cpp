@@ -118,7 +118,7 @@ void Translator::gestureCheck() {
 
     /* Update Sensor Data */
     flex->updateAndWriteSensors(&glove_data.flex_sensors);
-    touch->writeKeys(&glove_data.touch_sensor);
+    touch->updateAndWriteSensors(&glove_data.touch_sensor);
     imu->updateAndWriteSensors(&glove_data.imu);
 
     /* Flex Sensor functionality */
@@ -127,7 +127,7 @@ void Translator::gestureCheck() {
         /* Keyboard functionality */
         if (flex_sensors[i]->is_keyboard()) {
             keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
-            if (keyboard.changed && keyboard.valid) {
+            if (keyboard.valid) {
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
                 } else {
@@ -140,7 +140,7 @@ void Translator::gestureCheck() {
         else if (flex_sensors[i]->is_mouse()) {
             mouseData mouse =
                   flex_sensors[i]->get_mouse_data();  // Grab mouse data
-            if (mouse.changed && mouse.valid) {
+            if (mouse.valid) {
 
                 /* Left click */
                 if (mouse.part == LBUTTON) {
@@ -184,7 +184,7 @@ void Translator::gestureCheck() {
         /* Keyboard functionality */
         if (touch_sensors[i]->is_keyboard()) {
             keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
-            if (keyboard.changed && keyboard.valid) {
+            if (keyboard.valid) {
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
                 } else {
@@ -197,7 +197,7 @@ void Translator::gestureCheck() {
         else if (touch_sensors[i]->is_mouse()) {
             mouseData mouse =
                   touch_sensors[i]->get_mouse_data();  // Grab mouse data
-            if (mouse.changed && mouse.valid) {
+            if (mouse.valid) {
 
                 /* Left click */
                 if (mouse.part == LBUTTON) {
@@ -241,7 +241,7 @@ void Translator::gestureCheck() {
         /* Keyboard functionality */
         if (imu_axis[i]->is_keyboard()) {
             keyboardData keyboard = imu_axis[i]->get_keyboard_data();
-            if (keyboard.changed && keyboard.valid) {
+            if (keyboard.valid) {
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
                 } else {
@@ -253,7 +253,7 @@ void Translator::gestureCheck() {
         /* Mouse functionality */
         else if (imu_axis[i]->is_mouse()) {
             mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
-            if (mouse.changed && mouse.valid) {
+            if (mouse.valid) {
 
                 /* Left click */
                 if (mouse.part == LBUTTON) {
