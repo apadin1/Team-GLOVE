@@ -100,9 +100,9 @@ public:
 
 private:
     // NOTE: Vector indexed by GESTURE enum
-    AnalogButton<flex_sensor_t>* flex_sensors[FLEX_COUNT];
-    AnalogButton<float>* imu_axis[IMU_COUNT];
-    AnalogButton<uint8_t>* touch_sensors[TOUCH_COUNT];
+    flexToHID* flex_sensors[FLEX_COUNT];
+    imuToHID* imu_axis[IMU_COUNT];
+    touchToHID* touch_sensors[TOUCH_COUNT];
     KeyboardMouse* HIDinput;  // KeyboardMouse object
 
     // Glove data

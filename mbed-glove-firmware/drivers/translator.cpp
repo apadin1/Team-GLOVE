@@ -23,68 +23,68 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
       working(TRANSLATOR_DEBUG_PIN) {
 
     /* FLEX1 */
-    AnalogButton<flex_sensor_t> flex1(&glove_data.flex_sensors[0], 300, 800,
-                                      0.2, false, false, false);
+    flexToHID flex1(&glove_data.flex_sensors[0], 300, 800,
+                                      0.2, false);
     flex_sensors[FLEX1] = &flex1;
 
     /* FLEX2 */
-    AnalogButton<flex_sensor_t> flex2(&glove_data.flex_sensors[1], 300, 800, 20,
-                                      false, false);
+    flexToHID flex2(&glove_data.flex_sensors[1], 300, 800, 20,
+                                      false);
     flex_sensors[FLEX2] = &flex2;
 
     /* FLEX3 */
-    AnalogButton<flex_sensor_t> flex3(&glove_data.flex_sensors[2], 300, 800, 20,
-                                      false, false);
+    flexToHID flex3(&glove_data.flex_sensors[2], 300, 800, 20,
+                                      false);
     flex_sensors[FLEX3] = &flex3;
 
     /* FLEX4 */
-    AnalogButton<flex_sensor_t> flex4(&glove_data.flex_sensors[3], 300, 800, 20,
-                                      false, false);
+    flexToHID flex4(&glove_data.flex_sensors[3], 300, 800, 20,
+                                      false);
     flex_sensors[FLEX4] = &flex4;
 
     /* TOUCH1 */
-    AnalogButton<uint8_t> touch1(&glove_data.touch_sensor.a);
+    touchToHID touch1(&glove_data.touch_sensor.a);
     touch_sensors[TOUCH1] = &touch1;
 
     /* TOUCH2 */
-    AnalogButton<uint8_t> touch2(&glove_data.touch_sensor.b);
+    touchToHID touch2(&glove_data.touch_sensor.b);
     touch_sensors[TOUCH2] = &touch2;
 
     /* TOUCH3 */
-    AnalogButton<uint8_t> touch3(&glove_data.touch_sensor.c);
+    touchToHID touch3(&glove_data.touch_sensor.c);
     touch_sensors[TOUCH3] = &touch3;
 
     /* TOUCH4 */
-    AnalogButton<uint8_t> touch4(&glove_data.touch_sensor.d);
+    touchToHID touch4(&glove_data.touch_sensor.d);
     touch_sensors[TOUCH4] = &touch4;
 
     /* PITCHUP */
-    AnalogButton<float> pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true,
+    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true,
                                 true);
     imu_axis[PITCHUP] = &pitchup;
 
     /* PITCHDOWN */
-    AnalogButton<float> pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20,
+    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20,
                                   true, false);
     imu_axis[PITCHDOWN] = &pitchdown;
 
     /* ROLLLEFT */
-    AnalogButton<float> rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true,
+    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true,
                                  true);
     imu_axis[ROLLLEFT] = &rollleft;
 
     /* ROLLRIGHT */
-    AnalogButton<float> rollright(&glove_data.imu.orient_roll, -20, 0, 20, true,
+    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 20, true,
                                   false);
     imu_axis[ROLLRIGHT] = &rollright;
 
     /* YAWLEFT */
-    AnalogButton<float> yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true,
+    imuToHID yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true,
                                 true);
     imu_axis[YAWLEFT] = &yawleft;
 
     /* YAWRIGHT */
-    AnalogButton<float> yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true,
+    imuToHID yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true,
                                  false);
     imu_axis[YAWRIGHT] = &yawright;
 
