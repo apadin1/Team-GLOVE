@@ -71,24 +71,33 @@ void initializeHOGP(BLE &ble)
 
 
 /******************** CALLBACKS ********************/
-static void connectedCallback(KeyboardMouseService * new_ptr, bool connected) {
-    static KeyboardMouseService * my_ptr;
+
+/* Store the value of the service pointer for the callbacks to use */
+static KeyboardMouseService * getServicePtr(KeyboardMouseService * new_ptr) {
+    static KeyboardMouseService * service_ptr;
     if (new_ptr != NULL) {
-        my_ptr = new_ptr;
+        service_ptr = new_ptr;
     }
-    else {
-        my_ptr->setConnected(connected);
-    }    
+    return service_ptr;
 }
 
+/* When the device gets connected */
 static void onConnect() { 
-    connectedCallback(NULL, true);
-}
-static void onDisconnect() {
-    connectedCallback(NULL, false);
+    KeyboardMouseService * service_ptr = getServicePtr(NULL);
+    service_ptr->setConnected(true);
 }
 
-/* Wrapper class for Keyboard Mouse BLE Service */
+/* When the device gets disconnected */
+static void onDisconnect() {
+    KeyboardMouseService * service_ptr = getServicePtr(NULL);
+    service_ptr->setConnected(false);
+    BLE::Instance(BLE::DEFAULT_INSTANCE).gap().startAdvertising(); // restart advertising
+}
+
+
+/******************** CONSTRUCTOR/DESTRUCTOR ********************/
+
+/* Constructor */
 KeyboardMouse::KeyboardMouse() {
     
     /* Initialize keyboard variables */
@@ -128,6 +137,7 @@ KeyboardMouse::KeyboardMouse() {
     ble.gap().startAdvertising();
 }
 
+/* Destructor */
 KeyboardMouse::~KeyboardMouse() {
     delete service_ptr;
 }
