@@ -39,17 +39,11 @@ InterruptIn button2(BUTTON2);
 InterruptIn button3(BUTTON3);
 InterruptIn button4(BUTTON4);
 
-<<<<<<< HEAD
-FlexSensors flex_sensors;
-flex_sensor_t flex[4];
-
-TouchSensor touch_sensor;
-=======
 FlexSensors flex_sensors_class;
 flex_sensor_t flex_sensor_array[4];
 
 TouchSensor touch_sensor_class;
->>>>>>> master
+
 key_states_t keys;
 key_states_t last_keys;
 
@@ -74,18 +68,6 @@ void button2released() { keyboard_ptr->keyRelease(UP_ARROW); }
 void button3pressed() { keyboard_ptr->setMouseSpeedAll(10, 0, 0); }
 void button3released() { keyboard_ptr->setMouseSpeedAll(0, 0, 0); }
 
-<<<<<<< HEAD
-void button4pressed() {
-    db = 1;
-    keyboard_ptr->setMouseSpeedAll(-10, 0, 0);
-    db = 0;
-}
-void button4released() {
-    db = 1;
-    keyboard_ptr->setMouseSpeedAll(0, 0, 0);
-    db = 0;
-}
-
 void spacebar() {
   led3 = !led3;
   flex_sensors.updateAndWriteSensors(flex);
@@ -99,45 +81,7 @@ void spacebar() {
   }
 }
 
-void wasd() {
-    touch_sensor.writeKeys(&keys);
-    if (keys.a){
-        keyboard_ptr->keyPress('d',0);
-    }
-    else {
-        keyboard_ptr->keyRelease();
-    }
-    if (keys.b){
-        keyboard_ptr->keyPress('w',0);
-    }
-    else {
-        keyboard_ptr->keyRelease();
-    }
-    if (keys.c){
-        keyboard_ptr->keyPress('a',0);
-    }
-    else {
-        keyboard_ptr->keyRelease();
-    }
-    if (keys.d){
-        keyboard_ptr->keyPress('s',0);
-    }
-    else {
-        keyboard_ptr->keyRelease();
-    }
-}
 
-ble_error_t err;
-Serial dbg(USBTX, USBRX);
-
-void auto_button() {
-    db = 1;
-    err = keyboard_ptr->keyPress('x', 0);
-    db = 0;
-    dbg.printf("%s\r\n", ble_errors[err]);
-
-    wait_ms(500);
-=======
 void button4pressed() { keyboard_ptr->setMouseSpeedAll(-10, 0, 0); }
 void button4released() { keyboard_ptr->setMouseSpeedAll(0, 0, 0); }
 
@@ -170,7 +114,6 @@ void translate() {
         if (keys.c) keyboard_ptr->keyPress('s');
         else        keyboard_ptr->keyRelease('s');
     }
->>>>>>> master
 
     if (last_keys.d != keys.d) {
         if (keys.d) keyboard_ptr->keyPress('a');
@@ -188,23 +131,6 @@ void translate() {
 // MAIN
 int main() {
 
-<<<<<<< HEAD
-    wait(5);
-
-    db = 0;
-
-    Thread touch_sensor_thread;
-    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-
-    //printf("start here\r\n");
-    KeyboardMouse kbdMouse;
-    keyboard_ptr = &kbdMouse;
-    //printf("init ticker\r\n");
-
-    //Ticker waiting_tick;
-    //waiting_tick.attach(waiting, 1);
-
-=======
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
     
@@ -214,14 +140,12 @@ int main() {
     Callback<void()> wait_callback(waiting);
     RtosTimer wait_timer(wait_callback, osTimerPeriodic);
     wait_timer.start(100);
->>>>>>> master
 
     led1 = LED_OFF;
     led2 = LED_OFF;
     led3 = LED_OFF;
     led4 = LED_OFF;
-
-<<<<<<< HEAD
+    
     Callback<void()> spaace(spacebar);
     RtosTimer spacebar_timer(spaace, osTimerPeriodic);
     spacebar_timer.start(100);
@@ -235,11 +159,9 @@ int main() {
     //update_task_timer = new RtosTimer(spacebar, osTimerPeriodic);
     //update_task_timer->start(10);
 
-    /*
-=======
->>>>>>> master
-    button1.fall(button1pressed);
-    button1.rise(button1released);
+    
+    //button1.fall(button1pressed);
+    //button1.rise(button1released);
     //button2.fall(button2pressed);
     //button2.rise(button2released);
     //button3.fall(button3pressed);
@@ -247,11 +169,8 @@ int main() {
     //button4.fall(button4pressed);
     //button4.rise(button4released);
 
-    Callback<void()> translate_callback(translate);
-    RtosTimer translate_timer(translate_callback, osTimerPeriodic);
-    translate_timer.start(10);
-
-    while (true) {
-        keyboard_ptr->waitForEvent();
-    }
-}
+    //Callback<void()> translate_callback(translate);
+    //RtosTimer translate_timer(translate_callback, osTimerPeriodic);
+    //translate_timer.start(10);
+};
+ 
