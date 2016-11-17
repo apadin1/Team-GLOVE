@@ -111,9 +111,11 @@ void sensors_to_lights() {
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
-    TouchSensor touch_sensor;
+    TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
+    /*
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    */
     key_states_t keys;
 
     float flex_val;
@@ -140,7 +142,7 @@ void sensors_to_lights() {
             flex_max = flex_vals[0];
         }
 
-        touch_sensor.writeKeys(&keys);
+        touch_sensor.updateAndWrite(&keys);
         if (keys.pack()) {
             ds_leds.set_RGB(0,0,255,0);
         }
