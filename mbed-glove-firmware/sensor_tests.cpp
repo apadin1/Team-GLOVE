@@ -100,6 +100,8 @@ void flex_test() {
 
 void sensors_to_lights() {
 
+    boot_delay(2);
+
     DotStarLEDs ds_leds(2);
     uint8_t red, green, blue;
 
