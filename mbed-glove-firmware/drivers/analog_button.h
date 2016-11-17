@@ -36,7 +36,6 @@ enum mousePart {
 };
 
 struct keyboardData {
-    bool changed;
     bool valid;
     bool value;
     char key;
@@ -44,7 +43,6 @@ struct keyboardData {
 };
 
 struct mouseData {
-    bool changed;
     bool valid;
     mousePart part;
     int8_t value;
@@ -241,6 +239,33 @@ class flexToHID {
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
     }
+    
+    keyboardData get_keyboard_data() {
+        cur_keyboard.value = sensor_conversion.get_binary_state();
+        return cur_keyboard;
+    }
+
+    mouseData get_mouse_data() {
+        return cur_mouse;
+    }
+    
+    bool is_keyboard() { return HID == KEYBOARD; }
+    bool is_mouse() { return HID == MOUSE; }
+    bool is_joystick() { return HID == JOYSTICK; }
+
+    // call this function to change the hid status of the
+    void change_hid_profile(hidType hid, char key_=0,
+                            mousePart part_ = NONE) {
+        HID = hid;
+        if (HID == KEYBOARD) {
+            cur_keyboard.valid = true;
+            cur_keyboard.key = key_;
+        } else if (HID == MOUSE) {
+            cur_mouse.valid = true;
+            cur_mouse.part = part_;
+        } 
+    }
+
     private:
     bool active_low;
     AnalogButton <uint16_t> sensor_conversion;
@@ -271,11 +296,9 @@ public:
                           mousePart part_ = NONE) {
       HID = hid;
       if (HID == KEYBOARD) {
-         cur_keyboard.changed = true;
          cur_keyboard.valid = true;
          cur_keyboard.key = key_;
       } else if (HID == MOUSE) {
-         cur_mouse.changed = true;
          cur_mouse.valid = true;
          cur_mouse.part = part_;
       } else {
