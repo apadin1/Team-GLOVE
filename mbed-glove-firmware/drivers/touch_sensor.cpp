@@ -20,23 +20,24 @@
 #include "touch_sensor.h"
 
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl), change_event(intr) {
-
-    initialize();
+    : qt(sda, scl) {
+    initialize(intr);
 }
 
 TouchSensor::TouchSensor(I2C& i2c, PinName intr)
-    : qt(i2c), change_event(intr) {
-
-    initialize();
+    : qt(i2c) {
+    initialize(intr);
 }
 
 
-void TouchSensor::initialize() {
+void TouchSensor::initialize(PinName intr) {
     writeStaticConfig();
     qt.getButtonsState();
     // Associate the update function with the interrupt CHANGE line
-    change_event.fall(this, &TouchSensor::changeEventHandler);
+    if (intr != NC) {
+        change_event = new InterruptIn(intr);
+        change_event->fall(this, &TouchSensor::changeEventHandler);
+    }
 }
 
 void TouchSensor::writeStaticConfig() {

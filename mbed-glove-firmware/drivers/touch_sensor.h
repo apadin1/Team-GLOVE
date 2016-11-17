@@ -41,6 +41,7 @@
 const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
 const PinName TOUCH_INTERRUPT = p13;  // CHANGE interrupt line (active low)
+const PinName TOUCH_NO_INTERRUPT = NC; // Don't use an interrupt
 
 /* Low-Power Mode:
  *  - set multiple of 8ms between key measurements, default 2 (16ms)
@@ -113,7 +114,7 @@ public:
      */
     TouchSensor(PinName sda=TOUCH_I2C_SDA,
                 PinName scl=TOUCH_I2C_SCL,
-                PinName intr=TOUCH_INTERRUPT);
+                PinName intr=TOUCH_NO_INTERRUPT);
 
     /*
      * Alternate constructor - takes refrecne to mbed::I2C object
@@ -121,7 +122,7 @@ public:
      * Writes all the static config settings to the sensor
      * Assosciates the update() method with the CHANGE event line
      */
-    TouchSensor(I2C& i2c, PinName intr=TOUCH_INTERRUPT);
+    TouchSensor(I2C& i2c, PinName intr=TOUCH_NO_INTERRUPT);
 
     /*
      * Write the configuration values defined above
@@ -175,11 +176,11 @@ public:
     static void print(Serial& pc, key_states_t&);
 
 private:
-    void initialize();
+    void initialize(PinName intr);
 
 private:
     AT42QT1070 qt;
-    InterruptIn change_event;
+    InterruptIn* change_event;
     Semaphore do_update;
     key_states_t keys;
 };
