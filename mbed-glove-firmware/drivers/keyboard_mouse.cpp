@@ -15,6 +15,22 @@
  */
 
 #include "keyboard_mouse.h"
+#include "ble/services/BatteryService.h"
+#include "ble/services/DeviceInformationService.h"
+
+/* IO capabilities of the device. */
+#ifndef HID_SECURITY_IOCAPS
+#define HID_SECURITY_IOCAPS (SecurityManager::IO_CAPS_NONE)
+#endif
+
+/* Security level. */
+#ifndef HID_SECURITY_REQUIRE_MITM
+#define HID_SECURITY_REQUIRE_MITM false
+#endif
+
+
+static const char DEVICE_NAME[] = "TeamGLOVE";
+static const char SHORT_NAME[] = "glove1"; 
 
 
 /******************** HELPER FUNCTIONS ********************/
@@ -82,13 +98,13 @@ static KeyboardMouseService * getServicePtr(KeyboardMouseService * new_ptr) {
 }
 
 /* When the device gets connected */
-static void onConnect() { 
+static void connectionCallback(const Gap::ConnectionCallbackParams_t *params) { 
     KeyboardMouseService * service_ptr = getServicePtr(NULL);
     service_ptr->setConnected(true);
 }
 
 /* When the device gets disconnected */
-static void onDisconnect() {
+static void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *params) {
     KeyboardMouseService * service_ptr = getServicePtr(NULL);
     service_ptr->setConnected(false);
     BLE::Instance(BLE::DEFAULT_INSTANCE).gap().startAdvertising(); // restart advertising
@@ -106,15 +122,15 @@ KeyboardMouse::KeyboardMouse() {
             
     /* Prepare to connect and set callbacks */
     ble.init();
-    ble.gap().onConnection((Gap::ConnectionEventCallback_t) onConnect);
-    ble.gap().onDisconnection((Gap::DisconnectionEventCallback_t) onDisconnect);
+    ble.gap().onConnection(connectionCallback);
+    ble.gap().onDisconnection(disconnectionCallback);
 
     /* Security is required to pair */
     initializeSecurity(ble);
     
     /* Initialize service pointer and connection callbacks */
     service_ptr = new KeyboardMouseService(ble);
-    connectedCallback(service_ptr, true);
+    getServicePtr(service_ptr); // saves the service pointer for others to use
     
     /* Initialize GAP transmission */
     initializeHOGP(ble);

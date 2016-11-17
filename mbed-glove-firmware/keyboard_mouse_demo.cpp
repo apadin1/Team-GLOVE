@@ -73,10 +73,10 @@ void translate() {
     /* Flex Sensors */
     flex_sensors_class.update();
     flex_sensors_class.writeSensors(flex_sensor_array);
-    
+
     if (flex_sensor_array[0] < 250) { keyboard_ptr->keyPress(' '); }
     else { keyboard_ptr->keyRelease(' '); }
-    
+
     touch_sensor_class.update();
     touch_sensor_class.writeKeys(&keys);
 
@@ -86,12 +86,12 @@ void translate() {
     //    if (keys.a) keyboard_ptr->keyPress('d');
     //    else        keyboard_ptr->keyRelease('d');
     //}
-    
+
     if (last_keys.b != keys.b) {
         if (keys.b) keyboard_ptr->keyPress('d');
         else        keyboard_ptr->keyRelease('d');
     }
-    
+
     if (last_keys.c != keys.c) {
         if (keys.c) keyboard_ptr->keyPress('s');
         else        keyboard_ptr->keyRelease('s');
@@ -101,21 +101,21 @@ void translate() {
         if (keys.d) keyboard_ptr->keyPress('a');
         else        keyboard_ptr->keyRelease('a');
     }
-    
+
     last_keys = keys;
     pin15 = 0;
-    
+
     keyboard_ptr->sendKeyboard();
     keyboard_ptr->sendMouse();
 }
 
 
 // MAIN
-int main() {
+int keyboard_mouse_demo() {
 
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
-    
+
     //Ticker waiting_tick;
     //waiting_tick.attach(waiting, 1);
 
