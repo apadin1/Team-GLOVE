@@ -81,6 +81,17 @@ void TouchSensor::update() {
     //keys.g = buttons & 0x40; // key 6
 }
 
+void TouchSensor::updateAndWrite(key_states_t* key_states) {
+    update();
+    writeKeys(key_states);
+}
+
+void TouchSensor::reset() {
+    qt.reset();
+    writeStaticConfig();
+    qt.getButtonsState();
+}
+
 void TouchSensor::changeEventHandler() {
     do_update.release();
 }

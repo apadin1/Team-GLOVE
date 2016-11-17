@@ -143,6 +143,18 @@ public:
     void update();
 
     /*
+     * Do both the update and then write the key states
+     *
+     * Use with polling
+     */
+    void updateAndWrite(key_states_t* key_states);
+
+    /*
+     * Does a soft reset then re-configured the chip
+     */
+    void reset();
+
+    /*
      * Callback for the change event interrupt line
      */
     void changeEventHandler();
