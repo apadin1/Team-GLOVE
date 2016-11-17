@@ -17,21 +17,7 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 #include "KeyboardMouseService.h"
-#include "ble/services/BatteryService.h"
-#include "ble/services/DeviceInformationService.h"
 
-/* IO capabilities of the device. */
-#ifndef HID_SECURITY_IOCAPS
-#define HID_SECURITY_IOCAPS (SecurityManager::IO_CAPS_NONE)
-#endif
-
-/* Security level. */
-#ifndef HID_SECURITY_REQUIRE_MITM
-#define HID_SECURITY_REQUIRE_MITM false
-#endif
-
-static const char DEVICE_NAME[] = "TeamGLOVE";
-static const char SHORT_NAME[] = "glove1"; 
 
 /* Wrapper class for Keyboard Mouse BLE Service */
 class KeyboardMouse {
