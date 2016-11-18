@@ -64,27 +64,6 @@ void initializeSecurity(BLE &ble) {
     ble.securityManager().init(enableBonding, requireMITM, HID_SECURITY_IOCAPS);
 }
 
-void initializeHOGP(BLE &ble)
-{
-    static const uint16_t uuid16_list[] =  {GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
-        GattService::UUID_DEVICE_INFORMATION_SERVICE,
-        GattService::UUID_BATTERY_SERVICE};
-
-    DeviceInformationService deviceInfo(ble, "ARM", "m1", "abc", "def", "ghi", "jkl");
-
-    BatteryService batteryInfo(ble, 80);
-
-    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED |
-            GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
-    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS,
-            (uint8_t *)uuid16_list, sizeof(uuid16_list));
-
-    // see 5.1.2: HID over GATT Specification (pg. 25)
-    ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
-    // 30ms to 50ms is recommended (5.1.2)
-    ble.gap().setAdvertisingInterval(50);
-}
-
 
 /******************** CALLBACKS ********************/
 
@@ -110,47 +89,75 @@ static void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *para
     BLE::Instance(BLE::DEFAULT_INSTANCE).gap().startAdvertising(); // restart advertising
 }
 
+/* Initialize BLE */
+void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
 
-/******************** CONSTRUCTOR/DESTRUCTOR ********************/
-
-/* Constructor */
-KeyboardMouse::KeyboardMouse() {
-    
-    /* Initialize keyboard variables */
-    len = 0;
-    memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
-            
-    /* Prepare to connect and set callbacks */
-    ble.init();
-    ble.gap().onConnection(connectionCallback);
-    ble.gap().onDisconnection(disconnectionCallback);
+    /* Retrieve the parameters and check for errors */
+    BLE &ble          = params->ble;
+    ble_error_t error = params->error;
+    if (error != BLE_ERROR_NONE) return;
 
     /* Security is required to pair */
     initializeSecurity(ble);
     
-    /* Initialize service pointer and connection callbacks */
-    service_ptr = new KeyboardMouseService(ble);
-    getServicePtr(service_ptr); // saves the service pointer for others to use
+    /* Initialize callbacks */
+    ble.gap().onConnection(connectionCallback);
+    ble.gap().onDisconnection(disconnectionCallback);
+
+    /* Setup device services */
+    KeyboardMouseService * hid_service = new KeyboardMouseService(ble);
+    BatteryService * battery_service = new BatteryService(ble, 80);
+    DeviceInformationService * device_info_service = 
+        new DeviceInformationService(ble, "ARM", "Model1", "SN1", "hw-rev1", "fw-rev1", "soft-rev1");
+
+    /* Back door to let the KeyboardMouse class access the hid service */
+    getServicePtr(hid_service);
     
-    /* Initialize GAP transmission */
-    initializeHOGP(ble);
-    
+    /* Continue building advertising payload */
+    static const uint16_t uuid16_list[] =  {
+        GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
+        GattService::UUID_DEVICE_INFORMATION_SERVICE,
+        GattService::UUID_BATTERY_SERVICE
+    };
+
+    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS, (uint8_t *)uuid16_list, sizeof(uuid16_list));
+    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
+
+    /* This is how the device will initially be known to the computer */
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
     
-    ble.gap().accumulateAdvertisingPayload(
-        GapAdvertisingData::COMPLETE_LOCAL_NAME,
-        (const uint8_t *) DEVICE_NAME,
-        sizeof(DEVICE_NAME));
-    
-    ble.gap().accumulateAdvertisingPayload(
-        GapAdvertisingData::SHORTENED_LOCAL_NAME,
-        (const uint8_t *) SHORT_NAME,
-        sizeof(SHORT_NAME));
-
+    /* Add the device short and full name */
+    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (const uint8_t *) DEVICE_NAME, sizeof(DEVICE_NAME));
+    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME, (const uint8_t *) SHORT_NAME, sizeof(SHORT_NAME));
     ble.gap().setDeviceName((const uint8_t *) DEVICE_NAME);
 
     /* Search for nearby devices to comminucate with */
     ble.gap().startAdvertising();
+
+    // see 5.1.2: HID over GATT Specification (pg. 25)
+    ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
+    ble.gap().setAdvertisingInterval(50);     // 30ms to 50ms is recommended (5.1.2)
+}
+
+
+/******************** CONSTRUCTOR/DESTRUCTOR ********************/
+
+/* Constructor */
+KeyboardMouse::KeyboardMouse() : 
+        ble(BLE::Instance(BLE::DEFAULT_INSTANCE)),
+        len(0) {
+    
+    /* Initialize keyboard variables */
+    memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
+            
+    /* Initialize the BLE communication scheme */
+    ble.init(bleInitComplete);
+    
+    /* Initialize HID service pointer */
+    service_ptr = getServicePtr(NULL);
+    
+    /* Start GAP transmission */
+    ble.gap().startAdvertising();    
 }
 
 /* Destructor */
@@ -185,6 +192,7 @@ void KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
     service_ptr->setMouseSpeedAll(x, y, scroll);
 }
 
+
 /******************** KEYBOARD INTERFACE ********************/
 
 /* Set a keyboard button to be 'pressed' */
@@ -203,7 +211,6 @@ void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
     len += 1;
     service_ptr->keyPress(keyboard_keys, len, modifier);
 }
-
 
 /* Set the keyboard to be all buttons released */
 void KeyboardMouse::keyRelease(uint8_t key) {
