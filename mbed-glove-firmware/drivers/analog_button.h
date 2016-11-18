@@ -31,7 +31,7 @@ public:
 
         update_threshold(transition_band);
     }
-    
+
     void init(T* data_, T min_, T max_, float transition_band, bool active_low_) {
         data = data_;
         min_abs = min_;
@@ -67,9 +67,11 @@ public:
      * Active low for now cuz sure
      */
     bool get_binary_state() {
+        DigitalOut l3(LED3);
 
         // in the lowest range
         if (*data < min_thresh) {
+            l3 = 1;
             binary_state = active_low;
         }
         // in the transition band
@@ -79,6 +81,7 @@ public:
         // in the upper range
         else {
             binary_state = ! active_low;
+            l3 = 0;
         }
 
         return binary_state;
@@ -144,7 +147,7 @@ class flexToHID {
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
     }
-    
+
     keyboardData get_keyboard_data() {
         cur_keyboard.value = sensor_conversion.get_binary_state();
         return cur_keyboard;
@@ -159,7 +162,7 @@ class flexToHID {
         }
         return cur_mouse;
     }
-    
+
     bool is_keyboard() { return HID == KEYBOARD; }
     bool is_mouse() { return HID == MOUSE; }
     bool is_joystick() { return HID == JOYSTICK; }
@@ -174,7 +177,7 @@ class flexToHID {
         } else if (HID == MOUSE) {
             cur_mouse.valid = true;
             cur_mouse.part = part_;
-        } 
+        }
     }
 
     private:
@@ -194,7 +197,7 @@ class imuToHID {
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
     }
-    
+
     keyboardData get_keyboard_data() {
         cur_keyboard.value = sensor_conversion.get_binary_state();
         return cur_keyboard;
@@ -209,7 +212,7 @@ class imuToHID {
         }
         return cur_mouse;
     }
-    
+
     bool is_keyboard() { return HID == KEYBOARD; }
     bool is_mouse() { return HID == MOUSE; }
     bool is_joystick() { return HID == JOYSTICK; }
@@ -224,7 +227,7 @@ class imuToHID {
         } else if (HID == MOUSE) {
             cur_mouse.valid = true;
             cur_mouse.part = part_;
-        } 
+        }
     }
 
     private:

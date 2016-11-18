@@ -109,6 +109,8 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
 //}
 
 void Translator::gestureCheck() {
+    DigitalOut b1(LED1);
+    b1 = 0;
 
     /* Update Sensor Data */
     flex_sensor_t* flex_ptr = &glove_data.flex_sensors[0];
@@ -120,13 +122,16 @@ void Translator::gestureCheck() {
     for (int i = 0; i < FLEX_COUNT; ++i) {
 
         /* Keyboard functionality */
+        DigitalOut l4(LED4);
         if (flex_sensors[i]->is_keyboard()) {
             keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
             if (keyboard.valid) {
                 if (keyboard.value) {
+                    l4 = 0;
                     HIDinput->keyPress(keyboard.key);
                 } else {
                     HIDinput->keyRelease(keyboard.key);
+                    l4 = 1;
                 }
             }
         }  // keyboard
@@ -289,6 +294,10 @@ void Translator::gestureCheck() {
     /* Send HID inputs */
     HIDinput->sendKeyboard();
     HIDinput->sendMouse();
+
+    wait(1);
+    b1 = 1;
+    wait(1);
 
     return;
 }
