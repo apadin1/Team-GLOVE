@@ -1,5 +1,5 @@
 #include <inttypes.h>
-
+#include "drivers/translator.h"
 extern void blink(void);
 extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
@@ -15,8 +15,8 @@ void launch() {
   /* Initialize KeyboardMouse object */
   KeyboardMouse input;
 
-  Translator translator(&flex, &imu, &touch_sensor, &input)
-  Translator.startUpdateTask(20);
+  Translator translator(&flex, &imu, &touch_sensor, &input);
+  translator.startUpdateTask(20);
 
   for (;;) {
     input.waitForEvent();
