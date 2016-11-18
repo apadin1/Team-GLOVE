@@ -59,33 +59,27 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     touch_sensors[TOUCH4] = &touch4;
 
     /* PITCHUP */
-    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true,
-                                true);
+    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true);
     imu_axis[PITCHUP] = &pitchup;
 
     /* PITCHDOWN */
-    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20,
-                                  true, false);
+    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20, true);
     imu_axis[PITCHDOWN] = &pitchdown;
 
     /* ROLLLEFT */
-    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true,
-                                 true);
+    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true);
     imu_axis[ROLLLEFT] = &rollleft;
 
     /* ROLLRIGHT */
-    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 20, true,
-                                  false);
+    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 20, true);
     imu_axis[ROLLRIGHT] = &rollright;
 
     /* YAWLEFT */
-    imuToHID yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true,
-                                true);
+    imuToHID yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true);
     imu_axis[YAWLEFT] = &yawleft;
 
     /* YAWRIGHT */
-    imuToHID yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true,
-                                 false);
+    imuToHID yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true);
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
@@ -117,9 +111,10 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
 void Translator::gestureCheck() {
 
     /* Update Sensor Data */
-    flex->updateAndWriteSensors(&glove_data.flex_sensors);
-    touch->updateAndWriteSensors(&glove_data.touch_sensor);
-    imu->updateAndWriteSensors(&glove_data.imu);
+    flex_sensor_t* flex_ptr = &glove_data.flex_sensors[0];
+    flex->updateAndWrite(flex_ptr);
+    touch->updateAndWrite(&glove_data.touch_sensor);
+    imu->updateAndWrite(&glove_data.imu);
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {
