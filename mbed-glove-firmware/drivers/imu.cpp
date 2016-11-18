@@ -66,7 +66,7 @@ void IMU_BNO055::writeSensors(bno_imu_t* imu_) {
     imu_->accel_z = imu_data.accel_z;
 }
 
-void IMU_BNO055::updateAndWriteSensors(bno_imu_t* imu_) {
+void IMU_BNO055::updateAndWrite(bno_imu_t* imu_) {
     update();
     writeSensors(imu_);
 }

@@ -109,9 +109,11 @@ void sensors_to_lights() {
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
-    TouchSensor touch_sensor;
+    TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
+    /*
     Thread touch_sensor_thread;
     touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    */
     key_states_t keys;
 
     float flex_val;
@@ -126,11 +128,11 @@ void sensors_to_lights() {
      *
      * Light one is the combined IMU status
      */
-
     for (;;) {
-        imu.update();
-        imu.writeSensors(&imu_vals);
-        flex_sensors.updateAndWriteSensors(flex_vals);
+        imu.updateAndWrite(&imu_vals);
+        flex_sensors.updateAndWrite(flex_vals);
+        touch_sensor.updateAndWrite(&keys);
+
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];
         }
@@ -138,7 +140,6 @@ void sensors_to_lights() {
             flex_max = flex_vals[0];
         }
 
-        touch_sensor.writeKeys(&keys);
         if (keys.pack()) {
             ds_leds.set_RGB(0,0,255,0);
         }

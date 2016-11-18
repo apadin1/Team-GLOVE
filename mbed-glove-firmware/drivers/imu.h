@@ -91,7 +91,7 @@ public:
      * Single function call for manual polling
      * Calls update then writes to the provided
      */
-    void updateAndWriteSensors(bno_imu_t*);
+    void updateAndWrite(bno_imu_t*);
 
     /*
      * something something do manual calibration

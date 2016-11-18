@@ -34,10 +34,8 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    //flex_to_lights();
-    //imu_to_lights();
-    //launch_periodic();
-    //keyboard_mouse_demo();
     sensors_to_lights();
     //blink();
+    //launch_periodic();
+    //keyboard_mouse_demo();
 }
