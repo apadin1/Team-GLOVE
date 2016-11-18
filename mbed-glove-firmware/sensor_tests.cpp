@@ -136,18 +136,6 @@ void launch_periodic() {
     }
 }
 */
-Thread* touch_sensor_thread = new Thread;
-TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
-
-void touch_term() {
-    if (touch_sensor.is_running()) {
-        l2=0;
-        touch_sensor_thread->terminate();
-        l4 = 1;
-        l2=1;
-        // call restart!
-    }
-}
 
 void sensors_to_lights() {
     led = 1;
@@ -165,6 +153,7 @@ void sensors_to_lights() {
     flex_sensor_t flex_vals[4];
 
     //touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    TouchSensor touch_sensor(i2c, p16);
     key_states_t keys;
     //touch_sensor_thread.set_priority(osPriorityBelowNormal);
 
@@ -182,13 +171,11 @@ void sensors_to_lights() {
      */
     for (;;) {
         led = 0;
-        touch_sensor_thread = new Thread;
-        touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
-        Thread::yield(); //TODO check if needed to force updateSingle to run
+        touch_sensor.spawnUpdateThread();
 
-        touch_sensor.writeKeys(&keys);
-        flex_sensors.updateAndWrite(flex_vals);
         imu.updateAndWrite(&imu_vals);
+        flex_sensors.updateAndWrite(flex_vals);
+        touch_sensor.writeKeys(&keys);
 
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];
@@ -217,9 +204,7 @@ void sensors_to_lights() {
         }
 
         led = 1;
-        touch_term();
-        delete touch_sensor_thread; // NOTE needs to go before "wait"
-        touch_sensor_thread = NULL;
-        Thread::wait(10);
+        touch_sensor.terminateUpdateThreadIfBlocking();
+        Thread::wait(40);
     }
 }

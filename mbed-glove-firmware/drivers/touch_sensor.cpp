@@ -66,6 +66,7 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
 }
 
 extern DigitalOut l4;
+extern DigitalOut l2;
 uint16_t faaiil = 0;
 volatile uint8_t count;
 void TouchSensor::update() {
@@ -123,7 +124,7 @@ void TouchSensor::updateTask() {
 
 void TouchSensor::singleUpdate() {
     if (needs_restart) {
-        //reset();
+        //reset(); // This broke everything :(
     }
 
     l4 = 0;
@@ -143,9 +144,12 @@ void TouchSensor::spawnUpdateThread() {
 
 void TouchSensor::terminateUpdateThreadIfBlocking() {
     if (needs_restart) {
+        l2 = 0;
+        l4 = 1;
         update_thread->terminate();
         // Leave reset in the update funtion cuz don't block here
         // Might skip full reset??? Maybe count then do it after X hangs
+        l2 = 1;
     }
     delete update_thread;
     update_thread = NULL;
