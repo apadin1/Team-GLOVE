@@ -17,7 +17,7 @@
 #include "mbed.h"
 
 #include "ble/BLE.h"
-#include "drivers/BLE_HID/KeyboardService.h"
+#include "drivers/BLE_HID/JoystickService.h"
 
 #include "examples_common.h"
 
@@ -35,8 +35,8 @@
 
 DigitalOut connected_led(LED1);
 
-InterruptIn button1(BUTTON1);
-InterruptIn button2(BUTTON2);
+InterruptIn b1(BUTTON1);
+InterruptIn b2(BUTTON2);
 
 #define LED_ON 0
 #define LED_OFF 1
@@ -67,11 +67,19 @@ static void waiting() {
         connected_led = LED_ON;
 }
 
+void send_stuff() {
+    jsServicePtr->button(JOY_B0);
+}
+
+void send_more_stuff() {
+    jsServicePtr->hat(JOY_HAT_UP);
+}
+
 void joystick_test() {
     Ticker heartbeat;
 
-    button1.rise(send_stuff);
-    button2.rise(send_more_stuff);
+    b1.rise(send_stuff);
+    b2.rise(send_more_stuff);
 
     HID_DEBUG("initialising ticker\r\n");
 

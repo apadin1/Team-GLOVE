@@ -148,7 +148,7 @@ public:
         return true;
     }
 
-    virtual void sendCallback(void) {
+    void sendCallback(void) {
         if (!connected)
             return;
 

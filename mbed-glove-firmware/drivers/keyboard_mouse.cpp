@@ -30,7 +30,7 @@
 
 
 static const char DEVICE_NAME[] = "TeamGLOVE";
-static const char SHORT_NAME[] = "glove1"; 
+static const char SHORT_NAME[] = "glove1";
 
 
 /******************** HELPER FUNCTIONS ********************/
@@ -55,7 +55,7 @@ static void securitySetupInitiatedCallback(
     bool requireMITM,
     SecurityManager::SecurityIOCapabilities_t iocaps) { return; }
 
-void initializeSecurity(BLE &ble) {
+static void initializeSecurity(BLE &ble) {
     bool enableBonding = true;
     bool requireMITM = HID_SECURITY_REQUIRE_MITM;
     ble.securityManager().onSecuritySetupInitiated(securitySetupInitiatedCallback);
@@ -64,7 +64,7 @@ void initializeSecurity(BLE &ble) {
     ble.securityManager().init(enableBonding, requireMITM, HID_SECURITY_IOCAPS);
 }
 
-void initializeHOGP(BLE &ble)
+static void initializeHOGP(BLE &ble)
 {
     static const uint16_t uuid16_list[] =  {GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
         GattService::UUID_DEVICE_INFORMATION_SERVICE,
@@ -98,7 +98,7 @@ static KeyboardMouseService * getServicePtr(KeyboardMouseService * new_ptr) {
 }
 
 /* When the device gets connected */
-static void connectionCallback(const Gap::ConnectionCallbackParams_t *params) { 
+static void connectionCallback(const Gap::ConnectionCallbackParams_t *params) {
     KeyboardMouseService * service_ptr = getServicePtr(NULL);
     service_ptr->setConnected(true);
 }
@@ -115,11 +115,11 @@ static void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *para
 
 /* Constructor */
 KeyboardMouse::KeyboardMouse() {
-    
+
     /* Initialize keyboard variables */
     len = 0;
     memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
-            
+
     /* Prepare to connect and set callbacks */
     ble.init();
     ble.gap().onConnection(connectionCallback);
@@ -127,21 +127,21 @@ KeyboardMouse::KeyboardMouse() {
 
     /* Security is required to pair */
     initializeSecurity(ble);
-    
+
     /* Initialize service pointer and connection callbacks */
     service_ptr = new KeyboardMouseService(ble);
     getServicePtr(service_ptr); // saves the service pointer for others to use
-    
+
     /* Initialize GAP transmission */
     initializeHOGP(ble);
-    
+
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
-    
+
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::COMPLETE_LOCAL_NAME,
         (const uint8_t *) DEVICE_NAME,
         sizeof(DEVICE_NAME));
-    
+
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::SHORTENED_LOCAL_NAME,
         (const uint8_t *) SHORT_NAME,
@@ -163,7 +163,7 @@ KeyboardMouse::~KeyboardMouse() {
 
 /* Set a button to be pressed or released */
 void KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
-    service_ptr->setMouseButton(button, state);        
+    service_ptr->setMouseButton(button, state);
 }
 
 /* Set the speed of the mouse cursor in the x direction */
@@ -189,15 +189,15 @@ void KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
 
 /* Set a keyboard button to be 'pressed' */
 void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
-    
+
     /* If the array is full, there is nothing to do */
     if (len == KBD_USAGE_LENGTH) return;
-    
+
     /* Make sure the key is not already pressed */
     for (int i = 0; i < len; ++i) {
         if (keyboard_keys[i] == key) return;
     }
-    
+
     /* Not already pressed - add it to the list */
     keyboard_keys[len] = key;
     len += 1;
@@ -207,10 +207,10 @@ void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
 
 /* Set the keyboard to be all buttons released */
 void KeyboardMouse::keyRelease(uint8_t key) {
-    
+
     /* Check if it is actually there */
     for (int i = 0; i < len; ++i) {
-        
+
         /* If found, zero out and shift others down */
         if (keyboard_keys[i] == key) {
             len -= 1;
