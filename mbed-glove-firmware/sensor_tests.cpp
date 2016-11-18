@@ -141,10 +141,37 @@ TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
 
 void touch_term() {
     l2=0;
-    // chekc something I guess
-    touch_sensor_thread.terminate();
-    wait_ms(1000);
+    if (l4 == 0) {
+        touch_sensor_thread.terminate();
+        l4 = 1;
+        wait_ms(400);
+    }
+
+    /*
+    switch (touch_sensor_thread.get_state()) {
+    case (Thread::Running):
+    case (Thread::Ready):
+    case (Thread::WaitingDelay):
+    case (Thread::WaitingInterval):
+    case (Thread::WaitingOr):
+    case (Thread::WaitingAnd):
+    case (Thread::WaitingSemaphore):
+    case (Thread::WaitingMailbox):
+    case (Thread::WaitingMutex):
+        touch_sensor_thread.terminate();
+        l4 = 1;
+        wait_ms(400);
+        break;
+    case (Thread::Inactive):
+    case (Thread::Deleted):
+    default:
+        break;
+    }
+    */
+
+    //touch_sensor_thread.set_priority(osPriorityLow);
     // set a do_restart for the sem
+    wait_ms(3);
     l2=1;
 }
 
@@ -181,12 +208,11 @@ void sensors_to_lights() {
      */
     Timeout kill_touch;
     for (;;) {
-        kill_touch.attach_us(&touch_term, 100000);
+        kill_touch.attach_us(&touch_term, 350000);
         touch_sensor_thread.start(&touch_sensor, &TouchSensor::singleUpdate);
         Thread::yield();
         //touch_sensor_thread.join();
 
-        led = 0;
         touch_sensor.writeKeys(&keys);
         flex_sensors.updateAndWrite(flex_vals);
         imu.updateAndWrite(&imu_vals);
@@ -217,7 +243,6 @@ void sensors_to_lights() {
             ds_leds.set_RGB(1, red, green, blue, 3);
         }
 
-        led = 1;
-        Thread::wait(500);
+        Thread::wait(1000);
     }
 }

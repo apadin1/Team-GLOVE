@@ -21,6 +21,8 @@
 IMU_BNO055::IMU_BNO055(I2C& i2c)
     : imu(i2c, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
 
+    return; // XXX
+
     imu.set_mounting_position(IMU_MOUNT_POSITION);
 
     if (imu.chip_ready() == 0) {
@@ -35,8 +37,8 @@ IMU_BNO055::IMU_BNO055(I2C& i2c)
 }
 
 void IMU_BNO055::update() {
-    wait_ms(4);
-    return;
+    wait_ms(4); // XXX
+    return; // XXX
     imu.get_Euler_Angles(&euler_angles);
     imu.get_linear_accel(&linear_acc);
 

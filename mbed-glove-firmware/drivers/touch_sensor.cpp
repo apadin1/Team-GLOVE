@@ -31,6 +31,7 @@ TouchSensor::TouchSensor(I2C& i2c, PinName intr)
 
 
 void TouchSensor::initialize(PinName intr) {
+    /* // XXX
     writeStaticConfig();
     qt.getButtonsState();
     // Associate the update function with the interrupt CHANGE line
@@ -38,6 +39,7 @@ void TouchSensor::initialize(PinName intr) {
         change_event = new InterruptIn(intr);
         change_event->fall(this, &TouchSensor::changeEventHandler);
     }
+    */ // XXX
 }
 
 void TouchSensor::writeStaticConfig() {
@@ -67,10 +69,14 @@ extern DigitalOut l4;
 int faaiil = 0;
 void TouchSensor::update() {
     faaiil += 1;
-    if (faaiil > 10) {
+    if (faaiil > 5) {
         faaiil = 0;
-        wait_ms(3000);
+        //wait_ms(4000);
+        for (;;) {}
     }
+
+    wait_ms(1); // XXX
+    return; // XXX
 
     uint8_t buttons = qt.getButtonsState();
 
