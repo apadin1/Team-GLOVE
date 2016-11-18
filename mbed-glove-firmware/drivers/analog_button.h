@@ -268,7 +268,7 @@ private:
     bool active_low;
     T min_abs, max_abs;
     T min_thresh, max_thresh;
-};
+
 #endif /*ANALOG_BUTTON_H_*/
 
 
