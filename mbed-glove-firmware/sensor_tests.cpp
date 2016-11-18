@@ -144,33 +144,9 @@ void touch_term() {
     if (l4 == 0) {
         touch_sensor_thread->terminate();
         l4 = 1;
-        wait_ms(400);
+        wait_ms(150);
     }
 
-    /*
-    switch (touch_sensor_thread.get_state()) {
-    case (Thread::Running):
-    case (Thread::Ready):
-    case (Thread::WaitingDelay):
-    case (Thread::WaitingInterval):
-    case (Thread::WaitingOr):
-    case (Thread::WaitingAnd):
-    case (Thread::WaitingSemaphore):
-    case (Thread::WaitingMailbox):
-    case (Thread::WaitingMutex):
-        touch_sensor_thread.terminate();
-        l4 = 1;
-        wait_ms(400);
-        break;
-    case (Thread::Inactive):
-    case (Thread::Deleted):
-    default:
-        break;
-    }
-    */
-
-    //touch_sensor_thread.set_priority(osPriorityLow);
-    // set a do_restart for the sem
     wait_ms(3);
     l2=1;
 }
@@ -209,11 +185,13 @@ void sensors_to_lights() {
     Timeout kill_touch;
     for (;;) {
         led = 0;
+        if (touch_sensor_thread != NULL) {
+            delete touch_sensor_thread;
+        }
         touch_sensor_thread = new Thread;
-        kill_touch.attach_us(&touch_term, 350000);
+        kill_touch.attach_us(&touch_term, 400000);
         touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
         //Thread::yield();
-        //touch_sensor_thread.join();
 
         touch_sensor.writeKeys(&keys);
         flex_sensors.updateAndWrite(flex_vals);
@@ -246,7 +224,8 @@ void sensors_to_lights() {
         }
 
         led = 1;
-        Thread::wait(1000);
         delete touch_sensor_thread;
+        touch_sensor_thread = NULL;
+        Thread::wait(1000);
     }
 }

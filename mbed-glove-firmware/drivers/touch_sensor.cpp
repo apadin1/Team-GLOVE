@@ -16,7 +16,6 @@
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
  *   to indicate a change in state of the sensors.
  */
-
 #include "touch_sensor.h"
 
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
@@ -66,11 +65,16 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
 }
 
 extern DigitalOut l4;
-int faaiil = 0;
+uint16_t faaiil = 0;
+
 void TouchSensor::update() {
-    faaiil += 1;
-    if (faaiil > 4) {
+
+    if (faaiil++ > 4) {
         faaiil = 0;
+        wait_ms(100);
+        l4=1;
+        wait_ms(100);
+        l4=0;
         //wait_ms(4000);
         for (;;) {}
     }
@@ -118,6 +122,7 @@ void TouchSensor::updateTask() {
     }
 }
 
+extern Thread* touch_sensor_thread;
 void TouchSensor::singleUpdate() {
     // TODO check restart
     // maybe a semaphore
@@ -126,6 +131,7 @@ void TouchSensor::singleUpdate() {
     l4 = 0;
     update();
     l4 = 1;
+    touch_sensor_thread->terminate();
     //Thread::yield();
     // yield???
     // how to signal finished
