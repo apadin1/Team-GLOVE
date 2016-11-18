@@ -72,9 +72,9 @@ void TouchSensor::update() {
 
     if (faaiil++ > 4) {
         faaiil = 0;
-        wait_ms(100);
+        wait_ms(50);
         l4=1;
-        wait_ms(100);
+        wait_ms(50);
         l4=0;
         //wait_ms(4000);
         for (;;) {}

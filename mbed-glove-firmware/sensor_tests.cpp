@@ -144,7 +144,7 @@ void touch_term() {
     if (touch_sensor.is_running()) {
         touch_sensor_thread->terminate();
         l4 = 1;
-        wait_ms(150);
+        wait_ms(75);
     }
 
     wait_ms(3);
@@ -189,7 +189,7 @@ void sensors_to_lights() {
             delete touch_sensor_thread;
         }
         touch_sensor_thread = new Thread;
-        kill_touch.attach_us(&touch_term, 400000);
+        kill_touch.attach_us(&touch_term, 200000);
         touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
         Thread::yield(); //TODO check if needed to force updateSingle to run
 
@@ -224,8 +224,8 @@ void sensors_to_lights() {
         }
 
         led = 1;
-        delete touch_sensor_thread;
+        delete touch_sensor_thread; // NOTE needs to go before "wait"
         touch_sensor_thread = NULL;
-        Thread::wait(1000);
+        Thread::wait(500);
     }
 }
