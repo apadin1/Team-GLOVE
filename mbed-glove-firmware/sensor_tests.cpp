@@ -136,13 +136,13 @@ void launch_periodic() {
     }
 }
 */
-Thread touch_sensor_thread;
+Thread* touch_sensor_thread = new Thread;
 TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
 
 void touch_term() {
     l2=0;
     if (l4 == 0) {
-        touch_sensor_thread.terminate();
+        touch_sensor_thread->terminate();
         l4 = 1;
         wait_ms(400);
     }
@@ -208,9 +208,11 @@ void sensors_to_lights() {
      */
     Timeout kill_touch;
     for (;;) {
+        led = 0;
+        touch_sensor_thread = new Thread;
         kill_touch.attach_us(&touch_term, 350000);
-        touch_sensor_thread.start(&touch_sensor, &TouchSensor::singleUpdate);
-        Thread::yield();
+        touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
+        //Thread::yield();
         //touch_sensor_thread.join();
 
         touch_sensor.writeKeys(&keys);
@@ -243,6 +245,8 @@ void sensors_to_lights() {
             ds_leds.set_RGB(1, red, green, blue, 3);
         }
 
+        led = 1;
         Thread::wait(1000);
+        delete touch_sensor_thread;
     }
 }

@@ -69,7 +69,7 @@ extern DigitalOut l4;
 int faaiil = 0;
 void TouchSensor::update() {
     faaiil += 1;
-    if (faaiil > 5) {
+    if (faaiil > 4) {
         faaiil = 0;
         //wait_ms(4000);
         for (;;) {}
@@ -126,10 +126,9 @@ void TouchSensor::singleUpdate() {
     l4 = 0;
     update();
     l4 = 1;
-    Thread::yield();
+    //Thread::yield();
     // yield???
     // how to signal finished
-    //
 }
 
 void TouchSensor::print(Serial& pc, key_states_t& keys_) {
