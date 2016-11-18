@@ -75,12 +75,12 @@ typedef union {
         uint8_t scroll_speed;   // byte 4
         uint8_t unused[4];      // bytes 5-8
     }  mouse_t;
-    
+
     /* Report sent over BLE */
     uint8_t report[MAX_REPORT_LENGTH];
     mouse_t mouse;
     keyboard_t keyboard;
-    
+
 } hid_report_t;
 
 
@@ -91,27 +91,27 @@ public:
 
     /* Constructor */
     KeyboardMouseService(BLE &_ble);
-    
+
     /******************** SENDING REPORTS ********************/
     ble_error_t sendKeyboardReport();
-    ble_error_t sendMouseReport();        
-    
+    ble_error_t sendMouseReport();
+
     /******************** KEYBOARD INTERFACE ********************/
 
     /* Set the values for which keys are pressed */
     void keyPress(uint8_t * keys, int len, uint8_t modifier);
-    
+
     /* Set the key values without changing the modifier */
     void keyPress(uint8_t * keys, int len);
-    
+
     /* Send an empty report, indicating all keys were released */
     void keyRelease(void);
-    
+
     /******************** MOUSE INTERFACE ********************/
 
     /* Set a button to be pressed or released */
     void setMouseButton(MouseButton button, ButtonState state);
-    
+
     /* Set the speed of the mouse cursor in any or all directions */
     void setMouseSpeedX(int8_t speed);
     void setMouseSpeedY(int8_t speed);
@@ -128,8 +128,8 @@ public:
     virtual void setConnected(bool connected) {
         this->connected = connected;
     }
-    
-    
+
+
 private:
 
     /******************** PRIVATE VARIABLES ********************/
@@ -141,12 +141,12 @@ private:
     uint8_t mouse_buttons;
     int8_t mouse_x;
     int8_t mouse_y;
-    int8_t mouse_scroll;    
-    
+    int8_t mouse_scroll;
+
     /* Keyboard variables */
     uint8_t usage[KBD_USAGE_LENGTH];
     uint8_t modifier;
-    
+
 };
 
 
