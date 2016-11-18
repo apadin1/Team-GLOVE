@@ -65,16 +65,21 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
     key_states->d = keys.d;
 }
 
+/* XXX
 extern DigitalOut l4;
 extern DigitalOut l2;
 uint16_t faaiil = 0;
 volatile uint8_t count;
+*/ // XXX
+
 void TouchSensor::update() {
 
-    if (faaiil++ > 4) {
+    /* XXX
+    if (faaiil++ > 50) {
         faaiil = 0;
         for (;;) {count += 1;}
     }
+    */ // XXX
 
     /* Use the change line to avoid unnessescary
      * I2C I/O, but without being an interrupt
@@ -124,13 +129,15 @@ void TouchSensor::updateTask() {
 
 void TouchSensor::singleUpdate() {
     if (needs_restart) {
-        //reset(); // This broke everything :(
+        //reset(); // This broke everything :( cuz it takes too long (disable irq??)
+        //qt.reset();
+        //qt.getButtonsState();
     }
 
-    l4 = 0;
+    //l4 = 0; // XXX
     needs_restart = true;
     update();
-    l4 = 1;
+    //l4 = 1; // XXX
     needs_restart = false;
 
     update_thread->terminate();
@@ -144,12 +151,12 @@ void TouchSensor::spawnUpdateThread() {
 
 void TouchSensor::terminateUpdateThreadIfBlocking() {
     if (needs_restart) {
-        l2 = 0;
-        l4 = 1;
+        //l2 = 0; // XXX
+        //l4 = 1; // XXX
         update_thread->terminate();
         // Leave reset in the update funtion cuz don't block here
         // Might skip full reset??? Maybe count then do it after X hangs
-        l2 = 1;
+        //l2 = 1; // XXX
     }
     delete update_thread;
     update_thread = NULL;
