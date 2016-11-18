@@ -100,8 +100,6 @@ void flex_test() {
 
 void sensors_to_lights() {
 
-    boot_delay(2);
-
     DotStarLEDs ds_leds(2);
     uint8_t red, green, blue;
 
@@ -130,10 +128,11 @@ void sensors_to_lights() {
      *
      * Light one is the combined IMU status
      */
-
     for (;;) {
         imu.updateAndWrite(&imu_vals);
         flex_sensors.updateAndWrite(flex_vals);
+        touch_sensor.updateAndWrite(&keys);
+
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];
         }
@@ -141,7 +140,6 @@ void sensors_to_lights() {
             flex_max = flex_vals[0];
         }
 
-        touch_sensor.updateAndWrite(&keys);
         if (keys.pack()) {
             ds_leds.set_RGB(0,0,255,0);
         }
