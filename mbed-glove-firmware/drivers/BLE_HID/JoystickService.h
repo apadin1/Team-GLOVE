@@ -10,7 +10,8 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and * limitations under the License.
+ * See the License for the specific language governing permissions and *
+ *limitations under the License.
  */
 
 #include "mbed.h"
@@ -52,7 +53,7 @@ report_map_t JOYSTICK_REPORT_MAP = {
     COLLECTION(1),       0x01,  // Application
     USAGE_PAGE(1),       0x02,  // Simulation Controls
     USAGE(1),            0xBB,  // Throttle
-    USAGE(1),            0xBA,  // Rudder
+    USAGE(1),            0xBA,  // Roll
     LOGICAL_MINIMUM(1),  0x81,  // -127
     LOGICAL_MAXIMUM(1),  0x7f,  // 127
     REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
@@ -93,61 +94,68 @@ report_map_t JOYSTICK_REPORT_MAP = {
 
 uint8_t report[] = { 0, 0, 0, 0, 0 };
 
-class JoystickService: public HIDServiceBase
-{
+class JoystickService : public HIDServiceBase {
 public:
-    JoystickService(BLE &_ble) :
-        HIDServiceBase(_ble,
-                       JOYSTICK_REPORT_MAP, sizeof(JOYSTICK_REPORT_MAP),
-                       inputReport          = report,
-                       outputReport         = NULL,
-                       featureReport        = NULL,
-                       inputReportLength    = sizeof(inputReport),
-                       outputReportLength   = 0,
-                       featureReportLength  = 0,
-                       reportTickerDelay    = 20),
+    JoystickService(BLE& _ble)
+        : HIDServiceBase(_ble,
+                JOYSTICK_REPORT_MAP,
+                sizeof(JOYSTICK_REPORT_MAP),
+                inputReport = report,
+                outputReport = NULL,
+                featureReport = NULL,
+                inputReportLength = sizeof(inputReport),
+                outputReportLength = 0,
+                featureReportLength = 0,
+                reportTickerDelay = 20),
+          _t(-127),
+          _r(-127),
+          _x(0),
+          _y(0),
+          _button(0x00),
+          _hat(0x00),
+          failedReports(0) {
 
-    _t(-127), _r(-127), _x(0), _y(0), _button(0x00), _hat(0x00), failedReports (0)
-    {
         startReportTicker();
     }
 
-bool throttle(int16_t t) {
-    _t = t;
-    return update();
-}
+    bool throttle(int16_t t) {
+        _t = t;
+        return update();
+    }
 
-bool rudder(int16_t r) {
-    _r = r;
-    return update();
-}
+    bool roll(int16_t r) {
+        _r = r;
+        return update();
+    }
 
-bool move(int16_t x, int16_t y) {
-    _x = x;
-    _y = y;
-    return update();
-}
+    bool move(int16_t x, int16_t y) {
+        _x = x;
+        _y = y;
+        return update();
+    }
 
-bool button(uint8_t button) {
-    _button = button;
-    return update();
-}
+    bool button(uint8_t button) {
+        _button = button;
+        return update();
+    }
 
-bool hat(uint8_t hat) {
-    _hat = hat;
-    return update();
-}
+    bool hat(uint8_t hat) {
+        _hat = hat;
+        return update();
+    }
 
     virtual void sendCallback(void) {
         if (!connected)
             return;
 
+        /*
         _t = t;
         _r = r;
         _x = x;
         _y = y;
         _button = button;
         _hat = hat;
+        */
 
         // Fill the report according to the Joystick Descriptor
         report[0] = _t & 0xff;
