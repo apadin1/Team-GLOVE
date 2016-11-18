@@ -144,6 +144,10 @@ public:
         return update();
     }
 
+    bool update() {
+        return true;
+    }
+
     virtual void sendCallback(void) {
         if (!connected)
             return;

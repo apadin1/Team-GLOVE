@@ -42,10 +42,10 @@ InterruptIn button2(BUTTON2);
 #define LED_OFF 1
 
 BLE ble;
-KeyboardService *kbdServicePtr;
+JoystickService* jsServicePtr;
 
-static const char DEVICE_NAME[] = "uKbd";
-static const char SHORT_DEVICE_NAME[] = "kbd1";
+static const char DEVICE_NAME[] = "timJS";
+static const char SHORT_DEVICE_NAME[] = "js0";
 
 static void onDisconnect(const Gap::DisconnectionCallbackParams_t *params)
 {
@@ -61,34 +61,13 @@ static void onConnect(const Gap::ConnectionCallbackParams_t *params)
 }
 
 static void waiting() {
-    if (!kbdServicePtr->isConnected())
+    if (!jsServicePtr->isConnected())
         connected_led = !connected_led;
     else
         connected_led = LED_ON;
 }
 
-void send_string(const char * c) {
-    if (!kbdServicePtr)
-        return;
-
-    if (!kbdServicePtr->isConnected()) {
-        HID_DEBUG("we haven't connected yet...");
-    } else {
-        int len = strlen(c);
-        kbdServicePtr->printf(c);
-        HID_DEBUG("sending %d chars\r\n", len);
-    }
-}
-
-void send_stuff() {
-    send_string("hello world!\n");
-}
-
-void send_more_stuff() {
-    send_string("All work and no play makes Jack a dull boy\n");
-}
-
-void keyboard_stream() {
+void joystick_test() {
     Ticker heartbeat;
 
     button1.rise(send_stuff);
@@ -107,14 +86,14 @@ void keyboard_stream() {
     initializeSecurity(ble);
 
     HID_DEBUG("adding hid service\r\n");
-    KeyboardService kbdService(ble);
-    kbdServicePtr = &kbdService;
+
+    jsServicePtr = new JoystickService(ble);
 
     HID_DEBUG("adding device info and battery service\r\n");
     initializeHOGP(ble);
 
     HID_DEBUG("setting up gap\r\n");
-    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
+    ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::JOYSTICK);
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME,
                                            (const uint8_t *)DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME,
