@@ -18,10 +18,7 @@
  */
 #include "touch_sensor.h"
 
-DigitalIn change_line(p16); // the CHANGE line
-
-TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl) {
+TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr) : qt(sda, scl) {
     initialize(intr);
 }
 
@@ -35,19 +32,20 @@ void TouchSensor::initialize(PinName intr) {
     needs_restart = false;
     writeStaticConfig();
     qt.getButtonsState();
+
     // Associate the update function with the interrupt CHANGE line
     if (intr != NC) {
-        change_event = new InterruptIn(intr);
-        change_event->fall(this, &TouchSensor::changeEventHandler);
+        if (TOUCH_DIGITALIN_CHANGE) {
+            change_line = new DigitalIn(intr);
+        }
+        else {
+            change_event = new InterruptIn(intr);
+            change_event->fall(this, &TouchSensor::changeEventHandler);
+        }
     }
-    /* // XXX
-    */ // XXX
 }
 
 void TouchSensor::writeStaticConfig() {
-    // reset?
-    // calibrate???
-
     qt.setGuard(TOUCH_GUARD_KEY);
     qt.setLowPowerMode(TOUCH_LP_MODE);
     qt.setMaxOn(TOUCH_MAX_ON);
@@ -77,13 +75,10 @@ void TouchSensor::update() {
         for (;;) {count += 1;}
     }
 
-    //wait_ms(1); // XXX
-    //return; // XXX
-
     /* Use the change line to avoid unnessescary
      * I2C I/O, but without being an interrupt
      */
-    if (change_line == 1) {
+    if (*change_line == 1) {
         return;
     }
     uint8_t buttons = qt.getButtonsState();
@@ -103,15 +98,6 @@ void TouchSensor::update() {
     //keys.f = buttons & 0x20; // key 5
     //keys.g = buttons & 0x40; // key 6
 }
-
-/*
- * TODO List in lab:
- *
- * Check the timing constraints,
- *  - working pin LED4 on the update()
- *  - when the interrupt timeout gets called
- *  - making sure that singleUpdate has a change to run before Timeout
- */
 
 void TouchSensor::updateAndWrite(key_states_t* key_states) {
     update();
@@ -135,7 +121,6 @@ void TouchSensor::updateTask() {
     }
 }
 
-extern Thread* touch_sensor_thread;
 void TouchSensor::singleUpdate() {
     if (needs_restart) {
         //reset();
@@ -147,11 +132,23 @@ void TouchSensor::singleUpdate() {
     l4 = 1;
     needs_restart = false;
 
-    touch_sensor_thread->terminate();
+    update_thread->terminate();
 }
 
-bool TouchSensor::is_running() {
-    return needs_restart;
+void TouchSensor::spawnUpdateThread() {
+    update_thread = new Thread;
+    update_thread->start(this, &TouchSensor::singleUpdate);
+    Thread::yield();
+}
+
+void TouchSensor::terminateUpdateThreadIfBlocking() {
+    if (needs_restart) {
+        update_thread->terminate();
+        // Leave reset in the update funtion cuz don't block here
+        // Might skip full reset??? Maybe count then do it after X hangs
+    }
+    delete update_thread;
+    update_thread = NULL;
 }
 
 void TouchSensor::print(Serial& pc, key_states_t& keys_) {
