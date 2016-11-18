@@ -27,6 +27,10 @@
 *SOFTWARE.
 */
 
+/*
+ * JoystickService.h
+ */
+
 #include "stdint.h"
 #include "USBJoystick.h"
 

@@ -10,118 +10,178 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and *
+ *limitations under the License.
  */
 
 #include "mbed.h"
 
 #include "HIDServiceBase.h"
 
-enum ButtonState
-{
-    BUTTON_UP,
-    BUTTON_DOWN
+#define REPORT_ID_JOYSTICK 4
+
+/* Common usage */
+enum JOY_BUTTON {
+    JOY_B0 = 1,
+    JOY_B1 = 2,
+    JOY_B2 = 4,
+    JOY_B3 = 8,
 };
 
-enum JoystickButton
-{
-    JOYSTICK_BUTTON_1       = 0x1,
-    JOYSTICK_BUTTON_2       = 0x2,
+enum JOY_HAT {
+    JOY_HAT_UP = 0,
+    JOY_HAT_RIGHT = 1,
+    JOY_HAT_DOWN = 2,
+    JOY_HAT_LEFT = 3,
+    JOY_HAT_NEUTRAL = 4,
 };
+
+/* X, Y and T limits */
+/* These values do not directly map to screen pixels */
+/* Zero may be interpreted as meaning 'no movement' */
+#define JX_MIN_ABS (-127) /*!< The maximum value that we can move to the left on the x-axis */
+#define JY_MIN_ABS (-127) /*!< The maximum value that we can move up on the y-axis */
+#define JT_MIN_ABS (-127) /*!< The minimum value for the throttle */
+#define JX_MAX_ABS (127) /*!< The maximum value that we can move to the right on the x-axis */
+#define JY_MAX_ABS (127) /*!< The maximum value that we can move down on the y-axis */
+#define JT_MAX_ABS (127) /*!< The maximum value for the throttle */
 
 report_map_t JOYSTICK_REPORT_MAP = {
-    USAGE_PAGE(1),      0x01,         // Generic Desktop
-    USAGE(1),           0x04,         // Joystick
-    COLLECTION(1),      0x01,         // Application
-    COLLECTION(1),      0x00,         //  Physical
-    USAGE_PAGE(1),      0x09,         //   Buttons
-    USAGE_MINIMUM(1),   0x01,
-    USAGE_MAXIMUM(1),   0x03,
-    LOGICAL_MINIMUM(1), 0x00,
-    LOGICAL_MAXIMUM(1), 0x01,
-    REPORT_COUNT(1),    0x03,         //   2 bits (Buttons)
-    REPORT_SIZE(1),     0x01,
-    INPUT(1),           0x02,         //   Data, Variable, Absolute
-    REPORT_COUNT(1),    0x01,         //   6 bits (Padding)
-    REPORT_SIZE(1),     0x05,
-    INPUT(1),           0x01,         //   Constant
-    USAGE_PAGE(1),      0x01,         //   Generic Desktop
-    USAGE(1),           0x30,         //   X
-    USAGE(1),           0x31,         //   Y
-    USAGE(1),           0x32,         //   Z
-    USAGE(1),           0x33,         //   Rx
-    LOGICAL_MINIMUM(1), 0x81,         //   -127
-    LOGICAL_MAXIMUM(1), 0x7f,         //   127
-    REPORT_SIZE(1),     0x08,         //   Three bytes
-    REPORT_COUNT(1),    0x04,
-    INPUT(1),           0x02,         //   Data, Variable, Absolute (unlike mouse)
+    USAGE_PAGE(1),       0x01,  // Generic Desktop
+    LOGICAL_MINIMUM(1),  0x00,  // Logical_Minimum (0)
+    USAGE(1),            0x04,  // Usage (Joystick)
+    COLLECTION(1),       0x01,  // Application
+    USAGE_PAGE(1),       0x02,  // Simulation Controls
+    USAGE(1),            0xBB,  // Throttle
+    USAGE(1),            0xBA,  // Roll
+    LOGICAL_MINIMUM(1),  0x81,  // -127
+    LOGICAL_MAXIMUM(1),  0x7f,  // 127
+    REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
+    INPUT(1),            0x02,  // Data, Variable, Absolute
+    USAGE_PAGE(1),       0x01,  // Generic Desktop
+    USAGE(1),            0x01,  // Usage (Pointer)
+    COLLECTION(1),       0x00,  // Physical
+    USAGE(1),            0x30,  // X
+    USAGE(1),            0x31,  // Y
+                                //  8 bit values
+    LOGICAL_MINIMUM(1),  0x81,  // -127
+    LOGICAL_MAXIMUM(1),  0x7f,  // 127
+    REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
+    INPUT(1),            0x02,  // Data, Variable, Absolute
     END_COLLECTION(0),
-    END_COLLECTION(0),
+    // 4 Position Hat Switch
+    USAGE(1),            0x39,        // Usage (Hat switch)
+    LOGICAL_MINIMUM(1),  0x00,        // 0
+    LOGICAL_MAXIMUM(1),  0x03,        // 3
+    PHYSICAL_MINIMUM(1), 0x00,        // Physical_Minimum (0)
+    PHYSICAL_MAXIMUM(2), 0x0E, 0x01,  // Physical_Maximum (270)
+    UNIT(1),             0x14,        // Unit (Eng Rot:Angular Pos)
+    REPORT_SIZE(1),      0x04, REPORT_COUNT(1), 0x01,
+    INPUT(1),            0x02,  // Data, Variable, Absolute
+
+    // Buttons
+    USAGE_PAGE(1),       0x09,  // Buttons
+    USAGE_MINIMUM(1),    0x01,  // 1
+    USAGE_MAXIMUM(1),    0x04,  // 4
+    LOGICAL_MINIMUM(1),  0x00,  // 0
+    LOGICAL_MAXIMUM(1),  0x01,  // 1
+    REPORT_SIZE(1),      0x01, REPORT_COUNT(1), 0x04,
+    UNIT_EXPONENT(1),    0x00,  // Unit_Exponent (0)
+    UNIT(1),             0x00,  // Unit (None)
+    INPUT(1),            0x02,  // Data, Variable, Absolute
+    END_COLLECTION(0)
 };
 
 uint8_t report[] = { 0, 0, 0, 0, 0 };
 
-class JoystickService: public HIDServiceBase
-{
+class JoystickService : public HIDServiceBase {
 public:
-    JoystickService(BLE &_ble) :
-        HIDServiceBase(_ble,
-                       JOYSTICK_REPORT_MAP, sizeof(JOYSTICK_REPORT_MAP),
-                       inputReport          = report,
-                       outputReport         = NULL,
-                       featureReport        = NULL,
-                       inputReportLength    = sizeof(inputReport),
-                       outputReportLength   = 0,
-                       featureReportLength  = 0,
-                       reportTickerDelay    = 20),
-        buttonsState (0),
-        failedReports (0)
-    {
-        speed[0] = 0;
-        speed[1] = 0;
-        speed[2] = 0;
-        speed[3] = 0;
+    JoystickService(BLE& _ble)
+        : HIDServiceBase(_ble,
+                JOYSTICK_REPORT_MAP,
+                sizeof(JOYSTICK_REPORT_MAP),
+                inputReport = report,
+                outputReport = NULL,
+                featureReport = NULL,
+                inputReportLength = sizeof(inputReport),
+                outputReportLength = 0,
+                featureReportLength = 0,
+                reportTickerDelay = 20),
+          _t(-127),
+          _r(-127),
+          _x(0),
+          _y(0),
+          _button(0x00),
+          _hat(0x00),
+          failedReports(0) {
 
         startReportTicker();
     }
 
-    int setSpeed(int8_t x, int8_t y, int8_t z)
-    {
-        speed[0] = x;
-        speed[1] = y;
-        speed[2] = z;
-
-        return 0;
+    bool throttle(int16_t t) {
+        _t = t;
+        return update();
     }
 
-    int setButton(JoystickButton button, ButtonState state)
-    {
-        if (state == BUTTON_UP)
-            buttonsState &= ~(button);
-        else
-            buttonsState |= button;
+    bool roll(int16_t r) {
+        _r = r;
+        return update();
+    }
 
-        return 0;
+    bool move(int16_t x, int16_t y) {
+        _x = x;
+        _y = y;
+        return update();
+    }
+
+    bool button(uint8_t button) {
+        _button = button;
+        return update();
+    }
+
+    bool hat(uint8_t hat) {
+        _hat = hat;
+        return update();
     }
 
     virtual void sendCallback(void) {
         if (!connected)
             return;
 
+        /*
+        _t = t;
+        _r = r;
+        _x = x;
+        _y = y;
+        _button = button;
+        _hat = hat;
+        */
+
+        // Fill the report according to the Joystick Descriptor
+        report[0] = _t & 0xff;
+        report[1] = _r & 0xff;
+        report[2] = _x & 0xff;
+        report[3] = _y & 0xff;
+        report[4] = ((_button & 0x0f) << 4) | (_hat & 0x0f);
+        /*
         report[0] = buttonsState & 0x7;
         report[1] = speed[0];
         report[2] = speed[1];
         report[3] = speed[2];
         report[4] = speed[3];
+        */
 
         if (send(report))
             failedReports++;
     }
 
-protected:
-    uint8_t buttonsState;
-    uint8_t speed[4];
+private:
+    int8_t _t;
+    int8_t _r;
+    int8_t _x;
+    int8_t _y;
+    uint8_t _button;
+    uint8_t _hat;
 
 public:
     uint32_t failedReports;
