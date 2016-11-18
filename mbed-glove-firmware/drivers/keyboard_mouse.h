@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#ifndef KEYBOARD_MOUSE_H
+#define KEYBOARD_MOUSE_H
 
 #include "mbed.h"
 #include "ble/BLE.h"
@@ -105,10 +108,11 @@ private:
 
     /******************** PRIVATE VARIABLES ********************/
     KeyboardMouseService * service_ptr;
-    BLE ble;
+    BLE& ble;
 
     uint8_t keyboard_keys[KBD_USAGE_LENGTH];
     int len; /* Current number of keys pressed */
 
 };
 
+#endif /* KEYBOARD_MOUSE_H */
