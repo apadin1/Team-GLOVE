@@ -83,7 +83,7 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
-    // flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
+    flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
     // AnalogButton[FLEX2].change_hid_profile();
     // AnalogButton[FLEX3].change_hid_profile();
     // AnalogButton[FLEX4].change_hid_profile();
