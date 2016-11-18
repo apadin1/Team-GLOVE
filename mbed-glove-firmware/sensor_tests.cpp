@@ -17,10 +17,10 @@ I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 
 Serial pc(USBTX, USBRX);
 
-DigitalOut led(LED1);
-DigitalOut l2(LED2);
-DigitalOut l3(LED3);
-DigitalOut l4(LED4);
+DigitalOut led(p12);
+DigitalOut l2(p13);
+DigitalOut l3(p14);
+DigitalOut l4(p15);
 
 void blink() {
     l2 = 1;
@@ -140,15 +140,13 @@ Thread* touch_sensor_thread = new Thread;
 TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
 
 void touch_term() {
-    l2=0;
     if (touch_sensor.is_running()) {
+        l2=0;
         touch_sensor_thread->terminate();
         l4 = 1;
-        wait_ms(75);
+        l2=1;
+        // call restart!
     }
-
-    wait_ms(3);
-    l2=1;
 }
 
 void sensors_to_lights() {
@@ -182,14 +180,9 @@ void sensors_to_lights() {
      *
      * Light one is the combined IMU status
      */
-    Timeout kill_touch;
     for (;;) {
         led = 0;
-        if (touch_sensor_thread != NULL) {
-            delete touch_sensor_thread;
-        }
         touch_sensor_thread = new Thread;
-        kill_touch.attach_us(&touch_term, 200000);
         touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
         Thread::yield(); //TODO check if needed to force updateSingle to run
 
@@ -224,8 +217,9 @@ void sensors_to_lights() {
         }
 
         led = 1;
+        touch_term();
         delete touch_sensor_thread; // NOTE needs to go before "wait"
         touch_sensor_thread = NULL;
-        Thread::wait(500);
+        Thread::wait(10);
     }
 }

@@ -18,6 +18,8 @@
  */
 #include "touch_sensor.h"
 
+DigitalIn change_line(p16); // the CHANGE line
+
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
     : qt(sda, scl) {
     initialize(intr);
@@ -31,7 +33,6 @@ TouchSensor::TouchSensor(I2C& i2c, PinName intr)
 
 void TouchSensor::initialize(PinName intr) {
     needs_restart = false;
-    /* // XXX
     writeStaticConfig();
     qt.getButtonsState();
     // Associate the update function with the interrupt CHANGE line
@@ -39,6 +40,7 @@ void TouchSensor::initialize(PinName intr) {
         change_event = new InterruptIn(intr);
         change_event->fall(this, &TouchSensor::changeEventHandler);
     }
+    /* // XXX
     */ // XXX
 }
 
@@ -67,22 +69,23 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
 
 extern DigitalOut l4;
 uint16_t faaiil = 0;
-
+volatile uint8_t count;
 void TouchSensor::update() {
 
     if (faaiil++ > 4) {
         faaiil = 0;
-        wait_ms(50);
-        l4=1;
-        wait_ms(50);
-        l4=0;
-        //wait_ms(4000);
-        for (;;) {}
+        for (;;) {count += 1;}
     }
 
-    wait_ms(1); // XXX
-    return; // XXX
+    //wait_ms(1); // XXX
+    //return; // XXX
 
+    /* Use the change line to avoid unnessescary
+     * I2C I/O, but without being an interrupt
+     */
+    if (change_line == 1) {
+        return;
+    }
     uint8_t buttons = qt.getButtonsState();
 
     // Check overflow flag
