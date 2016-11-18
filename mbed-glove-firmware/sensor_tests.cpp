@@ -141,7 +141,7 @@ TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
 
 void touch_term() {
     l2=0;
-    if (l4 == 0) {
+    if (touch_sensor.is_running()) {
         touch_sensor_thread->terminate();
         l4 = 1;
         wait_ms(150);
@@ -191,7 +191,7 @@ void sensors_to_lights() {
         touch_sensor_thread = new Thread;
         kill_touch.attach_us(&touch_term, 400000);
         touch_sensor_thread->start(&touch_sensor, &TouchSensor::singleUpdate);
-        //Thread::yield();
+        Thread::yield(); //TODO check if needed to force updateSingle to run
 
         touch_sensor.writeKeys(&keys);
         flex_sensors.updateAndWrite(flex_vals);

@@ -182,6 +182,15 @@ public:
      */
     static void print(Serial& pc, key_states_t&);
 
+    /*
+     * Returns value of "needs_restart"
+     * which only gets set before updating,
+     * cleared after successful update
+     *
+     * Check this with the timeout that should kill the thread
+     */
+    bool is_running();
+
 private:
     void initialize(PinName intr);
 
@@ -189,8 +198,13 @@ private:
     AT42QT1070 qt;
     InterruptIn* change_event;
     Semaphore do_update;
-    Semaphore do_restart;
     key_states_t keys;
+
+    /*
+     * This signals if the Touch Sensor was killed
+     * while hanging on the bus, thus needs to get restarted
+     */
+    bool needs_restart;
 };
 
 #endif /* TOUCH_SENSOR_H_ */

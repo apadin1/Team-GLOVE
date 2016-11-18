@@ -30,6 +30,7 @@ TouchSensor::TouchSensor(I2C& i2c, PinName intr)
 
 
 void TouchSensor::initialize(PinName intr) {
+    needs_restart = false;
     /* // XXX
     writeStaticConfig();
     qt.getButtonsState();
@@ -100,6 +101,15 @@ void TouchSensor::update() {
     //keys.g = buttons & 0x40; // key 6
 }
 
+/*
+ * TODO List in lab:
+ *
+ * Check the timing constraints,
+ *  - working pin LED4 on the update()
+ *  - when the interrupt timeout gets called
+ *  - making sure that singleUpdate has a change to run before Timeout
+ */
+
 void TouchSensor::updateAndWrite(key_states_t* key_states) {
     update();
     writeKeys(key_states);
@@ -124,17 +134,21 @@ void TouchSensor::updateTask() {
 
 extern Thread* touch_sensor_thread;
 void TouchSensor::singleUpdate() {
-    // TODO check restart
-    // maybe a semaphore
-    //  But what if that fails???
-    //  Okay because this will get killed again
+    if (needs_restart) {
+        //reset();
+    }
+
     l4 = 0;
+    needs_restart = true;
     update();
     l4 = 1;
+    needs_restart = false;
+
     touch_sensor_thread->terminate();
-    //Thread::yield();
-    // yield???
-    // how to signal finished
+}
+
+bool TouchSensor::is_running() {
+    return needs_restart;
 }
 
 void TouchSensor::print(Serial& pc, key_states_t& keys_) {
