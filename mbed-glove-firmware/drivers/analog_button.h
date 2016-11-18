@@ -31,6 +31,14 @@ public:
 
         update_threshold(transition_band);
     }
+    
+    void init(T* data_, T min_, T max_, float transition_band, bool active_low_) {
+        data = data_;
+        min_abs = min_;
+        max_abs = max_;
+        active_low = active_low_;
+        update_threshold(transition_band);
+    }
 
     void update_threshold(float transition_band) {
         if (transition_band < 0.0 || 1.0 < transition_band) {
@@ -131,7 +139,8 @@ class flexToHID {
     public:
     flexToHID( uint16_t* data_, uint16_t min_, uint16_t max_, float transition_band_, bool active_low_=false)
         : active_low(active_low_) {
-        sensor_conversion = AnalogButton<uint16_t>(data_, min_, max_, transition_band_, active_low_);
+        //sensor_conversion = AnalogButton<uint16_t>(data_, min_, max_, transition_band_, active_low_);
+        sensor_conversion.init(data_, min_, max_, transition_band_, active_low_);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
     }
