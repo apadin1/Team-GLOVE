@@ -49,6 +49,7 @@ enum JOY_HAT {
 #define JT_MAX_ABS (127) /*!< The maximum value for the throttle */
 
 DigitalOut l4(LED4);
+DigitalOut l2(LED2);
 
 report_map_t JOYSTICK_REPORT_MAP = {
     USAGE_PAGE(1),       0x01,  // Generic Desktop
@@ -123,7 +124,7 @@ public:
           _hat(0x00),
           failedReports(0) {
 
-        startReportTicker();
+        //startReportTicker();
     }
 
     void throttle(int16_t t) {
@@ -150,7 +151,7 @@ public:
     }
 
     void sendReport(void) {
-        l4 = 0;
+        l4 = 1;
         if (!connected)
             return;
         // Fill the report according to the Joystick Descriptor
@@ -160,11 +161,15 @@ public:
         report[3] = _y & 0xff;
         report[4] = ((_button & 0x0f) << 4) | (_hat & 0x0f);
 
-        if (send(report))
+        if (send(report)) {
             failedReports++;
+            l2 = 1;
+            wait_ms(200);
+            l2 = 0;
+        }
 
-        wait_ms(3);
-        l4 = 1;
+        wait_ms(30);
+        l4 = 0;
     }
 
     void sendCallback(void) {
