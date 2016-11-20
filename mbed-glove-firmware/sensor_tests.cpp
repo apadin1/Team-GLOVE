@@ -51,6 +51,11 @@ void boot_delay(uint8_t t) {
     }
 }
 
+//Semaphore
+
+void calibration_mode() {
+}
+
 /*
 void imu_test() {
     IMU_BNO055 imu(i2c);

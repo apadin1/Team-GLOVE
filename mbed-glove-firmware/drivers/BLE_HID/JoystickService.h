@@ -41,25 +41,32 @@ enum JOY_HAT {
 /* Zero may be interpreted as meaning 'no movement' */
 #define JX_MIN_ABS (-127) /*!< The maximum value that we can move to the left on the x-axis */
 #define JY_MIN_ABS (-127) /*!< The maximum value that we can move up on the y-axis */
+#define JZ_MIN_ABS (-127) /*!< The maximum value that we can move up on the y-axis */
 #define JT_MIN_ABS (-127) /*!< The minimum value for the throttle */
 #define JX_MAX_ABS (127) /*!< The maximum value that we can move to the right on the x-axis */
 #define JY_MAX_ABS (127) /*!< The maximum value that we can move down on the y-axis */
+#define JZ_MAX_ABS (127) /*!< The maximum value that we can move down on the y-axis */
 #define JT_MAX_ABS (127) /*!< The maximum value for the throttle */
+
+DigitalOut l4(LED4);
 
 report_map_t JOYSTICK_REPORT_MAP = {
     USAGE_PAGE(1),       0x01,  // Generic Desktop
     LOGICAL_MINIMUM(1),  0x00,  // Logical_Minimum (0)
     USAGE(1),            0x04,  // Usage (Joystick)
+
     COLLECTION(1),       0x01,  // Application
     USAGE_PAGE(1),       0x02,  // Simulation Controls
+
     USAGE(1),            0xBB,  // Throttle
-    USAGE(1),            0xBA,  // Roll
+    USAGE(1),            0xBA,  // Roll (Z)
     LOGICAL_MINIMUM(1),  0x81,  // -127
     LOGICAL_MAXIMUM(1),  0x7f,  // 127
     REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
     INPUT(1),            0x02,  // Data, Variable, Absolute
     USAGE_PAGE(1),       0x01,  // Generic Desktop
     USAGE(1),            0x01,  // Usage (Pointer)
+
     COLLECTION(1),       0x00,  // Physical
     USAGE(1),            0x30,  // X
     USAGE(1),            0x31,  // Y
@@ -69,6 +76,7 @@ report_map_t JOYSTICK_REPORT_MAP = {
     REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
     INPUT(1),            0x02,  // Data, Variable, Absolute
     END_COLLECTION(0),
+
     // 4 Position Hat Switch
     USAGE(1),            0x39,        // Usage (Hat switch)
     LOGICAL_MINIMUM(1),  0x00,        // 0
@@ -108,7 +116,7 @@ public:
                 featureReportLength = 0,
                 reportTickerDelay = 20),
           _t(-127),
-          _r(-127),
+          _z(0),
           _x(0),
           _y(0),
           _button(0x00),
@@ -122,12 +130,14 @@ public:
         _t = t;
     }
 
-    void roll(int16_t r) {
-        _r = r;
+    void roll(int16_t z){
+        _z = z;
+    }
+    void pitch(int16_t x) {
+        _x = x;
     }
 
-    void move(int16_t x, int16_t y) {
-        _x = x;
+    void yaw(uint16_t y) {
         _y = y;
     }
 
@@ -139,40 +149,31 @@ public:
         _hat = hat;
     }
 
-    void sendCallback(void) {
+    void sendReport(void) {
+        l4 = 0;
         if (!connected)
             return;
-
-        /*
-        _t = t;
-        _r = r;
-        _x = x;
-        _y = y;
-        _button = button;
-        _hat = hat;
-        */
-
         // Fill the report according to the Joystick Descriptor
         report[0] = _t & 0xff;
-        report[1] = _r & 0xff;
+        report[1] = _z & 0xff;
         report[2] = _x & 0xff;
         report[3] = _y & 0xff;
         report[4] = ((_button & 0x0f) << 4) | (_hat & 0x0f);
-        /*
-        report[0] = buttonsState & 0x7;
-        report[1] = speed[0];
-        report[2] = speed[1];
-        report[3] = speed[2];
-        report[4] = speed[3];
-        */
 
         if (send(report))
             failedReports++;
+
+        wait_ms(3);
+        l4 = 1;
+    }
+
+    void sendCallback(void) {
+        sendReport();
     }
 
 private:
     int8_t _t;
-    int8_t _r;
+    int8_t _z;
     int8_t _x;
     int8_t _y;
     uint8_t _button;

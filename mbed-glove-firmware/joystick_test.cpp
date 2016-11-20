@@ -37,6 +37,8 @@ DigitalOut connected_led(LED1);
 
 InterruptIn b1(BUTTON1);
 InterruptIn b2(BUTTON2);
+InterruptIn b3(BUTTON3);
+InterruptIn b4(BUTTON4);
 
 #define LED_ON 0
 #define LED_OFF 1
@@ -58,6 +60,7 @@ static void onConnect(const Gap::ConnectionCallbackParams_t *params)
 {
     HID_DEBUG("connected\r\n");
     connected_led = LED_ON;
+    jsServicePtr->setConnected(true);
 }
 
 static void waiting() {
@@ -67,19 +70,57 @@ static void waiting() {
         connected_led = LED_ON;
 }
 
-void send_stuff() {
+void send_btn() {
     jsServicePtr->button(JOY_B0);
+    jsServicePtr->sendReport();
+    printf("failed: %d\r\n", jsServicePtr->failedReports);
+}
+void send_btn_release() {
+    jsServicePtr->button(0);
+    jsServicePtr->sendReport();
 }
 
-void send_more_stuff() {
+void send_hat() {
     jsServicePtr->hat(JOY_HAT_UP);
+    jsServicePtr->sendReport();
+}
+void send_hat_release() {
+    jsServicePtr->hat(JOY_HAT_NEUTRAL);
+    jsServicePtr->sendReport();
+}
+
+void send_b3_fall() {
+    jsServicePtr->yaw(99);
+    jsServicePtr->sendReport();
+}
+void send_b3_rise() {
+    jsServicePtr->yaw(0);
+    jsServicePtr->sendReport();
+}
+
+void send_b4_fall() {
+    jsServicePtr->pitch(-99);
+    jsServicePtr->sendReport();
+}
+void send_b4_rise() {
+    jsServicePtr->pitch(0);
+    jsServicePtr->sendReport();
 }
 
 void joystick_test() {
     Ticker heartbeat;
 
-    b1.rise(send_stuff);
-    b2.rise(send_more_stuff);
+    b1.fall(send_btn);
+    b1.rise(send_btn_release);
+
+    b2.fall(send_hat);
+    b2.rise(send_hat_release);
+
+    b3.fall(send_b3_fall);
+    b3.rise(send_b3_rise);
+
+    b4.fall(send_b4_fall);
+    b4.rise(send_b4_rise);
 
     HID_DEBUG("initialising ticker\r\n");
 
