@@ -59,44 +59,44 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     touch_sensors[TOUCH4] = &touch4;
 
     /* PITCHUP */
-    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 20, true);
+    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 0.2, true);
     imu_axis[PITCHUP] = &pitchup;
 
     /* PITCHDOWN */
-    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 20, true);
+    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 0.2, true);
     imu_axis[PITCHDOWN] = &pitchdown;
 
     /* ROLLLEFT */
-    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 20, true);
+    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 0.2, true);
     imu_axis[ROLLLEFT] = &rollleft;
 
     /* ROLLRIGHT */
-    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 20, true);
+    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 0.2, true);
     imu_axis[ROLLRIGHT] = &rollright;
 
     /* YAWLEFT */
-    imuToHID yawleft(&glove_data.imu.orient_yaw, 0, 20, 20, true);
+    imuToHID yawleft(&glove_data.imu.orient_yaw, 0, 20, 0.2, true);
     imu_axis[YAWLEFT] = &yawleft;
 
     /* YAWRIGHT */
-    imuToHID yawright(&glove_data.imu.orient_yaw, -20, 0, 0, true);
+    imuToHID yawright(&glove_data.imu.orient_yaw, -20, 0, 0.2, false);
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
     flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
-    // AnalogButton[FLEX2].change_hid_profile();
-    // AnalogButton[FLEX3].change_hid_profile();
-    // AnalogButton[FLEX4].change_hid_profile();
-    // AnalogButton[TOUCH1].change_hid_profile();
-    // AnalogButton[TOUCH2].change_hid_profile();
-    // AnalogButton[TOUCH3].change_hid_profile();
-    // AnalogButton[TOUCH4].change_hid_profile();
-    // AnalogButton[PITCHUP].change_hid_profile();
-    // AnalogButton[PITCHDOWN].change_hid_profile();
-    // AnalogButton[ROLLLEFT].change_hid_profile();
-    // AnalogButton[ROLLRIGHT].change_hid_profile();
-    // AnalogButton[YAWLEFT].change_hid_profile();
-    // AnalogButton[YAWRIGHT].change_hid_profile();
+    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
+    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
+    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
+    imu_axis[PITCHUP]->change_hid_profile(DISABLED);
+    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
+    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
+    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
+    imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
+    imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
 
     update_task_timer =
           new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
@@ -236,11 +236,10 @@ void Translator::gestureCheck() {
     }  // for
 
     /* IMU functionality */
-    for (int i = 0; i < IMU_COUNT; ++i) {
-
+    for (int i = 0; i < 6; i++) {
         /* Keyboard functionality */
-        if (imu_axis[i]->is_keyboard()) {
-            keyboardData keyboard = imu_axis[i]->get_keyboard_data();
+       if (imu_axis[i]->is_keyboard()) {
+         keyboardData keyboard = imu_axis[i]->get_keyboard_data();
             if (keyboard.valid) {
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
@@ -249,7 +248,7 @@ void Translator::gestureCheck() {
                 }
             }
         }  // keyboard
-
+    //}//DEBUG
         /* Mouse functionality */
         else if (imu_axis[i]->is_mouse()) {
             mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
@@ -261,7 +260,7 @@ void Translator::gestureCheck() {
                         HIDinput->setMouseButton(LEFT, DOWN);
                     } else {
                         HIDinput->setMouseButton(LEFT, UP);
-                    }
+                   }
                 }
 
                 /* Right click */
@@ -287,17 +286,14 @@ void Translator::gestureCheck() {
                 else if (mouse.part == YAXIS) {
                     HIDinput->setMouseSpeedY(mouse.value);
                 }
-            }  // for
+            }  // if
         }  // mouse
     }  // for
+                b1 = 1;
 
     /* Send HID inputs */
     HIDinput->sendKeyboard();
     HIDinput->sendMouse();
-
-    wait(1);
-    b1 = 1;
-    wait(1);
 
     return;
 }
