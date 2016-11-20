@@ -50,6 +50,7 @@ enum JOY_HAT {
 
 DigitalOut l4(LED4);
 DigitalOut l2(LED2);
+extern Serial pc;
 
 report_map_t JOYSTICK_REPORT_MAP = {
     USAGE_PAGE(1),       0x01,  // Generic Desktop
@@ -163,9 +164,9 @@ public:
 
         if (send(report)) {
             failedReports++;
-            l2 = 1;
-            wait_ms(200);
             l2 = 0;
+            wait_ms(100);
+            l2 = 1;
         }
 
         wait_ms(30);

@@ -11,8 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ * limitations under the License.  */
 
 #include "mbed.h"
 
@@ -76,12 +75,12 @@ extern Serial pc;
 
 void send_btn() {
     l3 = 0;
-    //jsServicePtr->button(JOY_B0);
-    //jsServicePtr->sendReport();
+    jsServicePtr->button(JOY_B0);
+    jsServicePtr->sendReport();
 }
 void send_btn_release() {
-    //jsServicePtr->button(0);
-    //jsServicePtr->sendReport();
+    jsServicePtr->button(0);
+    jsServicePtr->sendReport();
     l3 = 1;
 }
 
@@ -137,7 +136,7 @@ void joystick_test() {
 
     HID_DEBUG("initialising ticker\r\n");
 
-    heartbeat.attach(waiting, 1);
+    heartbeat.attach(waiting, 0.5);
 
     HID_DEBUG("initialising ble\r\n");
     ble.init();
@@ -166,7 +165,10 @@ void joystick_test() {
     HID_DEBUG("advertising\r\n");
     ble.gap().startAdvertising();
 
+    extern uint8_t report[];
+
     while (true) {
         ble.waitForEvent();
+        printf("0x%x %x %x %x %x\r\n", report[0], report[1], report[2], report[3], report[4]);
     }
 }
