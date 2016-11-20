@@ -146,7 +146,7 @@ void HIDServiceBase::stopReportTicker(void) {
 }
 
 void HIDServiceBase::onDataSent(unsigned count) {
-    startReportTicker();
+    //startReportTicker();
 }
 
 GattAttribute** HIDServiceBase::inputReportDescriptors() {

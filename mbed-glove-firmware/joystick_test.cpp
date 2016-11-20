@@ -11,8 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ * limitations under the License.  */
 
 #include "mbed.h"
 #include "ble/BLE.h"
@@ -74,14 +73,13 @@ void b1_fall() {
 
 
 void joystick_test() {
+
+    HID_DEBUG("initialising ticker\r\n");
     Ticker connect_ticker;
+    connect_ticker.attach(waiting, 0.5);
 
     b1.fall(b1_fall);
     b1.rise(b1_rise);
-
-    HID_DEBUG("initialising ticker\r\n");
-
-    heartbeat.attach(waiting, 1);
 
     HID_DEBUG("initialising ble\r\n");
     ble.init();
@@ -110,7 +108,10 @@ void joystick_test() {
     HID_DEBUG("advertising\r\n");
     ble.gap().startAdvertising();
 
+    extern uint8_t report[];
+
     while (true) {
         ble.waitForEvent();
+        printf("0x%x %x %x %x %x\r\n", report[0], report[1], report[2], report[3], report[4]);
     }
 }
