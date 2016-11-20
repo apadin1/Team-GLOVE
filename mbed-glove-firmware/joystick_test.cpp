@@ -15,112 +15,69 @@
  */
 
 #include "mbed.h"
-
 #include "ble/BLE.h"
 #include "drivers/BLE_HID/JoystickService.h"
-
 #include "examples_common.h"
-
-/**
- * This program implements a complete HID-over-Gatt Profile:
- *  - HID is provided by KeyboardService
- *  - Battery Service
- *  - Device Information Service
- *
- * Complete strings can be sent over BLE using printf. Please note, however, than a 12char string
- * will take about 500ms to transmit, principally because of the limited notification rate in BLE.
- * KeyboardService uses a circular buffer to store the strings to send, and calls to putc will fail
- * once this buffer is full. This will result in partial strings being sent to the client.
- */
-
-DigitalOut connected_led(LED1);
-
-InterruptIn b1(BUTTON1);
-InterruptIn b2(BUTTON2);
-InterruptIn b3(BUTTON3);
-InterruptIn b4(BUTTON4);
 
 #define LED_ON 0
 #define LED_OFF 1
 
-BLE ble;
-JoystickService* jsServicePtr;
 
-static const char DEVICE_NAME[] = "timJS";
+/******************** GLOBALS ********************/
+
+static DigitalOut led1(LED1);
+static DigitalOut led2(LED2);
+static DigitalOut led3(LED3);
+static DigitalOut led4(LED4);
+
+static InterruptIn b1(BUTTON1);
+static InterruptIn b2(BUTTON2);
+static InterruptIn b3(BUTTON3);
+static InterruptIn b4(BUTTON4);
+
+static BLE ble;
+static JoystickService* jsServicePtr;
+
+static const char DEVICE_NAME[] = "AdrianJS";
 static const char SHORT_DEVICE_NAME[] = "js0";
 
-static void onDisconnect(const Gap::DisconnectionCallbackParams_t *params)
-{
+
+/******************** CALLBACKS ********************/
+
+static void onDisconnect(const Gap::DisconnectionCallbackParams_t *params) {
     HID_DEBUG("disconnected\r\n");
-    connected_led = LED_OFF;
+    led1 = LED_OFF;
+    jsServicePtr->setConnected(false);
     ble.gap().startAdvertising(); // restart advertising
 }
 
-static void onConnect(const Gap::ConnectionCallbackParams_t *params)
-{
+static void onConnect(const Gap::ConnectionCallbackParams_t *params) {
     HID_DEBUG("connected\r\n");
-    connected_led = LED_ON;
+    led1 = LED_ON;
     jsServicePtr->setConnected(true);
 }
 
 static void waiting() {
     if (!jsServicePtr->isConnected())
-        connected_led = !connected_led;
+        led1 = !led1;
     else
-        connected_led = LED_ON;
+        led1 = LED_ON;
 }
 
-void send_btn() {
-    jsServicePtr->button(JOY_B0);
-    jsServicePtr->sendReport();
-    printf("failed: %d\r\n", jsServicePtr->failedReports);
-}
-void send_btn_release() {
-    jsServicePtr->button(0);
-    jsServicePtr->sendReport();
+void b1_rise() {
+    led2 = LED_OFF;
 }
 
-void send_hat() {
-    jsServicePtr->hat(JOY_HAT_UP);
-    jsServicePtr->sendReport();
-}
-void send_hat_release() {
-    jsServicePtr->hat(JOY_HAT_NEUTRAL);
-    jsServicePtr->sendReport();
+void b1_fall() {
+    led2 = LED_ON;
 }
 
-void send_b3_fall() {
-    jsServicePtr->yaw(99);
-    jsServicePtr->sendReport();
-}
-void send_b3_rise() {
-    jsServicePtr->yaw(0);
-    jsServicePtr->sendReport();
-}
-
-void send_b4_fall() {
-    jsServicePtr->pitch(-99);
-    jsServicePtr->sendReport();
-}
-void send_b4_rise() {
-    jsServicePtr->pitch(0);
-    jsServicePtr->sendReport();
-}
 
 void joystick_test() {
-    Ticker heartbeat;
+    Ticker connect_ticker;
 
-    b1.fall(send_btn);
-    b1.rise(send_btn_release);
-
-    b2.fall(send_hat);
-    b2.rise(send_hat_release);
-
-    b3.fall(send_b3_fall);
-    b3.rise(send_b3_rise);
-
-    b4.fall(send_b4_fall);
-    b4.rise(send_b4_rise);
+    b1.fall(b1_fall);
+    b1.rise(b1_rise);
 
     HID_DEBUG("initialising ticker\r\n");
 
