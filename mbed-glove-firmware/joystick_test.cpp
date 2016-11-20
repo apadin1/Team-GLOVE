@@ -84,13 +84,14 @@ void send_btn_release() {
     l3 = 1;
 }
 
+
 void send_hat() {
     l3 = 0;
-    jsServicePtr->hat(JOY_HAT_UP);
+    jsServicePtr->button(8);
     jsServicePtr->sendReport();
 }
 void send_hat_release() {
-    jsServicePtr->hat(JOY_HAT_NEUTRAL);
+    jsServicePtr->button(0);
     jsServicePtr->sendReport();
     l3 = 1;
 }

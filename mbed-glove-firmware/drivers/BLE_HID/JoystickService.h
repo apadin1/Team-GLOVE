@@ -22,10 +22,14 @@
 
 /* Common usage */
 enum JOY_BUTTON {
-    JOY_B0 = 1,
-    JOY_B1 = 2,
-    JOY_B2 = 4,
-    JOY_B3 = 8,
+    JOY_B0 = 0x01,
+    JOY_B1 = 0x02,
+    JOY_B2 = 0x04,
+    JOY_B3 = 0x08,
+    JOY_B4 = 0x10,
+    JOY_B5 = 0x20,
+    JOY_B6 = 0x40,
+    JOY_B7 = 0x80,
 };
 
 enum JOY_HAT {
@@ -53,52 +57,44 @@ DigitalOut l2(LED2);
 extern Serial pc;
 
 report_map_t JOYSTICK_REPORT_MAP = {
+
     USAGE_PAGE(1),       0x01,  // Generic Desktop
-    LOGICAL_MINIMUM(1),  0x00,  // Logical_Minimum (0)
     USAGE(1),            0x04,  // Usage (Joystick)
-
     COLLECTION(1),       0x01,  // Application
-    USAGE_PAGE(1),       0x02,  // Simulation Controls
+        USAGE_PAGE(1),       0x02,  // Simulation Controls
 
-    USAGE(1),            0xBB,  // Throttle
-    USAGE(1),            0xBA,  // Roll (Z)
-    LOGICAL_MINIMUM(1),  0x81,  // -127
-    LOGICAL_MAXIMUM(1),  0x7f,  // 127
-    REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
-    INPUT(1),            0x02,  // Data, Variable, Absolute
-    USAGE_PAGE(1),       0x01,  // Generic Desktop
-    USAGE(1),            0x01,  // Usage (Pointer)
+        USAGE(1),            0xBB,  // Throttle
+        LOGICAL_MINIMUM(1),  0x81,  // -127
+        LOGICAL_MAXIMUM(1),  0x7f,  // 127
+        REPORT_SIZE(1),      0x08,
+        REPORT_COUNT(1),     0x02,
+        INPUT(1),            0x02,  // Data, Variable, Absolute
 
-    COLLECTION(1),       0x00,  // Physical
-    USAGE(1),            0x30,  // X
-    USAGE(1),            0x31,  // Y
-                                //  8 bit values
-    LOGICAL_MINIMUM(1),  0x81,  // -127
-    LOGICAL_MAXIMUM(1),  0x7f,  // 127
-    REPORT_SIZE(1),      0x08, REPORT_COUNT(1), 0x02,
-    INPUT(1),            0x02,  // Data, Variable, Absolute
-    END_COLLECTION(0),
+        USAGE_PAGE(1),       0x01,  // Generic Desktop
+        USAGE(1),            0x01,  // Pointer
+        COLLECTION(1),       0x00,  // Physical (IMU/stick)
+            USAGE(1),            0x30,  // X
+            USAGE(1),            0x31,  // Y
+            USAGE(1),            0x32,  // Z
+            LOGICAL_MINIMUM(1),  0x81,  // -127
+            LOGICAL_MAXIMUM(1),  0x7f,  // 127
+            REPORT_SIZE(1),      0x08,
+            REPORT_COUNT(1),     0x03,
+            INPUT(1),            0x02,  // Data, Variable, Absolute
+        END_COLLECTION(0),
 
-    // 4 Position Hat Switch
-    USAGE(1),            0x39,        // Usage (Hat switch)
-    LOGICAL_MINIMUM(1),  0x00,        // 0
-    LOGICAL_MAXIMUM(1),  0x03,        // 3
-    PHYSICAL_MINIMUM(1), 0x00,        // Physical_Minimum (0)
-    PHYSICAL_MAXIMUM(2), 0x0E, 0x01,  // Physical_Maximum (270)
-    UNIT(1),             0x14,        // Unit (Eng Rot:Angular Pos)
-    REPORT_SIZE(1),      0x04, REPORT_COUNT(1), 0x01,
-    INPUT(1),            0x02,  // Data, Variable, Absolute
-
-    // Buttons
-    USAGE_PAGE(1),       0x09,  // Buttons
-    USAGE_MINIMUM(1),    0x01,  // 1
-    USAGE_MAXIMUM(1),    0x04,  // 4
-    LOGICAL_MINIMUM(1),  0x00,  // 0
-    LOGICAL_MAXIMUM(1),  0x01,  // 1
-    REPORT_SIZE(1),      0x01, REPORT_COUNT(1), 0x04,
-    UNIT_EXPONENT(1),    0x00,  // Unit_Exponent (0)
-    UNIT(1),             0x00,  // Unit (None)
-    INPUT(1),            0x02,  // Data, Variable, Absolute
+        // Buttons
+        USAGE_PAGE(1),       0x09,  // Buttons
+        USAGE_MINIMUM(1),    0x01,  // 1
+        USAGE_MAXIMUM(1),    0x08,  // 8
+        LOGICAL_MINIMUM(1),  0x00,  // 0
+        LOGICAL_MAXIMUM(1),  0x01,  // 1
+        PHYSICAL_MINIMUM(1),  0x00,  // 0
+        PHYSICAL_MAXIMUM(1),  0x01,  // 1
+        REPORT_SIZE(1),      0x01,
+        REPORT_COUNT(1),     0x08,
+        UNIT(1),             0x00,  // Unit (None)
+        INPUT(1),            0x02,  // Data, Variable, Absolute
     END_COLLECTION(0)
 };
 
@@ -118,11 +114,10 @@ public:
                 featureReportLength = 0,
                 reportTickerDelay = 20),
           _t(-127),
-          _z(0),
           _x(0),
           _y(0),
+          _z(0),
           _button(0x00),
-          _hat(0x00),
           failedReports(0) {
 
         //startReportTicker();
@@ -147,26 +142,29 @@ public:
         _button = button;
     }
 
-    void hat(uint8_t hat) {
-        _hat = hat;
-    }
-
     void sendReport(void) {
         l4 = 1;
         if (!connected)
             return;
         // Fill the report according to the Joystick Descriptor
         report[0] = _t & 0xff;
-        report[1] = _z & 0xff;
         report[2] = _x & 0xff;
         report[3] = _y & 0xff;
-        report[4] = ((_button & 0x0f) << 4) | (_hat & 0x0f);
+        report[1] = _z & 0xff;
+        //report[4] = ((_button & 0x0f) << 4) | (_hat & 0x0f);
+        report[4] = _button;
 
-        if (send(report)) {
+        uint8_t ret = send(report);
+        //if (send(report)) {
+        //TODO need to figure out which error we've been getting from send
+        if (ret) {
             failedReports++;
-            l2 = 0;
-            wait_ms(100);
-            l2 = 1;
+
+            for (uint8_t i=0; i<ret; ++i) {
+                l2 = 0;
+                wait_ms(250);
+                l2 = 1;
+            }
         }
 
         wait_ms(30);
@@ -179,11 +177,10 @@ public:
 
 private:
     int8_t _t;
-    int8_t _z;
     int8_t _x;
     int8_t _y;
+    int8_t _z;
     uint8_t _button;
-    uint8_t _hat;
 
 public:
     uint32_t failedReports;
