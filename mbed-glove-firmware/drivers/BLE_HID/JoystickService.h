@@ -118,34 +118,25 @@ public:
         startReportTicker();
     }
 
-    bool throttle(int16_t t) {
+    void throttle(int16_t t) {
         _t = t;
-        return update();
     }
 
-    bool roll(int16_t r) {
+    void roll(int16_t r) {
         _r = r;
-        return update();
     }
 
-    bool move(int16_t x, int16_t y) {
+    void move(int16_t x, int16_t y) {
         _x = x;
         _y = y;
-        return update();
     }
 
-    bool button(uint8_t button) {
+    void button(uint8_t button) {
         _button = button;
-        return update();
     }
 
-    bool hat(uint8_t hat) {
+    void hat(uint8_t hat) {
         _hat = hat;
-        return update();
-    }
-
-    bool update() {
-        return true;
     }
 
     void sendCallback(void) {
