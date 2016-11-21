@@ -32,7 +32,7 @@ void launch() {
 
   for (;;) {
     l2 = 0;
-    input.waitForEvent();
+    //input.waitForEvent();
     l2 = 1;
   }
 

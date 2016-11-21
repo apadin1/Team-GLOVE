@@ -24,7 +24,7 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
 
     /* FLEX1 */
     flexToHID flex1(&glove_data.flex_sensors[0], 300, 800,
-                                      0.05, false);
+                                      0.05, true);
     flex_sensors[FLEX1] = &flex1;
 
     /* FLEX2 */
@@ -83,7 +83,7 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
-    flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, ' ');
+    flex_sensors[FLEX1]->change_hid_profile(MOUSE, 0, LBUTTON);
     flex_sensors[FLEX2]->change_hid_profile(DISABLED);
     flex_sensors[FLEX3]->change_hid_profile(DISABLED);
     flex_sensors[FLEX4]->change_hid_profile(DISABLED);
@@ -295,7 +295,8 @@ void Translator::gestureCheck() {
     HIDinput->sendKeyboard();
     HIDinput->sendMouse();
 
-    return;
+    //return;
+    HIDinput->waitForEvent();
 }
 
 void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }
