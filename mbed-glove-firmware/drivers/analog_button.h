@@ -86,15 +86,13 @@ public:
 
         return binary_state;
     }
-    uint8_t analog_read() {
+    uint8_t imu_analog_state() {
         T value = (*data < max_abs) ? *data : max_abs;
         value = (*data > min_abs) ? *data : min_abs;
         int8_t temp = 0;
         if (true) {
             temp = 127 * (value / range);
-            if (temp > 10 || temp < -10)
-                temp = temp;//AAAAGGGHHGHHGHH
-            else
+            if (temp < 10 && temp > -10)
                 temp = 0;
         }
         return temp;
@@ -208,7 +206,7 @@ class imuToHID {
         if (cur_mouse.part == LBUTTON || cur_mouse.part == RBUTTON)
             cur_mouse.value = sensor_conversion.get_binary_state();
         else {
-            cur_mouse.valid = false;
+            cur_mouse.value = sensor_conversion.imu_analog_state();
         }
         return cur_mouse;
     }
