@@ -51,52 +51,26 @@ void boot_delay(uint8_t t) {
     }
 }
 
-/*
-void imu_test() {
-    IMU_BNO055 imu(i2c);
-    imu.startUpdateTask(500);
-    for (;;) {
-        imu.print(pc);
-        led = !led;
-        Thread::wait(1000);
-    }
-}
-void touch_sensor_test() {
-    key_states_t keys;
-    key_states_t last_keys;
-    boot_delay(2);
-    TouchSensor touch_sensor(i2c);
-    Thread touch_sensor_thread;
-    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-    DigitalOut l2(LED2);
-    DigitalOut l3(LED3);
-    DigitalOut l4(LED4);
-    boot_delay(2);
-    for (;;) {
-        last_keys = keys;
-        touch_sensor.writeKeys(&keys);
-        led = !keys.a;
-        l2 = !keys.b;
-        l3 = !keys.c;
-        l4 = !keys.d;
-        //if (last_keys.pack() != keys.pack()) {
-            //TouchSensor::print(pc, keys);
-        //}
-        Thread::wait(60);
-    }
-}
+void calibration_mode() {
+    /*
+     * The idea here is to go into a special mode for a fixed time,
+     * and measure the maximum and minimum values on all the sensors
+     */
 
-void flex_test() {
-    FlexSensors flex_sensors;
-    flex_sensors.startUpdateTask(200);
-    for (;;) {
-        //flex_sensors.update();
-        flex_sensors.printSingle(pc, 0);
-        led = !led;
-        Thread::wait(1000);
+    // setup objects
+
+    const uint16_t ms_period = 20;
+    for (uint32_t i = 0; i < 8000 / (ms_period - 8); ++i) {
+
+        // gather data
+
+        // update max/mins
+
+        // print results
+
+        Thread::wait(ms_period - 8);
     }
 }
-*/
 
 void sensors_to_lights() {
 
@@ -162,43 +136,3 @@ void sensors_to_lights() {
         Thread::wait(25);
     }
 }
-/*
-void launch_periodic() {
-    TouchSensor touch_sensor;
-    Thread touch_sensor_thread;
-    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-    key_states_t keys;
-    key_states_t last_keys;
-
-    FlexSensors flex_sensors;
-    IMU_BNO055 imu(i2c);
-
-    flex_sensors.startUpdateTask(10);
-    wait_ms(2); // to offset the timers
-    imu.startUpdateTask(10);
-
-    boot_delay(5);
-    uint8_t print_limit = 0;
-    for (;;) {
-        led = !led; // just so we know its running
-
-        // Flex
-        //flex_sensors.printSingle(pc, 0);
-        flex_sensors.print(pc);
-
-        // Touch
-        last_keys = keys;
-        touch_sensor.writeKeys(&keys);
-        if (last_keys.pack() != keys.pack()) {
-            TouchSensor::print(pc, keys);
-        }
-
-        if (print_limit++ == 2) {
-            imu.print(pc);
-            print_limit = 0;
-        }
-
-        Thread::wait(1000);
-    }
-}
-*/
