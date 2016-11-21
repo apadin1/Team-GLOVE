@@ -56,24 +56,40 @@ void button1released() {
     keyboard_ptr->sendKeyboard();
 }
 
+void button2pressed()  {
+    keyboard_ptr->keyPress(UP_ARROW);
+    keyboard_ptr->sendKeyboard();
+}
+void button2released() {
+    keyboard_ptr->keyRelease(UP_ARROW);
+    keyboard_ptr->sendKeyboard();
+}
 
-void button2pressed()  { keyboard_ptr->keyPress(UP_ARROW); }
-void button2released() { keyboard_ptr->keyRelease(UP_ARROW); }
+void button3pressed()  {
+    keyboard_ptr->setMouseSpeedAll(10, 0, 0);
+    keyboard_ptr->sendMouse();
+}
+void button3released() {
+    keyboard_ptr->setMouseSpeedAll(0, 0, 0);
+    keyboard_ptr->sendMouse();
+}
 
-void button3pressed()  { keyboard_ptr->setMouseSpeedAll(10, 0, 0); }
-void button3released() { keyboard_ptr->setMouseSpeedAll(0, 0, 0); }
+void button4pressed()  {
+    keyboard_ptr->setMouseSpeedAll(-10, 0, 0);
+    keyboard_ptr->sendMouse();
+}
+void button4released() {
+    keyboard_ptr->setMouseSpeedAll(0, 0, 0);
+    keyboard_ptr->sendMouse();
+}
 
-
-void button4pressed()  { keyboard_ptr->setMouseSpeedAll(-10, 0, 0); }
-
-void button4released() { keyboard_ptr->setMouseSpeedAll(0, 0, 0); }
 
 
 int keyboard_mouse_demo() {
 
     KeyboardMouse kbdMouse;
     keyboard_ptr = &kbdMouse;
-    
+
     Callback<void()> wait_callback(waiting);
     RtosTimer wait_timer(wait_callback, osTimerPeriodic);
     wait_timer.start(100);
@@ -85,6 +101,12 @@ int keyboard_mouse_demo() {
 
     button1.fall(button1pressed);
     button1.rise(button1released);
+    button2.fall(button2pressed);
+    button2.rise(button2released);
+    button3.fall(button3pressed);
+    button3.rise(button3released);
+    button4.fall(button4pressed);
+    button4.rise(button4released);
 
     while (true) {
         keyboard_ptr->waitForEvent();
