@@ -59,19 +59,19 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     touch_sensors[TOUCH4] = &touch4;
 
     /* PITCHUP */
-    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 15, 0.2, true);
+    imuToHID pitchup(&glove_data.imu.orient_pitch, 0, 35, 0.15, false);
     imu_axis[PITCHUP] = &pitchup;
 
     /* PITCHDOWN */
-    imuToHID pitchdown(&glove_data.imu.orient_pitch, -15, 0, 0.2, true);
+    imuToHID pitchdown(&glove_data.imu.orient_pitch, -35, 0, 0.15, true);
     imu_axis[PITCHDOWN] = &pitchdown;
 
     /* ROLLLEFT */
-    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 20, 0.2, true);
+    imuToHID rollleft(&glove_data.imu.orient_roll, 0, 45, 0.15, true);
     imu_axis[ROLLLEFT] = &rollleft;
 
     /* ROLLRIGHT */
-    imuToHID rollright(&glove_data.imu.orient_roll, -20, 0, 0.2, true);
+    imuToHID rollright(&glove_data.imu.orient_roll, -45, 0, 0.15, false);
     imu_axis[ROLLRIGHT] = &rollright;
 
     /* YAWLEFT */
@@ -87,14 +87,14 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
     flex_sensors[FLEX2]->change_hid_profile(DISABLED);
     flex_sensors[FLEX3]->change_hid_profile(DISABLED);
     flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'd');
-    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'w');
-    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 's');
-    touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'a');
-    imu_axis[PITCHUP]->change_hid_profile(DISABLED);
-    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
-    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
-    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH1]->change_hid_profile(DISABLED, 'd');
+    touch_sensors[TOUCH2]->change_hid_profile(DISABLED, 'w');
+    touch_sensors[TOUCH3]->change_hid_profile(DISABLED, 's');
+    touch_sensors[TOUCH4]->change_hid_profile(DISABLED, 'a');
+    imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'w');
+    imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 's');
+    imu_axis[ROLLLEFT]->change_hid_profile(KEYBOARD, 'a');
+    imu_axis[ROLLRIGHT]->change_hid_profile(KEYBOARD, 'd');
     imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
     imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
 
@@ -111,7 +111,6 @@ Translator::Translator(FlexSensors* _flex, IMU_BNO055* _imu,
 void Translator::gestureCheck() {
     DigitalOut b1(LED1);
     b1 = 0;
-    //uint32_t i = 0;//DEBUG
     DigitalOut l4(LED4);//DEBUG
     /* Update Sensor Data */
     flex_sensor_t* flex_ptr = &glove_data.flex_sensors[0];
@@ -199,10 +198,8 @@ void Translator::gestureCheck() {
                 /* Left click */
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
-                        l4=0;
                         HIDinput->setMouseButton(LEFT, DOWN);
                     } else {
-                        l4=1;
                         HIDinput->setMouseButton(LEFT, UP);
                     }
                 }
@@ -233,20 +230,23 @@ void Translator::gestureCheck() {
             }  // for
         }  // mouse
     }  // for
-//
-//    /* IMU functionality */
-//    for (int i = 0; i < 6; i++) {
-//        /* Keyboard functionality */
-//       if (imu_axis[i]->is_keyboard()) {
-//         keyboardData keyboard = imu_axis[i]->get_keyboard_data();
-//            if (keyboard.valid) {
-//                if (keyboard.value) {
-//                    HIDinput->keyPress(keyboard.key);
-//                } else {
-//                    HIDinput->keyRelease(keyboard.key);
-//                }
-//            }
-//        }  // keyboard
+
+    /* IMU functionality */
+    for (int i = 0; i < 4; i++) {
+        /* Keyboard functionality */
+        
+       //uint32_t i = 0;//DEBUG
+       if (imu_axis[i]->is_keyboard()) {
+         keyboardData keyboard = imu_axis[i]->get_keyboard_data();
+            if (keyboard.valid) {
+                if (keyboard.value) {
+                    HIDinput->keyPress(keyboard.key);
+                } else {
+                    HIDinput->keyRelease(keyboard.key);
+                }
+            }
+        }  // keyboard
+    }//DEBUG FOR
 //    //}//DEBUG
 //        /* Mouse functionality */
 //        else if (imu_axis[i]->is_mouse()) {
