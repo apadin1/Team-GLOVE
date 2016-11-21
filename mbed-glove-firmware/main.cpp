@@ -24,12 +24,16 @@ void launch() {
 
   /* Initialize KeyboardMouse object */
   KeyboardMouse input;
-
+  
   Translator translator(&flex, &imu, &touch_sensor, &input);
+  
   translator.startUpdateTask(20);
+  
 
   for (;;) {
+    l2 = 0;
     input.waitForEvent();
+    l2 = 1;
   }
 
 }

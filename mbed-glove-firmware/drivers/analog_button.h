@@ -76,7 +76,7 @@ public:
         }
         // in the transition band
         else if (*data < max_thresh) {
-            //binary_state = binary_state;
+            binary_state = binary_state;
         }
         // in the upper range
         else {
