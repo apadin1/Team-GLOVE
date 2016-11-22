@@ -37,7 +37,7 @@ static InterruptIn b4(BUTTON4);
 static BLE ble;
 static JoystickService* jsServicePtr;
 
-static const char DEVICE_NAME[] = "AdrianJS";
+static const char DEVICE_NAME[] = "gloveJS";
 static const char SHORT_DEVICE_NAME[] = "js0";
 
 
@@ -64,13 +64,12 @@ static void waiting() {
 }
 
 void b1_rise() {
-    led2 = LED_OFF;
+    led3 = 1;
 }
 
 void b1_fall() {
-    led2 = LED_ON;
+    led3 = 0;
 }
-
 void send_btn() {
     led3 = 0;
     jsServicePtr->button(JOY_B0);
@@ -81,6 +80,7 @@ void send_btn_release() {
     jsServicePtr->sendReport();
     led3 = 1;
 }
+/*
 void send_hat() {
     led3 = 0;
     jsServicePtr->button(8);
@@ -111,8 +111,14 @@ void send_b4_rise() {
     jsServicePtr->sendReport();
     led3 = 1;
 }
+*/
 
 void joystick_test() {
+
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
 
     HID_DEBUG("initialising ticker\r\n");
     Ticker connect_ticker;
@@ -122,7 +128,7 @@ void joystick_test() {
     b1.rise(b1_rise);
 
     b2.fall(send_btn);
-    b2.fall(send_btn_release);
+    b2.rise(send_btn_release);
 
     HID_DEBUG("initialising ble\r\n");
     ble.init();
@@ -151,10 +157,10 @@ void joystick_test() {
     HID_DEBUG("advertising\r\n");
     ble.gap().startAdvertising();
 
-    extern uint8_t report[];
+    //extern uint8_t report[];
 
     while (true) {
         ble.waitForEvent();
-        printf("0x%x %x %x %x %x\r\n", report[0], report[1], report[2], report[3], report[4]);
+        //printf("0x%x %x %x %x %x\r\n", report[0], report[1], report[2], report[3], report[4]);
     }
 }

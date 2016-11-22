@@ -98,6 +98,7 @@ report_map_t JOYSTICK_REPORT_MAP = {
 };
 
 uint8_t report[] = { 0, 0, 0, 0, 0 };
+DigitalOut dbg(p12);
 
 class JoystickService : public HIDServiceBase {
 public:
@@ -142,7 +143,7 @@ public:
     }
 
     void sendReport(void) {
-        l4 = 1;
+        l4 = 0;
         if (!connected)
             return;
         // Fill the report according to the Joystick Descriptor
@@ -160,14 +161,14 @@ public:
             failedReports++;
 
             for (uint8_t i=0; i<ret; ++i) {
-                l2 = 0;
-                wait_ms(250);
-                l2 = 1;
+                dbg = 1;
+                wait_ms(1);
+                dbg = 0;
             }
         }
 
         wait_ms(30);
-        l4 = 0;
+        l4 = 1;
     }
 
     void sendCallback(void) {
