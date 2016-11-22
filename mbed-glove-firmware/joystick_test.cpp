@@ -71,6 +71,46 @@ void b1_fall() {
     led2 = LED_ON;
 }
 
+void send_btn() {
+    l3 = 0;
+    jsServicePtr->button(JOY_B0);
+    jsServicePtr->sendReport();
+}
+void send_btn_release() {
+    jsServicePtr->button(0);
+    jsServicePtr->sendReport();
+    l3 = 1;
+}
+void send_hat() {
+    l3 = 0;
+    jsServicePtr->button(8);
+    jsServicePtr->sendReport();
+}
+void send_hat_release() {
+    jsServicePtr->button(0);
+    jsServicePtr->sendReport();
+    l3 = 1;
+}
+void send_b3_fall() {
+    l3 = 0;
+    jsServicePtr->yaw(99);
+    jsServicePtr->sendReport();
+}
+void send_b3_rise() {
+    jsServicePtr->yaw(0);
+    jsServicePtr->sendReport();
+    l3 = 1;
+}
+void send_b4_fall() {
+    l3 = 0;
+    jsServicePtr->pitch(-99);
+    jsServicePtr->sendReport();
+}
+void send_b4_rise() {
+    jsServicePtr->pitch(0);
+    jsServicePtr->sendReport();
+    l3 = 1;
+}
 
 void joystick_test() {
 
@@ -80,6 +120,9 @@ void joystick_test() {
 
     b1.fall(b1_fall);
     b1.rise(b1_rise);
+
+    b2.fall(send_btn);
+    b2.fall(send_btn_release);
 
     HID_DEBUG("initialising ble\r\n");
     ble.init();
