@@ -6,6 +6,8 @@ extern void sensors_to_lights(void);
 
 extern void keyboard_mouse_demo(void);
 
+extern void ble_scan_test(void);
+
 int main() {
 
     /*
@@ -17,5 +19,6 @@ int main() {
     //sensors_to_lights();
     //blink();
     //launch_periodic();
-    keyboard_mouse_demo();
+    //keyboard_mouse_demo();
+    ble_scan_test();
 }
