@@ -112,11 +112,19 @@ void Translator::gestureCheck() {
     DigitalOut b1(LED1);
     b1 = 0;
     DigitalOut l4(LED4);//DEBUG
+
     /* Update Sensor Data */
+    // XXX This will go with collector...
     flex_sensor_t* flex_ptr = &glove_data.flex_sensors[0];
+
+    touch->spawnUpdateThread();
+
     flex->updateAndWrite(flex_ptr);
-    touch->updateAndWrite(&glove_data.touch_sensor);
     imu->updateAndWrite(&glove_data.imu);
+    touch->writeKeys(&glove_data.touch_sensor);
+
+    // this really needs to be later in the looop....
+    touch->terminateUpdateThreadIfBlocking();
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -234,7 +242,7 @@ void Translator::gestureCheck() {
     /* IMU functionality */
     for (int i = 0; i < 4; i++) {
         /* Keyboard functionality */
-        
+
        //uint32_t i = 0;//DEBUG
        if (imu_axis[i]->is_keyboard()) {
          keyboardData keyboard = imu_axis[i]->get_keyboard_data();
