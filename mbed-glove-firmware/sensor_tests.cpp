@@ -16,10 +16,12 @@ I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 
 Serial pc(USBTX, USBRX);
 
-DigitalOut led(LED1);
+DigitalOut led(p12);
+DigitalOut l2(p13);
+DigitalOut l3(p14);
+DigitalOut l4(p15);
 
 void blink() {
-    DigitalOut l2(LED2);
     l2 = 1;
     led = 0;
     for (;;) {
@@ -33,9 +35,6 @@ void boot_delay(uint8_t t) {
     // this loop is to prevent the strange fatal state
     // happening with serial debug
     led = 1;
-    DigitalOut l2(LED2); l2 = 1;
-    DigitalOut l3(LED3); l3 = 1;
-    DigitalOut l4(LED4); l4 = 1;
     for (uint8_t i = 0; i < t; ++i) {
         led = 0;
         l2 = 0;
@@ -72,6 +71,10 @@ void calibration_mode() {
 }
 
 void sensors_to_lights() {
+    led = 1;
+    l2 = 1;
+    l3 = 1;
+    l4 = 1;
 
     DotStarLEDs ds_leds(2);
     uint8_t red, green, blue;
@@ -82,12 +85,10 @@ void sensors_to_lights() {
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
-    TouchSensor touch_sensor(i2c, TOUCH_NO_INTERRUPT);
-    /*
-    Thread touch_sensor_thread;
-    touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
-    */
+    //touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+    TouchSensor touch_sensor(i2c, p16);
     key_states_t keys;
+    //touch_sensor_thread.set_priority(osPriorityBelowNormal);
 
     float flex_val;
 
@@ -102,9 +103,11 @@ void sensors_to_lights() {
      * Light one is the combined IMU status
      */
     for (;;) {
+        touch_sensor.spawnUpdateThread();
+
         imu.updateAndWrite(&imu_vals);
         flex_sensors.updateAndWrite(flex_vals);
-        touch_sensor.updateAndWrite(&keys);
+        touch_sensor.writeKeys(&keys);
 
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];
@@ -132,6 +135,7 @@ void sensors_to_lights() {
             ds_leds.set_RGB(1, red, green, blue, 3);
         }
 
-        Thread::wait(25);
+        touch_sensor.terminateUpdateThreadIfBlocking();
+        Thread::wait(40);
     }
 }

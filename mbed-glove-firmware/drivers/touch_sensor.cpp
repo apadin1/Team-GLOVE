@@ -16,11 +16,9 @@
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
  *   to indicate a change in state of the sensors.
  */
-
 #include "touch_sensor.h"
 
-TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr)
-    : qt(sda, scl) {
+TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr) : qt(sda, scl) {
     initialize(intr);
 }
 
@@ -31,19 +29,23 @@ TouchSensor::TouchSensor(I2C& i2c, PinName intr)
 
 
 void TouchSensor::initialize(PinName intr) {
+    needs_restart = false;
     writeStaticConfig();
     qt.getButtonsState();
+
     // Associate the update function with the interrupt CHANGE line
     if (intr != NC) {
-        change_event = new InterruptIn(intr);
-        change_event->fall(this, &TouchSensor::changeEventHandler);
+        if (TOUCH_DIGITALIN_CHANGE) {
+            change_line = new DigitalIn(intr);
+        }
+        else {
+            change_event = new InterruptIn(intr);
+            change_event->fall(this, &TouchSensor::changeEventHandler);
+        }
     }
 }
 
 void TouchSensor::writeStaticConfig() {
-    // reset?
-    // calibrate???
-
     qt.setGuard(TOUCH_GUARD_KEY);
     qt.setLowPowerMode(TOUCH_LP_MODE);
     qt.setMaxOn(TOUCH_MAX_ON);
@@ -63,7 +65,28 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
     key_states->d = keys.d;
 }
 
+/* XXX
+extern DigitalOut l4;
+extern DigitalOut l2;
+uint16_t faaiil = 0;
+volatile uint8_t count;
+*/ // XXX
+
 void TouchSensor::update() {
+
+    /* XXX
+    if (faaiil++ > 50) {
+        faaiil = 0;
+        for (;;) {count += 1;}
+    }
+    */ // XXX
+
+    /* Use the change line to avoid unnessescary
+     * I2C I/O, but without being an interrupt
+     */
+    if (*change_line == 1) {
+        return;
+    }
     uint8_t buttons = qt.getButtonsState();
 
     // Check overflow flag
@@ -102,6 +125,41 @@ void TouchSensor::updateTask() {
         do_update.wait(osWaitForever);
         update();
     }
+}
+
+void TouchSensor::singleUpdate() {
+    if (needs_restart) {
+        //reset(); // This broke everything :( cuz it takes too long (disable irq??)
+        //qt.reset();
+        //qt.getButtonsState();
+    }
+
+    //l4 = 0; // XXX
+    needs_restart = true;
+    update();
+    //l4 = 1; // XXX
+    needs_restart = false;
+
+    update_thread->terminate();
+}
+
+void TouchSensor::spawnUpdateThread() {
+    update_thread = new Thread;
+    update_thread->start(this, &TouchSensor::singleUpdate);
+    Thread::yield();
+}
+
+void TouchSensor::terminateUpdateThreadIfBlocking() {
+    if (needs_restart) {
+        //l2 = 0; // XXX
+        //l4 = 1; // XXX
+        update_thread->terminate();
+        // Leave reset in the update funtion cuz don't block here
+        // Might skip full reset??? Maybe count then do it after X hangs
+        //l2 = 1; // XXX
+    }
+    delete update_thread;
+    update_thread = NULL;
 }
 
 void TouchSensor::print(Serial& pc, key_states_t& keys_) {

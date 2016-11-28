@@ -66,8 +66,11 @@ void IMU_BNO055::writeSensors(bno_imu_t* imu_) {
     imu_->accel_z = imu_data.accel_z;
 }
 
+extern DigitalOut l3;
 void IMU_BNO055::updateAndWrite(bno_imu_t* imu_) {
+    l3 = 0;
     update();
+    l3 = 1;
     writeSensors(imu_);
 }
 
