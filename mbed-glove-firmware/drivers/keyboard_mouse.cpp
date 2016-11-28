@@ -142,9 +142,27 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
 
 /******************** CONSTRUCTOR/DESTRUCTOR ********************/
 
-/* Constructor */
-KeyboardMouse::KeyboardMouse() : 
+/* Default Constructor */
+KeyboardMouse::KeyboardMouse() :
         ble(BLE::Instance(BLE::DEFAULT_INSTANCE)),
+        len(0) {
+    
+    /* Initialize keyboard variables */
+    memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
+            
+    /* Initialize the BLE communication scheme */
+    ble.init(bleInitComplete);
+    
+    /* Initialize HID service pointer */
+    service_ptr = getServicePtr(NULL);
+    
+    /* Start GAP transmission */
+    ble.gap().startAdvertising();    
+}
+
+/* Constructor */
+KeyboardMouse::KeyboardMouse(BLE& _ble) : 
+        ble(_ble),
         len(0) {
     
     /* Initialize keyboard variables */

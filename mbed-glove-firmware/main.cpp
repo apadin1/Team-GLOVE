@@ -3,10 +3,9 @@
 extern void blink(void);
 extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
-
 extern void keyboard_mouse_demo(void);
-
 extern void ble_scan_test(void);
+extern void uart_test(void);
 
 int main() {
 
@@ -20,5 +19,6 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    ble_scan_test();
+    //ble_scan_test();
+    uart_test();
 }

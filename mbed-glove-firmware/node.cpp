@@ -4,16 +4,24 @@
 #include "ble/DiscoveredCharacteristic.h"
 #include "ble/DiscoveredService.h"
 
-#define DEBUG false
-#define WRISTBANDS 3
+#include "keyboard_mouse.h"
+
+#define DEBUG true
+//#define WRISTBANDS 3
 
 #define LOG(args...) if (DEBUG) pc.printf(args)
 #define SEND(args...) pc.printf(args)
 
 static BLE ble;
 static DigitalOut led(LED1, 1);
+static DigitalOut led2(LED2, 1);
+static InterruptIn button(BUTTON1);
 static Serial pc(USBTX, USBRX);
 
+void buttonFallCallback();
+void buttonRiseCallback();
+
+/*
 static bool lookup_table[WRISTBANDS + 1];
 static bool foundWristbandCharacteristic = false;
 static uint8_t connectedWristbandShortUUID = 0;
@@ -25,32 +33,62 @@ static uint8_t transmit_buffer = 0;
 
 static Gap::Handle_t connectionHandle = 0xFFFF;
 static DiscoveredCharacteristic wristbandCharacteristic;
+*/
+
+const static uint8_t GLOVE_ADDR[2] = {0xEF, 0xBE};
+const static int MIN_DATA = 4;
+static char key_to_press = 'B';
+static KeyboardMouse * keyboard_ptr;
 
 void advertisementCallback(const Gap::AdvertisementCallbackParams_t *params) {
-	if (params->advertisingData[5] != 0x12 || params->advertisingData[6] != 0x34) {
-		return;
-	}
 
-	LOG("Wristband Advertisement\r\n");
-	LOG("-----------------------\r\n");
-	for (uint8_t i = 0; i < params->advertisingDataLen; ++i) {
-		LOG("%02x ", params->advertisingData[i]);
-	}
-	LOG("%d\r\n", lookup_table[params->advertisingData[24]]);
-	LOG("\r\n\r\n");
+    led2 = !led2;
+    
+    // Filter advertisements by length
+    if (params->advertisingDataLen < MIN_DATA) {
+        return;
+    }
+    
+    // Filter advertisements by address
+    if (params->advertisingData[2] != GLOVE_ADDR[0] ||
+        params->advertisingData[3] != GLOVE_ADDR[1]) {
+        return;
+    }
 
-	SEND("%d,%d\n", params->advertisingData[24], params->rssi);
-
-	if (lookup_table[params->advertisingData[24]]) {
-		connectedWristbandShortUUID = params->advertisingData[24];
-		ble.gap().connect(
-			params->peerAddr,
-			Gap::ADDR_TYPE_RANDOM_STATIC,
-			NULL,
-			NULL);
-	}
+    // Press a key if it has changed
+    char next_key_to_press = params->advertisingData[4];
+    if (next_key_to_press != key_to_press) {
+        key_to_press = next_key_to_press;
+        buttonFallCallback();
+        buttonRiseCallback();
+    }
+    
+    
+    
+    // Print data
+    /*
+    if (params->advertisingDataLen == 22) {
+        LOG("peerAddr: %02x %02x %02x %02x %02x %02x\r\n", 
+            params->peerAddr[0],
+            params->peerAddr[1],
+            params->peerAddr[2],
+            params->peerAddr[3],
+            params->peerAddr[4],
+            params->peerAddr[5]);
+        LOG("rssi: %d\r\n", params->rssi);
+        LOG("isScanResponse: %d\r\n", params->isScanResponse);
+        LOG("type: %d\r\n", params->type);
+        LOG("length: %d\r\n", params->advertisingDataLen);
+        for (int i = 0; i < params->advertisingDataLen; ++i) {
+            LOG("[%d]: %d\r\n", i, params->advertisingData[i]);
+            
+        }
+        wait(10);
+    }
+    */
 }
 
+/*
 void serviceDiscoveryCallback(const DiscoveredService *service) {
 #ifdef DEBUG
 	LOG("serviceDiscoveryCallback\r\n");
@@ -150,32 +188,38 @@ void uartCallback() {
 		lookup_table[uartWristbandShortUUID] = true;
 	}
 }
+*/
+
+void buttonFallCallback(void) {
+    SEND("Pressing %c\r\n", key_to_press);
+    keyboard_ptr->keyPress(key_to_press);
+    keyboard_ptr->sendKeyboard();
+}
+
+void buttonRiseCallback(void) {
+    SEND("Releasing %c\r\n", key_to_press);
+    keyboard_ptr->keyRelease(key_to_press);
+    keyboard_ptr->sendKeyboard();
+}
 
 int ble_scan_test(void) {
 	pc.baud(9600);
-	pc.attach(&uartCallback);
+	//pc.attach(&uartCallback);
 
-	ble.init();
-	ble.gap().onConnection(connectionCallback);
-	ble.gap().onDisconnection(disconnectionCallback);
-
-	ble.gap().setScanParams(500, 400);
+    SEND("I turned on!\r\n");
+    
+    KeyboardMouse keyboard_mouse(ble);
+    keyboard_ptr = &keyboard_mouse;
+    
+	//ble.init();
+	ble.gap().setScanParams(500, 100);
 	ble.gap().startScan(advertisementCallback);
-
-	ble.gattClient().onHVX(hvxCallback);
-
+    
+    button.fall(buttonFallCallback);
+    button.rise(buttonRiseCallback);
+    
 	while (true) {
-		if (foundWristbandCharacteristic && !ble.gattClient().isServiceDiscoveryActive()) {
-			foundWristbandCharacteristic = false;
-
-			uint16_t value = BLE_HVX_NOTIFICATION;
-			ble.gattClient().write(
-				GattClient::GATT_OP_WRITE_REQ,
-				connectionHandle,
-				wristbandCharacteristic.getValueHandle() + 1,
-				sizeof(uint16_t),
-				reinterpret_cast<const uint8_t *>(&value));
-		}
-		ble.waitForEvent();
+        led = !led;
+        ble.waitForEvent();
 	}
 }
