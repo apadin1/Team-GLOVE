@@ -5,6 +5,7 @@ extern void blink(void);
 extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 extern void thing_do(void);
+extern void keyboard_mouse_demo.cpp(void);
 
 void launch() {
     DigitalOut l1(LED1);
@@ -53,5 +54,5 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
+    //launch();
 }

@@ -26,18 +26,18 @@
 #define LED_ON 0
 
 /* LEDs and Buttons */
-DigitalOut led1(LED1);
-DigitalOut led2(LED2);
-DigitalOut led3(LED3);
-DigitalOut led4(LED4);
+static DigitalOut led1(LED1);
+static DigitalOut led2(LED2);
+static DigitalOut led3(LED3);
+static DigitalOut led4(LED4);
 
-InterruptIn button1(BUTTON1);
-InterruptIn button2(BUTTON2);
-InterruptIn button3(BUTTON3);
-InterruptIn button4(BUTTON4);
+static InterruptIn button1(BUTTON1);
+static InterruptIn button2(BUTTON2);
+static InterruptIn button3(BUTTON3);
+static InterruptIn button4(BUTTON4);
 
 
-KeyboardMouse * keyboard_ptr;
+static KeyboardMouse * keyboard_ptr;
 
 /* Ticker callback, waiting for commands */
 static void waiting() {
