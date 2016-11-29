@@ -184,6 +184,11 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
 }
 
 void Translator::updateGestureMap(uint8_t* config) {
+  this->stopUpdateTask(); //Stop gestureCheck
+
+  //TODO: Finalize config data structure/process
+
+  this->startUpdateTask(20); //Resume gestureCheck
 }
 
 void Translator::gestureCheck() {
