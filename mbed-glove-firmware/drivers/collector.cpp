@@ -32,13 +32,12 @@ void Collector::updateAndAdvertise() {
 
     touch->spawnUpdateThread();
 
-    flex->updateAndWrite(flex_ptr);
     imu->updateAndWrite(&glove_data.imu); // TODO remove linear data collection
+    flex->updateAndWrite(flex_ptr);
+    touch->writeKeys(&glove_data.touch_sensor);
 
     // because
     Thread::wait_ms(5);
-
-    touch->writeKeys(&glove_data.touch_sensor);
 
     // this really needs to be later in the looop....
     touch->terminateUpdateThreadIfBlocking();
