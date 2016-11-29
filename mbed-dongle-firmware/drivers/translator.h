@@ -70,7 +70,7 @@ public:
      * Constructor for translator
      *
      */
-    Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch,
+    Translator(glove_sensors_raw_t* left, glove_sensors_raw_t* right,
                KeyboardMouse* input);
 
     /*
@@ -78,7 +78,7 @@ public:
      * Transciever to send the new Vector to bluetooth class,
      * which should then call this function
      */
-    // void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
+    void updateGestureMap();
 
     /*
      * Analyze sensors to determine if gesture
@@ -99,18 +99,26 @@ public:
     void stopUpdateTask();
 
 private:
-    // NOTE: Vector indexed by GESTURE enum
-    flexToHID* flex_sensors[FLEX_COUNT];
-    imuToHID* imu_axis[IMU_COUNT];
-    touchToHID* touch_sensors[TOUCH_COUNT];
-    KeyboardMouse* HIDinput;  // KeyboardMouse object
+    // NOTE: Arrays indexed by enums
 
-    // Glove data
-    FlexSensors* flex;
-    IMU_BNO055* imu;
-    TouchSensor* touch;
-    glove_sensors_raw_t glove_data;
+    /* Left Glove Analog Buttons */
+    flexToHID* flex_sensorsL[FLEX_COUNT];
+    imuToHID* imu_axisL[IMU_COUNT];
+    touchToHID* touch_sensorsL[TOUCH_COUNT];
 
+    /* Right Glove Analog Buttons */
+    flexToHID* flex_sensorsR[FLEX_COUNT];
+    imuToHID* imu_axisR[IMU_COUNT];
+    touchToHID* touch_sensorsR[TOUCH_COUNT];
+
+    /* KeyboardMouse Object */
+    KeyboardMouse* HIDinput;
+
+    /* Glove Data */
+    glove_sensors_raw_t* glove_dataL;
+    glove_sensors_raw_t* glove_dataR;
+
+    /* MBED Objects */
     RtosTimer* update_task_timer;
     DigitalOut working;
 };
