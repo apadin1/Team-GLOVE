@@ -1,5 +1,7 @@
 #include <inttypes.h>
-#include "drivers/translator.h"
+
+#include "drivers/collector.h"
+#include "drivers/ble_advert.h"
 
 extern void blink(void);
 extern void boot_delay(uint8_t);
@@ -7,7 +9,6 @@ extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
 
-/*
 void launch() {
     DigitalOut l1(LED1);
     DigitalOut l2(LED2);
@@ -26,24 +27,15 @@ void launch() {
     // Start update thread for touch sensor
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT); //Initialize touch sensor object
 
-    // Initialize KeyboardMouse object
-    KeyboardMouse input;
+    // This encapsulates the BLE stack
+    AdvertBLE adble();
 
-    Translator translator(&flex, &imu, &touch_sensor, &input);
+    Collector collector(&flex, &imu, &touch_sensor, AdvertBLE);
 
-    translator.startUpdateTask(20);
+    collector.startUpdateTask(20);
 
-
-    for (;;) {
-        l2 = 0;
-        //input.waitForEvent();
-        l2 = 1;
-    }
-
+    adble.waitForEventLoop();
 }
-*/
-
-extern void keyboard_mouse_demo(void);
 
 int main() {
 
@@ -56,6 +48,6 @@ int main() {
     //sensors_to_lights();
     //blink();
     //launch_periodic();
-    keyboard_mouse_demo();
-    //launch();
+    //keyboard_mouse_demo();
+    launch();
 }
