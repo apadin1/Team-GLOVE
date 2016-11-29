@@ -45,9 +45,9 @@ public:
     void waitForEventLoop();
 
 private:
-    BLE& ble;
+    BLE ble;
     GapAdvertisingData adv;
     uint8_t adv_payload[PAYLOAD_LENGTH];
-}
+};
 
 #endif /* BLE_ADVERT_H_ */

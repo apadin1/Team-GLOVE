@@ -37,8 +37,10 @@ class Collector {
 public:
     /*
      * Constructor for collector
+     *
+     * TODO try to use refrences instead of pointers
      */
-    Collector(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
+    Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch, AdvertBLE& _adble);
 
     /*
      * Update gesture mapping via new configuration vector.

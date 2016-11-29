@@ -28,9 +28,9 @@ void launch() {
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT); //Initialize touch sensor object
 
     // This encapsulates the BLE stack
-    AdvertBLE adble();
+    AdvertBLE adble;
 
-    Collector collector(&flex, &imu, &touch_sensor, AdvertBLE);
+    Collector collector(&flex, &imu, &touch_sensor, adble);
 
     collector.startUpdateTask(20);
 
