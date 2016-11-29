@@ -33,38 +33,6 @@ static const char DEVICE_NAME[] = "TeamGLOVE";
 static const char SHORT_NAME[] = "glove1"; 
 
 
-/******************** HELPER FUNCTIONS ********************/
-
-/* Most of these functions are for initializing the GAP protocol
- * and doing the security handshake. I have no idea how any of
- * this works, I literally just copied it from the mbed example
- * and I know that we need it so here it is.
- */
-
-static void passkeyDisplayCallback(
-    Gap::Handle_t handle,
-    const SecurityManager::Passkey_t passkey) { return; }
-
-static void securitySetupCompletedCallback(
-    Gap::Handle_t handle,
-    SecurityManager::SecurityCompletionStatus_t status) { return; }
-
-static void securitySetupInitiatedCallback(
-    Gap::Handle_t,
-    bool allowBonding,
-    bool requireMITM,
-    SecurityManager::SecurityIOCapabilities_t iocaps) { return; }
-
-void initializeSecurity(BLE &ble) {
-    bool enableBonding = true;
-    bool requireMITM = HID_SECURITY_REQUIRE_MITM;
-    ble.securityManager().onSecuritySetupInitiated(securitySetupInitiatedCallback);
-    ble.securityManager().onPasskeyDisplay(passkeyDisplayCallback);
-    ble.securityManager().onSecuritySetupCompleted(securitySetupCompletedCallback);
-    ble.securityManager().init(enableBonding, requireMITM, HID_SECURITY_IOCAPS);
-}
-
-
 /******************** CALLBACKS ********************/
 
 /* Store the value of the service pointer for the callbacks to use */
@@ -87,6 +55,20 @@ static void disconnectionCallback(const Gap::DisconnectionCallbackParams_t *para
     KeyboardMouseService * service_ptr = getServicePtr(NULL);
     service_ptr->setConnected(false);
     BLE::Instance(BLE::DEFAULT_INSTANCE).gap().startAdvertising(); // restart advertising
+}
+
+/******************** HELPER FUNCTIONS ********************/
+
+/* Most of these functions are for initializing the GAP protocol
+ * and doing the security handshake. I have no idea how any of
+ * this works, I literally just copied it from the mbed example
+ * and I know that we need it so here it is.
+ */
+
+void initializeSecurity(BLE &ble) {
+    bool enableBonding = true;
+    bool requireMITM = false;
+    ble.securityManager().init(enableBonding, requireMITM, SecurityManager::IO_CAPS_NONE);
 }
 
 /* Initialize BLE */
