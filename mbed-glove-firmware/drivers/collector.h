@@ -1,5 +1,5 @@
 /*
- * Filename:  translator.h
+ * Filename:  collector.h
  * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
@@ -10,11 +10,11 @@
  *     Tim Schumacher
  *
  * Purpose:
- *  Translator to interpret glove data as HID input
+ *  Collect sensor data on the glove, send over ble advertisement
  */
 
-#ifndef TRANSLATOR_H_
-#define TRANSLATOR_H_
+#ifndef COLLECTOR_H_
+#define COLLECTOR_H_
 
 #include <vector>
 
@@ -57,35 +57,26 @@ enum IMU {
     YAWRIGHT
 };
 
-/* Translator
+/* Collector
  *
  * Single class to handle data interpretation between
  * glove data and HID input. Methods are written
  * to update internally, and to write all methods into a
  * data structure
  */
-class Translator {
+class Collector {
 public:
     /*
-     * Constructor for translator
-     *
+     * Constructor for collector
      */
-    Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch,
-               KeyboardMouse* input);
+    Collector(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch);
 
     /*
      * Update gesture mapping via new configuration vector.
      * Transciever to send the new Vector to bluetooth class,
      * which should then call this function
      */
-    // void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
-
-    /*
-     * Analyze sensors to determine if gesture
-     * is occuring. If so, generate proper HID data to be sent to HID class.
-     * This function designed to be set up as a periodic task.
-     */
-    void gestureCheck();
+    void updateAndAdvertise();
 
     /*
      * Calls the start() method on the periodic update task,
@@ -99,19 +90,16 @@ public:
     void stopUpdateTask();
 
 private:
-    // NOTE: Vector indexed by GESTURE enum
-    flexToHID* flex_sensors[FLEX_COUNT];
-    imuToHID* imu_axis[IMU_COUNT];
-    touchToHID* touch_sensors[TOUCH_COUNT];
-    KeyboardMouse* HIDinput;  // KeyboardMouse object
-
-    // Glove data
+    // Sensor classes (consider &refs)
     FlexSensors* flex;
     IMU_BNO055* imu;
     TouchSensor* touch;
+
     glove_sensors_raw_t glove_data;
+    flex_sensor_t* flex_ptr; // pointer to the flex data in glove_data
 
     RtosTimer* update_task_timer;
+    uint32_t period_ms;
     DigitalOut working;
 };
 
