@@ -1,5 +1,5 @@
 /*
- * Filename:  ble_advert.cpp
+ * Filename:  ble_advert.h
  * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
@@ -14,6 +14,9 @@
  *  data via BLE advertisements
  */
 
+#ifndef BLE_ADVERT_H_
+#define BLE_ADVERT_H_
+
 #include <cstring> // string.h
 
 static const uint16_t ADVERT_ID = 0xFACE; // 0xFACE
@@ -22,39 +25,20 @@ static const uint8_t PAYLOAD_CRC_LENGTH = 2;
 static const uint8_t PAYLOAD_LENGTH = sizeof(ADVERT_ID) + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH;
 
 class AdvertBLE {
+public:
 
-    AdvertBLE(uint32_t advertising_interval_ms=10) {
-        memset(payload, 0, PAYLOAD_LENGTH);
-        payload[0] = (ADVERT_ID >> 8) & 0x00FF;
-        payload[1] = ADVERT_ID & 0x00FF;
+    AdvertBLE(uint32_t advertising_interval_ms=10);
 
-        ble.init();
-        adv.addData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA,
-                payload, PAYLOAD_LENGTH);
+    /*
+     * Given pointer to data of length PAYLOAD_DATA_LENGTH,
+     * update the advertisement data and the CRC
+     */
+    update(uint8_t* data);
 
-        ble.setAdvertisingInterval(advertising_interval_ms);
-    }
-
-    AdvertBLE::update(uint8_t* data) {
-
-        // set data in the advertisement
-        memcpy(payload+2, data, PAYLOAD_DATA_LENGTH);
-
-        // CRC
-
-        // start the new advertisement
-        adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA,
-                payload, PAYLOAD_LENGTH);
-        ble.setAdvertisingData(adv);
-        ble.startAdvertising();
-    }
-
-    AdvertBLE::waitForEventLoop() {
-        for (;;) {
-            ble.waitForEvent();
-        }
-    }
-
+    /*
+     * Calls ble.waitForEvent() in a for(;;) loop that never returns
+     */
+    waitForEventLoop();
 
 private:
     BLE ble;
@@ -62,3 +46,4 @@ private:
     uint8_t payload[PAYLOAD_LENGTH];
 }
 
+#endif /* BLE_ADVERT_H_ */
