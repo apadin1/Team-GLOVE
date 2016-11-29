@@ -16,12 +16,8 @@
 #ifndef COLLECTOR_H_
 #define COLLECTOR_H_
 
-#include <vector>
-
 #include "mbed.h"
 
-#include "analog_button.h"
-#include "keyboard_mouse.h"
 #include "glove_sensors.h"
 
 #define GESTURE_COUNT 14
@@ -94,6 +90,7 @@ private:
     FlexSensors* flex;
     IMU_BNO055* imu;
     TouchSensor* touch;
+    AdvertBLE& adble;
 
     glove_sensors_raw_t glove_data;
     flex_sensor_t* flex_ptr; // pointer to the flex data in glove_data
