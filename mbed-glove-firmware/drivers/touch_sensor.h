@@ -42,6 +42,7 @@ const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
 const PinName TOUCH_INTERRUPT = p13;  // CHANGE interrupt line (active low)
 const PinName TOUCH_NO_INTERRUPT = NC; // Don't use an interrupt
+const bool TOUCH_DIGITALIN_CHANGE = true; // use DigitalIn instead of InterruptIn
 
 /* Low-Power Mode:
  *  - set multiple of 8ms between key measurements, default 2 (16ms)
@@ -171,6 +172,27 @@ public:
     void updateTask();
 
     /*
+     * This update task check to see if a reset is required,
+     * runs the update() function,
+     */
+    void singleUpdate();
+
+    /*
+     * Spawns a thread to run singleUpdate() then yields.
+     * Use at the beginning of sensor-polling periodic function.
+     */
+    void spawnUpdateThread();
+
+    /*
+     * If using spawnUpdateThread MUST be called at the end
+     * of the same periodic funciton.
+     *
+     * Terminates the update thread if hung and sets up for a reset
+     * on next update called.
+     */
+    void terminateUpdateThreadIfBlocking();
+
+    /*
      * Print out the given key states
      */
     static void print(Serial& pc, key_states_t&);
@@ -180,9 +202,22 @@ private:
 
 private:
     AT42QT1070 qt;
+    key_states_t keys;
+
+    /*
+     * Deferred-interrupt based touch sensor
+     */
     InterruptIn* change_event;
     Semaphore do_update;
-    key_states_t keys;
+
+    /* Polling in spawned thread
+     *
+     * needs_restart signals if the touch sensor was killed
+     * while hanging on the bus, thus needs to get restarted
+     */
+    Thread* update_thread;
+    DigitalIn* change_line;
+    bool needs_restart;
 };
 
 #endif /* TOUCH_SENSOR_H_ */
