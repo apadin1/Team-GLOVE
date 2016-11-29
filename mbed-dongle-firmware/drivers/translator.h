@@ -74,11 +74,9 @@ public:
                KeyboardMouse* input);
 
     /*
-     * Update gesture mapping via new configuration vector.
-     * Transciever to send the new Vector to bluetooth class,
-     * which should then call this function
+     * Update gesture mapping via new configuration arrary.
      */
-    void updateGestureMap();
+    void updateGestureMap(uint8_t* config);
 
     /*
      * Analyze sensors to determine if gesture

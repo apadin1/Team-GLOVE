@@ -183,10 +183,8 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
           new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
 
-// void Translator::updateGestureMap(std::vector<AnalogButton>* updatedMapping)
-// {
-// sensors = *updatedMapping;
-//}
+void Translator::updateGestureMap(uint8_t* config) {
+}
 
 void Translator::gestureCheck() {
 
@@ -321,7 +319,7 @@ void Translator::gestureCheck() {
             }
         }  // keyboard
     }//FOR
-    
+
 //        /* Mouse functionality */
 //        else if (imu_axisL[i]->is_mouse()) {
 //            mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
