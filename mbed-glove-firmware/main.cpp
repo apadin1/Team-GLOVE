@@ -58,7 +58,9 @@ void launch() {
     //glove_sensors_raw_t glove_data;
 
     for (;;) {
+        l2 = 0;
         adble.waitForEvent();
+        l2 = 1;
     }
 
     DigitalOut d1(p12);
