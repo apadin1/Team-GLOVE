@@ -30,10 +30,6 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 }
 
 void Collector::updateAndAdvertise() {
-    DigitalOut l2(LED2);
-    DigitalOut l3(LED3);
-    l2 = 1;
-    l3 = 0;
     working = 1;
 
     //touch->spawnUpdateThread();
@@ -50,21 +46,17 @@ void Collector::updateAndAdvertise() {
     // because
     //Thread::wait(5);
     wait_ms(5);
-    l2=0;
 
     // this really needs to be later in the looop....
     //touch->terminateUpdateThreadIfBlocking();
 
-    l3 = 1;
     working = 0;
-    adble.waitForEvent();
-    Thread::wait(period_ms - 6);
+    //adble.waitForEvent();
 }
 
 void Collector::startUpdateTask(uint32_t ms) {
     period_ms = ms;
-    //update_task_timer->start(period_ms);
-    updateAndAdvertise();
+    update_task_timer->start(period_ms);
 }
 
 void Collector::stopUpdateTask() {

@@ -35,8 +35,10 @@ void launch() {
 
     collector.startUpdateTask(30);
 
+    DigitalOut d1(p12);
     for (;;) {
-        //adble.waitForEvent();
+        d1 = !d1;
+        wait_ms(1);
     }
     Thread::wait(osWaitForever);
 }
