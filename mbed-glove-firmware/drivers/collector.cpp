@@ -16,7 +16,7 @@
 #include "collector.h"
 #include "string.h"
 
-const PinName COLLECTOR_DEBUG_PIN = p26;
+const PinName COLLECTOR_DEBUG_PIN = p15;
 
 Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
                      TouchSensor* _touch, AdvertBLE& _adble)
@@ -25,21 +25,18 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 
     update_task_timer =
           new RtosTimer(this, &Collector::updateAndAdvertise, osTimerPeriodic);
-
-    flex_ptr = &glove_data.flex_sensors[0];
 }
 
 void Collector::updateAndAdvertise() {
     working = 1;
 
-    //touch->spawnUpdateThread();
+    touch->spawnUpdateThread();
 
     imu->updateAndWrite(&glove_data.imu); // TODO remove linear data collection
-    flex->updateAndWrite(flex_ptr);
-    //touch->writeKeys(&glove_data.touch_sensor);
-    touch->updateAndWrite(&glove_data.touch_sensor);
+    flex->updateAndWrite(&glove_data.flex_sensors[0]);
+    touch->writeKeys(&glove_data.touch_sensor);
 
-    //compressGloveSensors(&glove_data, &glove_data_compressed);
+    compressGloveSensors(&glove_data, &glove_data_compressed);
 
     //adble.update((uint8_t*)&glove_data_compressed);
 
@@ -47,8 +44,7 @@ void Collector::updateAndAdvertise() {
     //Thread::wait(5);
     wait_ms(5);
 
-    // this really needs to be later in the looop....
-    //touch->terminateUpdateThreadIfBlocking();
+    touch->terminateUpdateThreadIfBlocking();
 
     working = 0;
     //adble.waitForEvent();

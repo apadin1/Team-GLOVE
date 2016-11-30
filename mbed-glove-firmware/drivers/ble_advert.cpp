@@ -22,9 +22,9 @@ AdvertBLE::AdvertBLE(uint32_t advertising_interval_ms) {
     adv_payload[0] = (ADVERT_ID >> 8) & 0x00FF;
     adv_payload[1] = ADVERT_ID & 0x00FF;
 
-    //ble.init();
-    //adv.addData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
-    //ble.setAdvertisingInterval(advertising_interval_ms);
+    ble.init();
+    adv.addData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
+    ble.setAdvertisingInterval(advertising_interval_ms);
 }
 
 void AdvertBLE::update(uint8_t* data, uint8_t len) {
@@ -39,9 +39,9 @@ void AdvertBLE::update(uint8_t* data, uint8_t len) {
     // CRC
 
     // start the new advertisement
-    //adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, len+2);
-    //ble.setAdvertisingData(adv);
-    //ble.startAdvertising();
+    adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, len+2);
+    ble.setAdvertisingData(adv);
+    ble.startAdvertising();
 }
 
 void AdvertBLE::waitForEvent() {
