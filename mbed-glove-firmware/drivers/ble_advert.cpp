@@ -27,15 +27,19 @@ AdvertBLE::AdvertBLE(uint32_t advertising_interval_ms) {
     ble.setAdvertisingInterval(advertising_interval_ms);
 }
 
-void AdvertBLE::update(uint8_t* data) {
+void AdvertBLE::update(uint8_t* data, uint8_t len) {
+
+    if (memcmp(data, adv_payload+2, len) == 0) {
+        return;
+    }
 
     // set data in the advertisement
-    memcpy(adv_payload+2, data, PAYLOAD_DATA_LENGTH);
+    memcpy(adv_payload+2, data, len);
 
     // CRC
 
     // start the new advertisement
-    adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
+    adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, len+2);
     ble.setAdvertisingData(adv);
     ble.startAdvertising();
 }

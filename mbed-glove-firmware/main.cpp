@@ -32,7 +32,7 @@ void launch() {
 
     Collector collector(&flex, &imu, &touch_sensor, adble);
 
-    collector.startUpdateTask(20);
+    collector.startUpdateTask(30);
 
     adble.waitForEventLoop();
 }

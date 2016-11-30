@@ -14,6 +14,7 @@
  */
 
 #include "collector.h"
+#include "string.h"
 
 const PinName COLLECTOR_DEBUG_PIN = p26;
 
@@ -37,11 +38,13 @@ void Collector::updateAndAdvertise() {
     flex->updateAndWrite(flex_ptr);
     touch->writeKeys(&glove_data.touch_sensor);
 
-    // send the advertisement
-    adble.update((uint8_t*)&glove_data);
+    compressGloveSensors(&glove_data, &glove_data_compressed);
+
+    adble.update((uint8_t*)&glove_data_compressed);
 
     // because
-    Thread::wait(5);
+    //Thread::wait(5);
+    wait_ms(5);
 
     // this really needs to be later in the looop....
     touch->terminateUpdateThreadIfBlocking();

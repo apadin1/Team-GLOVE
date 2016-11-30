@@ -69,6 +69,7 @@ private:
 
     glove_sensors_raw_t glove_data;
     flex_sensor_t* flex_ptr; // pointer to the flex data in glove_data
+    glove_sensors_compressed_t glove_data_compressed;
 
     RtosTimer* update_task_timer;
     uint32_t period_ms;
