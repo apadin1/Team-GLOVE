@@ -41,9 +41,9 @@ public:
     void update(uint8_t* data, uint8_t len=PAYLOAD_DATA_LENGTH);
 
     /*
-     * Calls ble.waitForEvent() in a for(;;) loop that never returns
+     * Calls ble.waitForEvent()
      */
-    void waitForEventLoop();
+    void waitForEvent();
 
 private:
     BLE ble;

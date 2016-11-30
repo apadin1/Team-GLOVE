@@ -30,32 +30,41 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 }
 
 void Collector::updateAndAdvertise() {
+    DigitalOut l2(LED2);
+    DigitalOut l3(LED3);
+    l2 = 1;
+    l3 = 0;
     working = 1;
 
-    touch->spawnUpdateThread();
+    //touch->spawnUpdateThread();
 
     imu->updateAndWrite(&glove_data.imu); // TODO remove linear data collection
     flex->updateAndWrite(flex_ptr);
-    touch->writeKeys(&glove_data.touch_sensor);
+    //touch->writeKeys(&glove_data.touch_sensor);
+    touch->updateAndWrite(&glove_data.touch_sensor);
 
-    compressGloveSensors(&glove_data, &glove_data_compressed);
+    //compressGloveSensors(&glove_data, &glove_data_compressed);
 
-    adble.update((uint8_t*)&glove_data_compressed);
+    //adble.update((uint8_t*)&glove_data_compressed);
 
     // because
     //Thread::wait(5);
     wait_ms(5);
+    l2=0;
 
     // this really needs to be later in the looop....
-    touch->terminateUpdateThreadIfBlocking();
+    //touch->terminateUpdateThreadIfBlocking();
 
+    l3 = 1;
     working = 0;
-    return;
+    adble.waitForEvent();
+    Thread::wait(period_ms - 6);
 }
 
 void Collector::startUpdateTask(uint32_t ms) {
     period_ms = ms;
-    update_task_timer->start(period_ms);
+    //update_task_timer->start(period_ms);
+    updateAndAdvertise();
 }
 
 void Collector::stopUpdateTask() {

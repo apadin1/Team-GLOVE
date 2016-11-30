@@ -44,9 +44,7 @@ void AdvertBLE::update(uint8_t* data, uint8_t len) {
     ble.startAdvertising();
 }
 
-void AdvertBLE::waitForEventLoop() {
-    for (;;) {
-        ble.waitForEvent();
-    }
+void AdvertBLE::waitForEvent() {
+    ble.waitForEvent();
 }
 

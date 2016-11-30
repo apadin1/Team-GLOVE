@@ -15,10 +15,11 @@ void launch() {
     DigitalOut l3(LED3);
     DigitalOut l4(LED4);
 
-    l1 = 1;
+    l1 = 0;
     l2 = 1;
     l3 = 1;
     l4 = 1;
+
 
     FlexSensors flex; // Initialize flex sensor object
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
@@ -28,13 +29,16 @@ void launch() {
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT); //Initialize touch sensor object
 
     // This encapsulates the BLE stack
-    AdvertBLE adble;
+    AdvertBLE adble(50);
 
     Collector collector(&flex, &imu, &touch_sensor, adble);
 
     collector.startUpdateTask(30);
 
-    adble.waitForEventLoop();
+    for (;;) {
+        //adble.waitForEvent();
+    }
+    Thread::wait(osWaitForever);
 }
 
 int main() {
