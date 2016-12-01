@@ -21,9 +21,30 @@ void Rx_interrupt() {
     while (len < MAX_LEN) {
         rx_buffer[len++] = pc.getc();
     }
-    SEND(rx_buffer);
     led1 = true;
     
+    if ((rx_buffer[0] == '2') &&
+        (rx_buffer[1] == '1') &&
+        (rx_buffer[2] == '1') &&
+        (rx_buffer[3] == '1') &&
+        (rx_buffer[4] == '1') &&
+        (rx_buffer[5] == '1') &&
+        (rx_buffer[6] == '1') &&
+        (rx_buffer[7] == '1') &&
+        (rx_buffer[8] == '1') &&
+        (rx_buffer[9] == '1') &&
+        (rx_buffer[10] == '1') &&
+        (rx_buffer[11] == '1') &&
+        (rx_buffer[12] == '1') &&
+        (rx_buffer[13] == '1') &&
+        (rx_buffer[14] == '1') &&
+        (rx_buffer[15] == '4')) {
+        
+        led2 = !led2;
+    }
+    else {
+        led3 = !led3;
+    }
     /*
     if (rx_buffer[0] == '1') led1 = !led1;
     if (rx_buffer[0] == '2') led2 = !led2;
