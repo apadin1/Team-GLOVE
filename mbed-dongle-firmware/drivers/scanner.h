@@ -38,16 +38,16 @@ static void right_glove() {
 
 // Does most of the work of filtering packets
 static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *params) {
-    
+
     // Filter advertisements by length
     if (params->advertisingDataLen < MIN_PACKET_LENGTH) {
         return;
     }
-    
+
     // Filter advertisements by ID number
     uint16_t id = params->advertisingData[3] << 8;
     id |= params->advertisingData[2];
-    
+
     if (id == LEFT_GLOVE_ID) {
         left_glove();
     }
@@ -64,8 +64,9 @@ class Scanner {
 public:
 
     // Scan period and duration are in milliseconds
-    Scanner() {
+    Scanner(Translator* _translator) {
         ble.init();
+        translator = _translator;
     }
 
     // Stop and start scanning
@@ -73,18 +74,19 @@ public:
         ble.gap().setScanParams(scan_period, scan_duration);
         ble.gap().startScan(advertisementCallback);
     }
-    
+
     void stopScan() {
         ble.gap().stopScan();
     }
-    
+
     // Convenience function - either one can be used
     void waitForEvent() {
         ble.waitForEvent();
     }
-    
+
 private:
     BLE ble;
+    Translator* translator;
 };
 
 #endif // SCANNER_H_

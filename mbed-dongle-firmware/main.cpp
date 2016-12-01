@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include "drivers/translator.h"
+#include "drivers/scanner.h"
 
 void launch() {
   DigitalOut l1(LED1);
@@ -21,11 +22,15 @@ void launch() {
 
   /* Initialize Translator object */
   Translator translator(&leftGlove, &rightGlove, &input);
-  //TODO: Initialize Scanner Object
+  Scanner scanner(&translator);
   translator.startUpdateTask(20);
 
 
   for (;;) {
+    rightGlove.touch_sensor.a = 1;
+    wait(1);
+    rightGlove.touch_sensor.a = 0;
+    wait(1);
     //Inifite loop
   }
 
