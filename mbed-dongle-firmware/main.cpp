@@ -1,6 +1,8 @@
 #include <inttypes.h>
-#include "drivers/translator.h"
 #include "drivers/scanner.h"
+#include "drivers/serial_com.h"
+#include "drivers/translator.h"
+
 
 extern void uart_test(void);
 
@@ -22,9 +24,14 @@ void launch() {
   glove_sensors_raw_t leftGlove;
   glove_sensors_raw_t rightGlove;
 
-  /* Initialize Translator object */
+  /* Initialize Translator and Scanner objects */
   Translator translator(&leftGlove, &rightGlove, &input);
   Scanner scanner(&translator);
+
+  /* Initialize Serial Interrupt */
+  serialInit(&translator, &scanner);
+
+  /* Begin Scanner Functionality */
   scanner.startUpdateTask(20);
 
   for (;;) {
