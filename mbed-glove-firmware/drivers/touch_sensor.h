@@ -40,7 +40,7 @@
 
 const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
-const PinName TOUCH_INTERRUPT = p13;  // CHANGE interrupt line (active low)
+const PinName TOUCH_INTERRUPT = p16;  // CHANGE interrupt line (active low) (p16 on PCB)
 const PinName TOUCH_NO_INTERRUPT = NC; // Don't use an interrupt
 const bool TOUCH_DIGITALIN_CHANGE = true; // use DigitalIn instead of InterruptIn
 

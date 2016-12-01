@@ -12,14 +12,14 @@
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
 const PinName GLOVE_I2C_SCL = p7; //I2C_SCL0; // p7
 
-I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
+static I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 
-Serial pc(USBTX, USBRX);
+static Serial pc(USBTX, USBRX);
 
-DigitalOut led(p12);
-DigitalOut l2(p13);
-DigitalOut l3(p14);
-DigitalOut l4(p15);
+static DigitalOut led(LED1);
+static DigitalOut l2(LED2);
+static DigitalOut l3(LED3);
+static DigitalOut l4(LED4);
 
 void blink() {
     l2 = 1;

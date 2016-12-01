@@ -36,15 +36,15 @@ IMU_BNO055::IMU_BNO055(I2C& i2c)
 
 void IMU_BNO055::update() {
     imu.get_Euler_Angles(&euler_angles);
-    imu.get_linear_accel(&linear_acc);
+    //imu.get_linear_accel(&linear_acc);
 
     imu_data.orient_pitch = euler_angles.p;
     imu_data.orient_roll = euler_angles.r;
     imu_data.orient_yaw = euler_angles.h;
 
-    imu_data.accel_x = linear_acc.x;
-    imu_data.accel_y = linear_acc.y;
-    imu_data.accel_z = linear_acc.z;
+    //imu_data.accel_x = linear_acc.x;
+    //imu_data.accel_y = linear_acc.y;
+    //imu_data.accel_z = linear_acc.z;
 }
 
 /*
@@ -66,11 +66,8 @@ void IMU_BNO055::writeSensors(bno_imu_t* imu_) {
     imu_->accel_z = imu_data.accel_z;
 }
 
-extern DigitalOut l3;
 void IMU_BNO055::updateAndWrite(bno_imu_t* imu_) {
-    l3 = 0;
     update();
-    l3 = 1;
     writeSensors(imu_);
 }
 
