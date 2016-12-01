@@ -1,5 +1,4 @@
-#include <inttypes.h>
-#include "drivers/translator.h"
+#include "mbed.h"
 
 extern void blink(void);
 extern void boot_delay(uint8_t);
@@ -9,6 +8,7 @@ extern void keyboard_mouse_demo(void);
 extern void ble_scan_test(void);
 extern void uart_test(void);
 
+/*
 void launch() {
     DigitalOut l1(LED1);
     DigitalOut l2(LED2);
@@ -41,7 +41,7 @@ void launch() {
         l2 = 1;
     }
 }
-
+*/
 
 int main() {
 

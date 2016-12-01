@@ -4,7 +4,6 @@
 
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
-#include "scanner.h"
 
 #define SEND(args...) pc.printf(args)
 #define GETC(args...) pc.getc()
@@ -160,11 +159,11 @@ int ble_scan_test(void) {
     int scan_period = 15;
     int scan_duration = 10;
     
-    Scanner scanner;
-    scanner.startScan(scan_period, scan_duration);
+    //Scanner scanner;
+    //scanner.startScan(scan_period, scan_duration);
     
 	while (true) {
         led1 = !led1;
-        scanner.waitForEvent();
+    //    scanner.waitForEvent();
 	}
 }

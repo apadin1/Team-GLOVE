@@ -16,7 +16,6 @@
 
 #include "mbed.h"
 #include "drivers/keyboard_mouse.h"
-#include "drivers/translator.h"
 #include "glove_sensors.h"
 #include "keyboard_mouse.h"
 #include "flex_sensor.h"
