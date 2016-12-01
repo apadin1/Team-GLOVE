@@ -38,14 +38,14 @@ typedef struct {
  * With no linear accelerations, 19B
  */
 typedef struct {
-    // touch sensors (4*1 = 4b = 1B)
-    uint8_t t;
-
     // flex sensors (12*4 = 48b = 6B)
     uint16_t f0 : 12;
     uint16_t f1 : 12;
     uint16_t f2 : 12;
     uint16_t f3 : 12;
+
+    // touch sensors (4*1 = 4b = 1B)
+    uint8_t t;
 
     // imu (3*4B = 12B | 6*4B = 24B)
     float r;
