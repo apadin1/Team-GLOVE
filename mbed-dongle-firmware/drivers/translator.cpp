@@ -186,7 +186,91 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
 void Translator::updateGestureMap(uint8_t* config) {
   this->stopUpdateTask(); //Stop gestureCheck
 
-  //TODO: Finalize config data structure/process
+  /* Left Glove Configuration */
+  if (config[hand] == 'L') {
+
+    /* Flex Sensor Configuration */
+    for (int i = 1; i < FLEX_COUNT + 1; ++i) {
+      if (config[i] == 0) {
+        flex_sensorsL[i-1]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        flex_sensorsL[i-1]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        flex_sensorsL[i-1]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+
+    /* Touch Sensor Configuration */
+    for (int i = 5; i < TOUCH_COUNT + 5; ++i) {
+      if (config[i] == 0) {
+        touch_sensorsL[i-5]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        touch_sensorsL[i-5]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        touch_sensorsL[i-5]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+
+    /* IMU Configuration */
+    for (int i = 9; i < IMU_COUNT + 9; ++i) {
+      if (config[i] == 0) {
+        imu_axisL[i-9]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        imu_axisL[i-9]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        imu_axisL[i-9]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+  }
+
+  /* Right Glove Configuration */
+  else if (config[hand] == 'R') {
+
+    /* Flex Sensor Configuration */
+    for (int i = 1; i < FLEX_COUNT + 1; ++i) {
+      if (config[i] == 0) {
+        flex_sensorsR[i-1]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        flex_sensorsR[i-1]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        flex_sensorsR[i-1]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+
+    /* Touch Sensor Configuration */
+    for (int i = 5; i < TOUCH_COUNT + 5; ++i) {
+      if (config[i] == 0) {
+        touch_sensorsR[i-5]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        touch_sensorsR[i-5]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        touch_sensorsR[i-5]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+
+    /* IMU Configuration */
+    for (int i = 9; i < IMU_COUNT + 9; ++i) {
+      if (config[i] == 0) {
+        imu_axisR[i-9]->change_hid_profile(DISABLED);
+      }
+      else if (config[i] < 200) {
+        imu_axisR[i-9]->change_hid_profile(KEYBOARD, config[i]);
+      }
+      else {
+        imu_axisR[i-9]->change_hid_profile(MOUSE, config[i]);
+      }
+    }
+  }
 
   this->startUpdateTask(20); //Resume gestureCheck
 }

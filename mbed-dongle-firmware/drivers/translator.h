@@ -24,7 +24,7 @@
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
 
-#define GESTURE_COUNT 14
+#define GESTURE_COUNT 15
 #define FLEX_COUNT 4
 #define TOUCH_COUNT 4
 #define IMU_COUNT 6
@@ -33,6 +33,24 @@
  * Default Update Period (in milliseconds)
  */
 const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
+
+enum SENSOR {
+    hand,
+    flex1,
+    flex2,
+    flex3,
+    flex4,
+    touch1,
+    touch2,
+    touch3,
+    touch4,
+    pitchup,
+    pitchdown,
+    rollleft,
+    rollright,
+    yawleft,
+    yawright
+}
 
 enum FLEX {
     FLEX1,
