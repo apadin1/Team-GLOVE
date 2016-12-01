@@ -28,542 +28,786 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.OkButton = new System.Windows.Forms.Button();
             this.ApplyButton = new System.Windows.Forms.Button();
-            this.ConnectButton = new System.Windows.Forms.Button();
-            this.DisconnectButton = new System.Windows.Forms.Button();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.LeftSettings = new System.Windows.Forms.TabPage();
-            this.RightSettings = new System.Windows.Forms.TabPage();
-            this.LeftGestureHeader = new System.Windows.Forms.LinkLabel();
+            this.yawrightLtext = new System.Windows.Forms.TextBox();
+            this.yawleftLtext = new System.Windows.Forms.TextBox();
+            this.rollrightLtext = new System.Windows.Forms.TextBox();
+            this.rollleftLtext = new System.Windows.Forms.TextBox();
+            this.pitchdownLtext = new System.Windows.Forms.TextBox();
+            this.pitchupLtext = new System.Windows.Forms.TextBox();
+            this.touch4Ltext = new System.Windows.Forms.TextBox();
+            this.touch3Ltext = new System.Windows.Forms.TextBox();
+            this.touch2Ltext = new System.Windows.Forms.TextBox();
+            this.touch1Ltext = new System.Windows.Forms.TextBox();
+            this.flex4Ltext = new System.Windows.Forms.TextBox();
+            this.flex3Ltext = new System.Windows.Forms.TextBox();
+            this.flex2Ltext = new System.Windows.Forms.TextBox();
+            this.flex1Ltext = new System.Windows.Forms.TextBox();
+            this.yawrightlabelL = new System.Windows.Forms.Label();
+            this.yawleftlabelL = new System.Windows.Forms.Label();
+            this.rolllrightlabelL = new System.Windows.Forms.Label();
+            this.rollleftlabelL = new System.Windows.Forms.Label();
+            this.pitchdownlabelL = new System.Windows.Forms.Label();
+            this.pitchuplabelL = new System.Windows.Forms.Label();
+            this.touch4labelL = new System.Windows.Forms.Label();
+            this.touch3labelL = new System.Windows.Forms.Label();
+            this.touch2labelL = new System.Windows.Forms.Label();
+            this.touch1labelL = new System.Windows.Forms.Label();
+            this.flex4labelL = new System.Windows.Forms.Label();
+            this.flex3labelL = new System.Windows.Forms.Label();
+            this.flex2labelL = new System.Windows.Forms.Label();
+            this.flex1LabelL = new System.Windows.Forms.Label();
             this.LeftMappingHeader = new System.Windows.Forms.Label();
-            this.RightGestureHeading = new System.Windows.Forms.LinkLabel();
-            this.RightMappingHeader = new System.Windows.Forms.Label();
-            this.LeftWristMotionInput = new System.Windows.Forms.ComboBox();
-            this.LeftPointerTouchInput = new System.Windows.Forms.ComboBox();
-            this.LeftMiddleTouchInput = new System.Windows.Forms.ComboBox();
-            this.LeftRingTouchInput = new System.Windows.Forms.ComboBox();
-            this.LeftPinkyTouchInput = new System.Windows.Forms.ComboBox();
-            this.LeftPointerBendInput = new System.Windows.Forms.ComboBox();
-            this.LeftMiddleBendInput = new System.Windows.Forms.ComboBox();
-            this.LeftRingBendInput = new System.Windows.Forms.ComboBox();
-            this.LeftPinkyBendInput = new System.Windows.Forms.ComboBox();
+            this.LeftGestureHeader = new System.Windows.Forms.LinkLabel();
+            this.RightSettings = new System.Windows.Forms.TabPage();
+            this.yawrightRtext = new System.Windows.Forms.TextBox();
+            this.yawleftRtext = new System.Windows.Forms.TextBox();
+            this.rollrightRtext = new System.Windows.Forms.TextBox();
+            this.rollleftRtext = new System.Windows.Forms.TextBox();
+            this.pitchdownRtext = new System.Windows.Forms.TextBox();
+            this.pitchupRtext = new System.Windows.Forms.TextBox();
+            this.touch4Rtext = new System.Windows.Forms.TextBox();
+            this.touch3Rtext = new System.Windows.Forms.TextBox();
+            this.touch2Rtext = new System.Windows.Forms.TextBox();
+            this.touch1Rtext = new System.Windows.Forms.TextBox();
+            this.flex4Rtext = new System.Windows.Forms.TextBox();
+            this.flex3Rtext = new System.Windows.Forms.TextBox();
+            this.flex2Rtext = new System.Windows.Forms.TextBox();
+            this.flex1Rtext = new System.Windows.Forms.TextBox();
+            this.rawrightlabelR = new System.Windows.Forms.Label();
+            this.yawleftlabelR = new System.Windows.Forms.Label();
+            this.rollrightlabelR = new System.Windows.Forms.Label();
+            this.rollleftlabelR = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.RightWristMotionInput = new System.Windows.Forms.ComboBox();
-            this.RightPointerTouchInput = new System.Windows.Forms.ComboBox();
-            this.RightMiddleTouchInput = new System.Windows.Forms.ComboBox();
-            this.RightRingTouchInput = new System.Windows.Forms.ComboBox();
-            this.RightPinkyTouchInput = new System.Windows.Forms.ComboBox();
-            this.RightPointerBendInput = new System.Windows.Forms.ComboBox();
-            this.RightMiddleBendInput = new System.Windows.Forms.ComboBox();
-            this.RightRingBendInput = new System.Windows.Forms.ComboBox();
-            this.RightPinkyBendInput = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
+            this.pitchuplabelR = new System.Windows.Forms.Label();
+            this.touch4labelR = new System.Windows.Forms.Label();
+            this.touch3labelR = new System.Windows.Forms.Label();
+            this.touch2labelR = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.flex4labelR = new System.Windows.Forms.Label();
+            this.flex3labelR = new System.Windows.Forms.Label();
+            this.flex2labelR = new System.Windows.Forms.Label();
+            this.flex1labelR = new System.Windows.Forms.Label();
+            this.RightMappingHeader = new System.Windows.Forms.Label();
+            this.RightGestureHeading = new System.Windows.Forms.LinkLabel();
+            this.comPortLabel = new System.Windows.Forms.Label();
+            this.comPortDropDown = new System.Windows.Forms.ComboBox();
             this.Tabs.SuspendLayout();
             this.LeftSettings.SuspendLayout();
             this.RightSettings.SuspendLayout();
             this.SuspendLayout();
             // 
-            // CancelButton
-            // 
-            this.CancelButton.Location = new System.Drawing.Point(93, 343);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 0;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // OkButton
-            // 
-            this.OkButton.Location = new System.Drawing.Point(12, 343);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
-            this.OkButton.TabIndex = 1;
-            this.OkButton.Text = "Ok";
-            this.OkButton.UseVisualStyleBackColor = true;
-            // 
             // ApplyButton
             // 
-            this.ApplyButton.Location = new System.Drawing.Point(174, 343);
+            this.ApplyButton.Location = new System.Drawing.Point(155, 579);
+            this.ApplyButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ApplyButton.Name = "ApplyButton";
-            this.ApplyButton.Size = new System.Drawing.Size(75, 23);
+            this.ApplyButton.Size = new System.Drawing.Size(100, 28);
             this.ApplyButton.TabIndex = 2;
             this.ApplyButton.Text = "Apply";
             this.ApplyButton.UseVisualStyleBackColor = true;
-            // 
-            // ConnectButton
-            // 
-            this.ConnectButton.Location = new System.Drawing.Point(12, 12);
-            this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(75, 23);
-            this.ConnectButton.TabIndex = 3;
-            this.ConnectButton.Text = "Connect";
-            this.ConnectButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.ConnectButton.UseVisualStyleBackColor = true;
-            // 
-            // DisconnectButton
-            // 
-            this.DisconnectButton.Location = new System.Drawing.Point(93, 12);
-            this.DisconnectButton.Name = "DisconnectButton";
-            this.DisconnectButton.Size = new System.Drawing.Size(75, 23);
-            this.DisconnectButton.TabIndex = 5;
-            this.DisconnectButton.Text = "Disconnect";
-            this.DisconnectButton.UseVisualStyleBackColor = true;
             // 
             // Tabs
             // 
             this.Tabs.Controls.Add(this.LeftSettings);
             this.Tabs.Controls.Add(this.RightSettings);
-            this.Tabs.Location = new System.Drawing.Point(12, 41);
+            this.Tabs.Location = new System.Drawing.Point(16, 38);
+            this.Tabs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Tabs.Multiline = true;
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(281, 296);
+            this.Tabs.Size = new System.Drawing.Size(375, 533);
             this.Tabs.TabIndex = 6;
             // 
             // LeftSettings
             // 
             this.LeftSettings.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.LeftSettings.Controls.Add(this.label10);
-            this.LeftSettings.Controls.Add(this.label9);
-            this.LeftSettings.Controls.Add(this.label8);
-            this.LeftSettings.Controls.Add(this.label7);
-            this.LeftSettings.Controls.Add(this.label6);
-            this.LeftSettings.Controls.Add(this.label5);
-            this.LeftSettings.Controls.Add(this.label4);
-            this.LeftSettings.Controls.Add(this.label3);
-            this.LeftSettings.Controls.Add(this.label2);
-            this.LeftSettings.Controls.Add(this.LeftPinkyBendInput);
-            this.LeftSettings.Controls.Add(this.LeftRingBendInput);
-            this.LeftSettings.Controls.Add(this.LeftMiddleBendInput);
-            this.LeftSettings.Controls.Add(this.LeftPointerBendInput);
-            this.LeftSettings.Controls.Add(this.LeftPinkyTouchInput);
-            this.LeftSettings.Controls.Add(this.LeftRingTouchInput);
-            this.LeftSettings.Controls.Add(this.LeftMiddleTouchInput);
-            this.LeftSettings.Controls.Add(this.LeftPointerTouchInput);
-            this.LeftSettings.Controls.Add(this.LeftWristMotionInput);
+            this.LeftSettings.Controls.Add(this.yawrightLtext);
+            this.LeftSettings.Controls.Add(this.yawleftLtext);
+            this.LeftSettings.Controls.Add(this.rollrightLtext);
+            this.LeftSettings.Controls.Add(this.rollleftLtext);
+            this.LeftSettings.Controls.Add(this.pitchdownLtext);
+            this.LeftSettings.Controls.Add(this.pitchupLtext);
+            this.LeftSettings.Controls.Add(this.touch4Ltext);
+            this.LeftSettings.Controls.Add(this.touch3Ltext);
+            this.LeftSettings.Controls.Add(this.touch2Ltext);
+            this.LeftSettings.Controls.Add(this.touch1Ltext);
+            this.LeftSettings.Controls.Add(this.flex4Ltext);
+            this.LeftSettings.Controls.Add(this.flex3Ltext);
+            this.LeftSettings.Controls.Add(this.flex2Ltext);
+            this.LeftSettings.Controls.Add(this.flex1Ltext);
+            this.LeftSettings.Controls.Add(this.yawrightlabelL);
+            this.LeftSettings.Controls.Add(this.yawleftlabelL);
+            this.LeftSettings.Controls.Add(this.rolllrightlabelL);
+            this.LeftSettings.Controls.Add(this.rollleftlabelL);
+            this.LeftSettings.Controls.Add(this.pitchdownlabelL);
+            this.LeftSettings.Controls.Add(this.pitchuplabelL);
+            this.LeftSettings.Controls.Add(this.touch4labelL);
+            this.LeftSettings.Controls.Add(this.touch3labelL);
+            this.LeftSettings.Controls.Add(this.touch2labelL);
+            this.LeftSettings.Controls.Add(this.touch1labelL);
+            this.LeftSettings.Controls.Add(this.flex4labelL);
+            this.LeftSettings.Controls.Add(this.flex3labelL);
+            this.LeftSettings.Controls.Add(this.flex2labelL);
+            this.LeftSettings.Controls.Add(this.flex1LabelL);
             this.LeftSettings.Controls.Add(this.LeftMappingHeader);
             this.LeftSettings.Controls.Add(this.LeftGestureHeader);
-            this.LeftSettings.Location = new System.Drawing.Point(4, 22);
+            this.LeftSettings.Location = new System.Drawing.Point(4, 25);
+            this.LeftSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.LeftSettings.Name = "LeftSettings";
-            this.LeftSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.LeftSettings.Size = new System.Drawing.Size(273, 270);
+            this.LeftSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LeftSettings.Size = new System.Drawing.Size(367, 504);
             this.LeftSettings.TabIndex = 0;
             this.LeftSettings.Text = "Left Glove";
             this.LeftSettings.Click += new System.EventHandler(this.tabPage1_Click_1);
             // 
-            // RightSettings
+            // yawrightLtext
             // 
-            this.RightSettings.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.RightSettings.Controls.Add(this.label18);
-            this.RightSettings.Controls.Add(this.label17);
-            this.RightSettings.Controls.Add(this.label16);
-            this.RightSettings.Controls.Add(this.label15);
-            this.RightSettings.Controls.Add(this.label14);
-            this.RightSettings.Controls.Add(this.label13);
-            this.RightSettings.Controls.Add(this.label12);
-            this.RightSettings.Controls.Add(this.label11);
-            this.RightSettings.Controls.Add(this.label1);
-            this.RightSettings.Controls.Add(this.RightPinkyBendInput);
-            this.RightSettings.Controls.Add(this.RightRingBendInput);
-            this.RightSettings.Controls.Add(this.RightMiddleBendInput);
-            this.RightSettings.Controls.Add(this.RightPointerBendInput);
-            this.RightSettings.Controls.Add(this.RightPinkyTouchInput);
-            this.RightSettings.Controls.Add(this.RightRingTouchInput);
-            this.RightSettings.Controls.Add(this.RightMiddleTouchInput);
-            this.RightSettings.Controls.Add(this.RightPointerTouchInput);
-            this.RightSettings.Controls.Add(this.RightWristMotionInput);
-            this.RightSettings.Controls.Add(this.RightMappingHeader);
-            this.RightSettings.Controls.Add(this.RightGestureHeading);
-            this.RightSettings.Location = new System.Drawing.Point(4, 22);
-            this.RightSettings.Name = "RightSettings";
-            this.RightSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.RightSettings.Size = new System.Drawing.Size(273, 270);
-            this.RightSettings.TabIndex = 1;
-            this.RightSettings.Text = "Right Glove";
-            this.RightSettings.Click += new System.EventHandler(this.tabPage2_Click);
+            this.yawrightLtext.Location = new System.Drawing.Point(175, 459);
+            this.yawrightLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.yawrightLtext.Name = "yawrightLtext";
+            this.yawrightLtext.Size = new System.Drawing.Size(180, 22);
+            this.yawrightLtext.TabIndex = 39;
+            // 
+            // yawleftLtext
+            // 
+            this.yawleftLtext.Location = new System.Drawing.Point(175, 426);
+            this.yawleftLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.yawleftLtext.Name = "yawleftLtext";
+            this.yawleftLtext.Size = new System.Drawing.Size(180, 22);
+            this.yawleftLtext.TabIndex = 38;
+            // 
+            // rollrightLtext
+            // 
+            this.rollrightLtext.Location = new System.Drawing.Point(175, 393);
+            this.rollrightLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rollrightLtext.Name = "rollrightLtext";
+            this.rollrightLtext.Size = new System.Drawing.Size(180, 22);
+            this.rollrightLtext.TabIndex = 37;
+            // 
+            // rollleftLtext
+            // 
+            this.rollleftLtext.Location = new System.Drawing.Point(175, 359);
+            this.rollleftLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rollleftLtext.Name = "rollleftLtext";
+            this.rollleftLtext.Size = new System.Drawing.Size(180, 22);
+            this.rollleftLtext.TabIndex = 36;
+            // 
+            // pitchdownLtext
+            // 
+            this.pitchdownLtext.Location = new System.Drawing.Point(175, 326);
+            this.pitchdownLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pitchdownLtext.Name = "pitchdownLtext";
+            this.pitchdownLtext.Size = new System.Drawing.Size(180, 22);
+            this.pitchdownLtext.TabIndex = 35;
+            // 
+            // pitchupLtext
+            // 
+            this.pitchupLtext.Location = new System.Drawing.Point(175, 293);
+            this.pitchupLtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pitchupLtext.Name = "pitchupLtext";
+            this.pitchupLtext.Size = new System.Drawing.Size(180, 22);
+            this.pitchupLtext.TabIndex = 34;
+            // 
+            // touch4Ltext
+            // 
+            this.touch4Ltext.Location = new System.Drawing.Point(175, 260);
+            this.touch4Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch4Ltext.Name = "touch4Ltext";
+            this.touch4Ltext.Size = new System.Drawing.Size(180, 22);
+            this.touch4Ltext.TabIndex = 33;
+            // 
+            // touch3Ltext
+            // 
+            this.touch3Ltext.Location = new System.Drawing.Point(175, 226);
+            this.touch3Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch3Ltext.Name = "touch3Ltext";
+            this.touch3Ltext.Size = new System.Drawing.Size(180, 22);
+            this.touch3Ltext.TabIndex = 32;
+            // 
+            // touch2Ltext
+            // 
+            this.touch2Ltext.Location = new System.Drawing.Point(175, 193);
+            this.touch2Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch2Ltext.Name = "touch2Ltext";
+            this.touch2Ltext.Size = new System.Drawing.Size(180, 22);
+            this.touch2Ltext.TabIndex = 31;
+            // 
+            // touch1Ltext
+            // 
+            this.touch1Ltext.Location = new System.Drawing.Point(175, 160);
+            this.touch1Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch1Ltext.Name = "touch1Ltext";
+            this.touch1Ltext.Size = new System.Drawing.Size(180, 22);
+            this.touch1Ltext.TabIndex = 30;
+            // 
+            // flex4Ltext
+            // 
+            this.flex4Ltext.Location = new System.Drawing.Point(175, 127);
+            this.flex4Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex4Ltext.Name = "flex4Ltext";
+            this.flex4Ltext.Size = new System.Drawing.Size(180, 22);
+            this.flex4Ltext.TabIndex = 29;
+            // 
+            // flex3Ltext
+            // 
+            this.flex3Ltext.Location = new System.Drawing.Point(175, 94);
+            this.flex3Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex3Ltext.Name = "flex3Ltext";
+            this.flex3Ltext.Size = new System.Drawing.Size(180, 22);
+            this.flex3Ltext.TabIndex = 28;
+            // 
+            // flex2Ltext
+            // 
+            this.flex2Ltext.Location = new System.Drawing.Point(175, 60);
+            this.flex2Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex2Ltext.Name = "flex2Ltext";
+            this.flex2Ltext.Size = new System.Drawing.Size(180, 22);
+            this.flex2Ltext.TabIndex = 27;
+            // 
+            // flex1Ltext
+            // 
+            this.flex1Ltext.Location = new System.Drawing.Point(175, 27);
+            this.flex1Ltext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex1Ltext.Name = "flex1Ltext";
+            this.flex1Ltext.Size = new System.Drawing.Size(180, 22);
+            this.flex1Ltext.TabIndex = 26;
+            this.flex1Ltext.TextChanged += new System.EventHandler(this.flex1Ltext_TextChanged);
+            // 
+            // yawrightlabelL
+            // 
+            this.yawrightlabelL.AutoSize = true;
+            this.yawrightlabelL.Location = new System.Drawing.Point(8, 463);
+            this.yawrightlabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.yawrightlabelL.Name = "yawrightlabelL";
+            this.yawrightlabelL.Size = new System.Drawing.Size(82, 17);
+            this.yawrightlabelL.TabIndex = 24;
+            this.yawrightlabelL.Text = "YAWRIGHT";
+            // 
+            // yawleftlabelL
+            // 
+            this.yawleftlabelL.AutoSize = true;
+            this.yawleftlabelL.Location = new System.Drawing.Point(8, 430);
+            this.yawleftlabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.yawleftlabelL.Name = "yawleftlabelL";
+            this.yawleftlabelL.Size = new System.Drawing.Size(73, 17);
+            this.yawleftlabelL.TabIndex = 23;
+            this.yawleftlabelL.Text = "YAWLEFT";
+            // 
+            // rolllrightlabelL
+            // 
+            this.rolllrightlabelL.AutoSize = true;
+            this.rolllrightlabelL.Location = new System.Drawing.Point(8, 396);
+            this.rolllrightlabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rolllrightlabelL.Name = "rolllrightlabelL";
+            this.rolllrightlabelL.Size = new System.Drawing.Size(88, 17);
+            this.rolllrightlabelL.TabIndex = 22;
+            this.rolllrightlabelL.Text = "ROLLRIGHT";
+            // 
+            // rollleftlabelL
+            // 
+            this.rollleftlabelL.AutoSize = true;
+            this.rollleftlabelL.Location = new System.Drawing.Point(8, 363);
+            this.rollleftlabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rollleftlabelL.Name = "rollleftlabelL";
+            this.rollleftlabelL.Size = new System.Drawing.Size(79, 17);
+            this.rollleftlabelL.TabIndex = 21;
+            this.rollleftlabelL.Text = "ROLLLEFT";
+            // 
+            // pitchdownlabelL
+            // 
+            this.pitchdownlabelL.AutoSize = true;
+            this.pitchdownlabelL.Location = new System.Drawing.Point(8, 330);
+            this.pitchdownlabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.pitchdownlabelL.Name = "pitchdownlabelL";
+            this.pitchdownlabelL.Size = new System.Drawing.Size(92, 17);
+            this.pitchdownlabelL.TabIndex = 20;
+            this.pitchdownlabelL.Text = "PITCHDOWN";
+            // 
+            // pitchuplabelL
+            // 
+            this.pitchuplabelL.AutoSize = true;
+            this.pitchuplabelL.Location = new System.Drawing.Point(8, 297);
+            this.pitchuplabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.pitchuplabelL.Name = "pitchuplabelL";
+            this.pitchuplabelL.Size = new System.Drawing.Size(67, 17);
+            this.pitchuplabelL.TabIndex = 19;
+            this.pitchuplabelL.Text = "PITCHUP";
+            // 
+            // touch4labelL
+            // 
+            this.touch4labelL.AutoSize = true;
+            this.touch4labelL.Location = new System.Drawing.Point(8, 263);
+            this.touch4labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch4labelL.Name = "touch4labelL";
+            this.touch4labelL.Size = new System.Drawing.Size(65, 17);
+            this.touch4labelL.TabIndex = 18;
+            this.touch4labelL.Text = "TOUCH4";
+            // 
+            // touch3labelL
+            // 
+            this.touch3labelL.AutoSize = true;
+            this.touch3labelL.Location = new System.Drawing.Point(8, 230);
+            this.touch3labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch3labelL.Name = "touch3labelL";
+            this.touch3labelL.Size = new System.Drawing.Size(65, 17);
+            this.touch3labelL.TabIndex = 17;
+            this.touch3labelL.Text = "TOUCH3";
+            // 
+            // touch2labelL
+            // 
+            this.touch2labelL.AutoSize = true;
+            this.touch2labelL.Location = new System.Drawing.Point(8, 197);
+            this.touch2labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch2labelL.Name = "touch2labelL";
+            this.touch2labelL.Size = new System.Drawing.Size(65, 17);
+            this.touch2labelL.TabIndex = 16;
+            this.touch2labelL.Text = "TOUCH2";
+            // 
+            // touch1labelL
+            // 
+            this.touch1labelL.AutoSize = true;
+            this.touch1labelL.Location = new System.Drawing.Point(8, 164);
+            this.touch1labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch1labelL.Name = "touch1labelL";
+            this.touch1labelL.Size = new System.Drawing.Size(65, 17);
+            this.touch1labelL.TabIndex = 15;
+            this.touch1labelL.Text = "TOUCH1";
+            // 
+            // flex4labelL
+            // 
+            this.flex4labelL.AutoSize = true;
+            this.flex4labelL.Location = new System.Drawing.Point(8, 130);
+            this.flex4labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex4labelL.Name = "flex4labelL";
+            this.flex4labelL.Size = new System.Drawing.Size(50, 17);
+            this.flex4labelL.TabIndex = 14;
+            this.flex4labelL.Text = "FLEX4";
+            // 
+            // flex3labelL
+            // 
+            this.flex3labelL.AutoSize = true;
+            this.flex3labelL.Location = new System.Drawing.Point(8, 97);
+            this.flex3labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex3labelL.Name = "flex3labelL";
+            this.flex3labelL.Size = new System.Drawing.Size(50, 17);
+            this.flex3labelL.TabIndex = 13;
+            this.flex3labelL.Text = "FLEX3";
+            // 
+            // flex2labelL
+            // 
+            this.flex2labelL.AutoSize = true;
+            this.flex2labelL.Location = new System.Drawing.Point(8, 64);
+            this.flex2labelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex2labelL.Name = "flex2labelL";
+            this.flex2labelL.Size = new System.Drawing.Size(50, 17);
+            this.flex2labelL.TabIndex = 12;
+            this.flex2labelL.Text = "FLEX2";
+            // 
+            // flex1LabelL
+            // 
+            this.flex1LabelL.AutoSize = true;
+            this.flex1LabelL.Location = new System.Drawing.Point(8, 31);
+            this.flex1LabelL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex1LabelL.Name = "flex1LabelL";
+            this.flex1LabelL.Size = new System.Drawing.Size(50, 17);
+            this.flex1LabelL.TabIndex = 11;
+            this.flex1LabelL.Text = "FLEX1";
+            this.flex1LabelL.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // LeftMappingHeader
+            // 
+            this.LeftMappingHeader.AutoSize = true;
+            this.LeftMappingHeader.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LeftMappingHeader.Location = new System.Drawing.Point(171, 4);
+            this.LeftMappingHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LeftMappingHeader.Name = "LeftMappingHeader";
+            this.LeftMappingHeader.Size = new System.Drawing.Size(162, 19);
+            this.LeftMappingHeader.TabIndex = 1;
+            this.LeftMappingHeader.Text = "Keyboard Mapping:";
             // 
             // LeftGestureHeader
             // 
             this.LeftGestureHeader.AutoSize = true;
             this.LeftGestureHeader.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LeftGestureHeader.LinkColor = System.Drawing.Color.Black;
-            this.LeftGestureHeader.Location = new System.Drawing.Point(6, 3);
+            this.LeftGestureHeader.Location = new System.Drawing.Point(8, 4);
+            this.LeftGestureHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LeftGestureHeader.Name = "LeftGestureHeader";
-            this.LeftGestureHeader.Size = new System.Drawing.Size(69, 16);
+            this.LeftGestureHeader.Size = new System.Drawing.Size(78, 19);
             this.LeftGestureHeader.TabIndex = 0;
             this.LeftGestureHeader.TabStop = true;
             this.LeftGestureHeader.Text = "Gesture:";
             // 
-            // LeftMappingHeader
+            // RightSettings
             // 
-            this.LeftMappingHeader.AutoSize = true;
-            this.LeftMappingHeader.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LeftMappingHeader.Location = new System.Drawing.Point(128, 3);
-            this.LeftMappingHeader.Name = "LeftMappingHeader";
-            this.LeftMappingHeader.Size = new System.Drawing.Size(144, 16);
-            this.LeftMappingHeader.TabIndex = 1;
-            this.LeftMappingHeader.Text = "Keyboard Mapping:";
+            this.RightSettings.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.RightSettings.Controls.Add(this.yawrightRtext);
+            this.RightSettings.Controls.Add(this.yawleftRtext);
+            this.RightSettings.Controls.Add(this.rollrightRtext);
+            this.RightSettings.Controls.Add(this.rollleftRtext);
+            this.RightSettings.Controls.Add(this.pitchdownRtext);
+            this.RightSettings.Controls.Add(this.pitchupRtext);
+            this.RightSettings.Controls.Add(this.touch4Rtext);
+            this.RightSettings.Controls.Add(this.touch3Rtext);
+            this.RightSettings.Controls.Add(this.touch2Rtext);
+            this.RightSettings.Controls.Add(this.touch1Rtext);
+            this.RightSettings.Controls.Add(this.flex4Rtext);
+            this.RightSettings.Controls.Add(this.flex3Rtext);
+            this.RightSettings.Controls.Add(this.flex2Rtext);
+            this.RightSettings.Controls.Add(this.flex1Rtext);
+            this.RightSettings.Controls.Add(this.rawrightlabelR);
+            this.RightSettings.Controls.Add(this.yawleftlabelR);
+            this.RightSettings.Controls.Add(this.rollrightlabelR);
+            this.RightSettings.Controls.Add(this.rollleftlabelR);
+            this.RightSettings.Controls.Add(this.label2);
+            this.RightSettings.Controls.Add(this.label1);
+            this.RightSettings.Controls.Add(this.pitchuplabelR);
+            this.RightSettings.Controls.Add(this.touch4labelR);
+            this.RightSettings.Controls.Add(this.touch3labelR);
+            this.RightSettings.Controls.Add(this.touch2labelR);
+            this.RightSettings.Controls.Add(this.label14);
+            this.RightSettings.Controls.Add(this.flex4labelR);
+            this.RightSettings.Controls.Add(this.flex3labelR);
+            this.RightSettings.Controls.Add(this.flex2labelR);
+            this.RightSettings.Controls.Add(this.flex1labelR);
+            this.RightSettings.Controls.Add(this.RightMappingHeader);
+            this.RightSettings.Controls.Add(this.RightGestureHeading);
+            this.RightSettings.Location = new System.Drawing.Point(4, 25);
+            this.RightSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RightSettings.Name = "RightSettings";
+            this.RightSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RightSettings.Size = new System.Drawing.Size(367, 504);
+            this.RightSettings.TabIndex = 1;
+            this.RightSettings.Text = "Right Glove";
+            this.RightSettings.Click += new System.EventHandler(this.tabPage2_Click);
+            // 
+            // yawrightRtext
+            // 
+            this.yawrightRtext.Location = new System.Drawing.Point(175, 459);
+            this.yawrightRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.yawrightRtext.Name = "yawrightRtext";
+            this.yawrightRtext.Size = new System.Drawing.Size(180, 22);
+            this.yawrightRtext.TabIndex = 40;
+            // 
+            // yawleftRtext
+            // 
+            this.yawleftRtext.Location = new System.Drawing.Point(175, 426);
+            this.yawleftRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.yawleftRtext.Name = "yawleftRtext";
+            this.yawleftRtext.Size = new System.Drawing.Size(180, 22);
+            this.yawleftRtext.TabIndex = 39;
+            // 
+            // rollrightRtext
+            // 
+            this.rollrightRtext.Location = new System.Drawing.Point(175, 393);
+            this.rollrightRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rollrightRtext.Name = "rollrightRtext";
+            this.rollrightRtext.Size = new System.Drawing.Size(180, 22);
+            this.rollrightRtext.TabIndex = 38;
+            // 
+            // rollleftRtext
+            // 
+            this.rollleftRtext.Location = new System.Drawing.Point(175, 359);
+            this.rollleftRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rollleftRtext.Name = "rollleftRtext";
+            this.rollleftRtext.Size = new System.Drawing.Size(180, 22);
+            this.rollleftRtext.TabIndex = 37;
+            // 
+            // pitchdownRtext
+            // 
+            this.pitchdownRtext.Location = new System.Drawing.Point(175, 326);
+            this.pitchdownRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pitchdownRtext.Name = "pitchdownRtext";
+            this.pitchdownRtext.Size = new System.Drawing.Size(180, 22);
+            this.pitchdownRtext.TabIndex = 36;
+            // 
+            // pitchupRtext
+            // 
+            this.pitchupRtext.Location = new System.Drawing.Point(175, 293);
+            this.pitchupRtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pitchupRtext.Name = "pitchupRtext";
+            this.pitchupRtext.Size = new System.Drawing.Size(180, 22);
+            this.pitchupRtext.TabIndex = 35;
+            // 
+            // touch4Rtext
+            // 
+            this.touch4Rtext.Location = new System.Drawing.Point(175, 260);
+            this.touch4Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch4Rtext.Name = "touch4Rtext";
+            this.touch4Rtext.Size = new System.Drawing.Size(180, 22);
+            this.touch4Rtext.TabIndex = 34;
+            // 
+            // touch3Rtext
+            // 
+            this.touch3Rtext.Location = new System.Drawing.Point(175, 226);
+            this.touch3Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch3Rtext.Name = "touch3Rtext";
+            this.touch3Rtext.Size = new System.Drawing.Size(180, 22);
+            this.touch3Rtext.TabIndex = 33;
+            // 
+            // touch2Rtext
+            // 
+            this.touch2Rtext.Location = new System.Drawing.Point(175, 193);
+            this.touch2Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch2Rtext.Name = "touch2Rtext";
+            this.touch2Rtext.Size = new System.Drawing.Size(180, 22);
+            this.touch2Rtext.TabIndex = 32;
+            // 
+            // touch1Rtext
+            // 
+            this.touch1Rtext.Location = new System.Drawing.Point(175, 160);
+            this.touch1Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.touch1Rtext.Name = "touch1Rtext";
+            this.touch1Rtext.Size = new System.Drawing.Size(180, 22);
+            this.touch1Rtext.TabIndex = 31;
+            // 
+            // flex4Rtext
+            // 
+            this.flex4Rtext.Location = new System.Drawing.Point(175, 127);
+            this.flex4Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex4Rtext.Name = "flex4Rtext";
+            this.flex4Rtext.Size = new System.Drawing.Size(180, 22);
+            this.flex4Rtext.TabIndex = 30;
+            // 
+            // flex3Rtext
+            // 
+            this.flex3Rtext.Location = new System.Drawing.Point(175, 94);
+            this.flex3Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex3Rtext.Name = "flex3Rtext";
+            this.flex3Rtext.Size = new System.Drawing.Size(180, 22);
+            this.flex3Rtext.TabIndex = 29;
+            // 
+            // flex2Rtext
+            // 
+            this.flex2Rtext.Location = new System.Drawing.Point(175, 60);
+            this.flex2Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex2Rtext.Name = "flex2Rtext";
+            this.flex2Rtext.Size = new System.Drawing.Size(180, 22);
+            this.flex2Rtext.TabIndex = 28;
+            // 
+            // flex1Rtext
+            // 
+            this.flex1Rtext.Location = new System.Drawing.Point(175, 27);
+            this.flex1Rtext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flex1Rtext.Name = "flex1Rtext";
+            this.flex1Rtext.Size = new System.Drawing.Size(180, 22);
+            this.flex1Rtext.TabIndex = 27;
+            this.flex1Rtext.TextChanged += new System.EventHandler(this.flex1Rtext_TextChanged);
+            // 
+            // rawrightlabelR
+            // 
+            this.rawrightlabelR.AutoSize = true;
+            this.rawrightlabelR.Location = new System.Drawing.Point(8, 463);
+            this.rawrightlabelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rawrightlabelR.Name = "rawrightlabelR";
+            this.rawrightlabelR.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.rawrightlabelR.Size = new System.Drawing.Size(82, 17);
+            this.rawrightlabelR.TabIndex = 25;
+            this.rawrightlabelR.Text = "YAWRIGHT";
+            // 
+            // yawleftlabelR
+            // 
+            this.yawleftlabelR.AutoSize = true;
+            this.yawleftlabelR.Location = new System.Drawing.Point(8, 430);
+            this.yawleftlabelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.yawleftlabelR.Name = "yawleftlabelR";
+            this.yawleftlabelR.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.yawleftlabelR.Size = new System.Drawing.Size(73, 17);
+            this.yawleftlabelR.TabIndex = 24;
+            this.yawleftlabelR.Text = "YAWLEFT";
+            // 
+            // rollrightlabelR
+            // 
+            this.rollrightlabelR.AutoSize = true;
+            this.rollrightlabelR.Location = new System.Drawing.Point(8, 396);
+            this.rollrightlabelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rollrightlabelR.Name = "rollrightlabelR";
+            this.rollrightlabelR.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.rollrightlabelR.Size = new System.Drawing.Size(88, 17);
+            this.rollrightlabelR.TabIndex = 23;
+            this.rollrightlabelR.Text = "ROLLRIGHT";
+            // 
+            // rollleftlabelR
+            // 
+            this.rollleftlabelR.AutoSize = true;
+            this.rollleftlabelR.Location = new System.Drawing.Point(8, 363);
+            this.rollleftlabelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rollleftlabelR.Name = "rollleftlabelR";
+            this.rollleftlabelR.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.rollleftlabelR.Size = new System.Drawing.Size(79, 17);
+            this.rollleftlabelR.TabIndex = 22;
+            this.rollleftlabelR.Text = "ROLLLEFT";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 330);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label2.Size = new System.Drawing.Size(92, 17);
+            this.label2.TabIndex = 21;
+            this.label2.Text = "PITCHDOWN";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 334);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label1.Size = new System.Drawing.Size(0, 17);
+            this.label1.TabIndex = 20;
+            this.label1.Click += new System.EventHandler(this.label1_Click_1);
+            // 
+            // pitchuplabelR
+            // 
+            this.pitchuplabelR.AutoSize = true;
+            this.pitchuplabelR.Location = new System.Drawing.Point(8, 297);
+            this.pitchuplabelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.pitchuplabelR.Name = "pitchuplabelR";
+            this.pitchuplabelR.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.pitchuplabelR.Size = new System.Drawing.Size(67, 17);
+            this.pitchuplabelR.TabIndex = 19;
+            this.pitchuplabelR.Text = "PITCHUP";
+            // 
+            // touch4labelR
+            // 
+            this.touch4labelR.AutoSize = true;
+            this.touch4labelR.Location = new System.Drawing.Point(8, 263);
+            this.touch4labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch4labelR.Name = "touch4labelR";
+            this.touch4labelR.Size = new System.Drawing.Size(65, 17);
+            this.touch4labelR.TabIndex = 18;
+            this.touch4labelR.Text = "TOUCH4";
+            // 
+            // touch3labelR
+            // 
+            this.touch3labelR.AutoSize = true;
+            this.touch3labelR.Location = new System.Drawing.Point(8, 230);
+            this.touch3labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch3labelR.Name = "touch3labelR";
+            this.touch3labelR.Size = new System.Drawing.Size(65, 17);
+            this.touch3labelR.TabIndex = 17;
+            this.touch3labelR.Text = "TOUCH3";
+            // 
+            // touch2labelR
+            // 
+            this.touch2labelR.AutoSize = true;
+            this.touch2labelR.Location = new System.Drawing.Point(8, 197);
+            this.touch2labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.touch2labelR.Name = "touch2labelR";
+            this.touch2labelR.Size = new System.Drawing.Size(65, 17);
+            this.touch2labelR.TabIndex = 16;
+            this.touch2labelR.Text = "TOUCH2";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 164);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(65, 17);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "TOUCH1";
+            // 
+            // flex4labelR
+            // 
+            this.flex4labelR.AutoSize = true;
+            this.flex4labelR.Location = new System.Drawing.Point(8, 130);
+            this.flex4labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex4labelR.Name = "flex4labelR";
+            this.flex4labelR.Size = new System.Drawing.Size(50, 17);
+            this.flex4labelR.TabIndex = 14;
+            this.flex4labelR.Text = "FLEX4";
+            // 
+            // flex3labelR
+            // 
+            this.flex3labelR.AutoSize = true;
+            this.flex3labelR.Location = new System.Drawing.Point(8, 97);
+            this.flex3labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex3labelR.Name = "flex3labelR";
+            this.flex3labelR.Size = new System.Drawing.Size(50, 17);
+            this.flex3labelR.TabIndex = 13;
+            this.flex3labelR.Text = "FLEX3";
+            // 
+            // flex2labelR
+            // 
+            this.flex2labelR.AutoSize = true;
+            this.flex2labelR.Location = new System.Drawing.Point(8, 64);
+            this.flex2labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex2labelR.Name = "flex2labelR";
+            this.flex2labelR.Size = new System.Drawing.Size(50, 17);
+            this.flex2labelR.TabIndex = 12;
+            this.flex2labelR.Text = "FLEX2";
+            // 
+            // flex1labelR
+            // 
+            this.flex1labelR.AutoSize = true;
+            this.flex1labelR.Location = new System.Drawing.Point(8, 31);
+            this.flex1labelR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.flex1labelR.Name = "flex1labelR";
+            this.flex1labelR.Size = new System.Drawing.Size(50, 17);
+            this.flex1labelR.TabIndex = 11;
+            this.flex1labelR.Text = "FLEX1";
+            this.flex1labelR.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // RightMappingHeader
+            // 
+            this.RightMappingHeader.AutoSize = true;
+            this.RightMappingHeader.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RightMappingHeader.Location = new System.Drawing.Point(171, 4);
+            this.RightMappingHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.RightMappingHeader.Name = "RightMappingHeader";
+            this.RightMappingHeader.Size = new System.Drawing.Size(162, 19);
+            this.RightMappingHeader.TabIndex = 1;
+            this.RightMappingHeader.Text = "Keyboard Mapping:";
             // 
             // RightGestureHeading
             // 
             this.RightGestureHeading.AutoSize = true;
             this.RightGestureHeading.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RightGestureHeading.LinkColor = System.Drawing.Color.Black;
-            this.RightGestureHeading.Location = new System.Drawing.Point(6, 3);
+            this.RightGestureHeading.Location = new System.Drawing.Point(8, 4);
+            this.RightGestureHeading.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.RightGestureHeading.Name = "RightGestureHeading";
-            this.RightGestureHeading.Size = new System.Drawing.Size(69, 16);
+            this.RightGestureHeading.Size = new System.Drawing.Size(78, 19);
             this.RightGestureHeading.TabIndex = 0;
             this.RightGestureHeading.TabStop = true;
             this.RightGestureHeading.Text = "Gesture:";
             // 
-            // RightMappingHeader
-            // 
-            this.RightMappingHeader.AutoSize = true;
-            this.RightMappingHeader.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RightMappingHeader.Location = new System.Drawing.Point(128, 3);
-            this.RightMappingHeader.Name = "RightMappingHeader";
-            this.RightMappingHeader.Size = new System.Drawing.Size(144, 16);
-            this.RightMappingHeader.TabIndex = 1;
-            this.RightMappingHeader.Text = "Keyboard Mapping:";
-            // 
-            // LeftWristMotionInput
-            // 
-            this.LeftWristMotionInput.FormattingEnabled = true;
-            this.LeftWristMotionInput.Location = new System.Drawing.Point(131, 22);
-            this.LeftWristMotionInput.Name = "LeftWristMotionInput";
-            this.LeftWristMotionInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftWristMotionInput.TabIndex = 2;
-            // 
-            // LeftPointerTouchInput
-            // 
-            this.LeftPointerTouchInput.FormattingEnabled = true;
-            this.LeftPointerTouchInput.Location = new System.Drawing.Point(131, 49);
-            this.LeftPointerTouchInput.Name = "LeftPointerTouchInput";
-            this.LeftPointerTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftPointerTouchInput.TabIndex = 3;
-            // 
-            // LeftMiddleTouchInput
-            // 
-            this.LeftMiddleTouchInput.FormattingEnabled = true;
-            this.LeftMiddleTouchInput.Location = new System.Drawing.Point(131, 76);
-            this.LeftMiddleTouchInput.Name = "LeftMiddleTouchInput";
-            this.LeftMiddleTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftMiddleTouchInput.TabIndex = 4;
-            // 
-            // LeftRingTouchInput
-            // 
-            this.LeftRingTouchInput.FormattingEnabled = true;
-            this.LeftRingTouchInput.Location = new System.Drawing.Point(131, 103);
-            this.LeftRingTouchInput.Name = "LeftRingTouchInput";
-            this.LeftRingTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftRingTouchInput.TabIndex = 5;
-            // 
-            // LeftPinkyTouchInput
-            // 
-            this.LeftPinkyTouchInput.FormattingEnabled = true;
-            this.LeftPinkyTouchInput.Location = new System.Drawing.Point(131, 130);
-            this.LeftPinkyTouchInput.Name = "LeftPinkyTouchInput";
-            this.LeftPinkyTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftPinkyTouchInput.TabIndex = 6;
-            // 
-            // LeftPointerBendInput
-            // 
-            this.LeftPointerBendInput.FormattingEnabled = true;
-            this.LeftPointerBendInput.Location = new System.Drawing.Point(131, 157);
-            this.LeftPointerBendInput.Name = "LeftPointerBendInput";
-            this.LeftPointerBendInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftPointerBendInput.TabIndex = 7;
-            // 
-            // LeftMiddleBendInput
-            // 
-            this.LeftMiddleBendInput.FormattingEnabled = true;
-            this.LeftMiddleBendInput.Location = new System.Drawing.Point(131, 184);
-            this.LeftMiddleBendInput.Name = "LeftMiddleBendInput";
-            this.LeftMiddleBendInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftMiddleBendInput.TabIndex = 8;
-            // 
-            // LeftRingBendInput
-            // 
-            this.LeftRingBendInput.FormattingEnabled = true;
-            this.LeftRingBendInput.Location = new System.Drawing.Point(131, 211);
-            this.LeftRingBendInput.Name = "LeftRingBendInput";
-            this.LeftRingBendInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftRingBendInput.TabIndex = 9;
-            // 
-            // LeftPinkyBendInput
-            // 
-            this.LeftPinkyBendInput.FormattingEnabled = true;
-            this.LeftPinkyBendInput.Location = new System.Drawing.Point(131, 238);
-            this.LeftPinkyBendInput.Name = "LeftPinkyBendInput";
-            this.LeftPinkyBendInput.Size = new System.Drawing.Size(121, 21);
-            this.LeftPinkyBendInput.TabIndex = 10;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 25);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Wrist Motion:";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 52);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 13);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Pointer Touch:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 79);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Middle Touch:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 106);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Ring Touch:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 133);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(70, 13);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Pinky Touch:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 160);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 13);
-            this.label7.TabIndex = 16;
-            this.label7.Text = "Pointer Bend:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 187);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(69, 13);
-            this.label8.TabIndex = 17;
-            this.label8.Text = "Middle Bend:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 214);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(60, 13);
-            this.label9.TabIndex = 18;
-            this.label9.Text = "Ring Bend:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 241);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 13);
-            this.label10.TabIndex = 19;
-            this.label10.Text = "Pinky Bend:";
-            // 
-            // RightWristMotionInput
-            // 
-            this.RightWristMotionInput.FormattingEnabled = true;
-            this.RightWristMotionInput.Location = new System.Drawing.Point(131, 22);
-            this.RightWristMotionInput.Name = "RightWristMotionInput";
-            this.RightWristMotionInput.Size = new System.Drawing.Size(121, 21);
-            this.RightWristMotionInput.TabIndex = 2;
-            // 
-            // RightPointerTouchInput
-            // 
-            this.RightPointerTouchInput.FormattingEnabled = true;
-            this.RightPointerTouchInput.Location = new System.Drawing.Point(131, 49);
-            this.RightPointerTouchInput.Name = "RightPointerTouchInput";
-            this.RightPointerTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.RightPointerTouchInput.TabIndex = 3;
-            // 
-            // RightMiddleTouchInput
-            // 
-            this.RightMiddleTouchInput.FormattingEnabled = true;
-            this.RightMiddleTouchInput.Location = new System.Drawing.Point(131, 76);
-            this.RightMiddleTouchInput.Name = "RightMiddleTouchInput";
-            this.RightMiddleTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.RightMiddleTouchInput.TabIndex = 4;
-            // 
-            // RightRingTouchInput
-            // 
-            this.RightRingTouchInput.FormattingEnabled = true;
-            this.RightRingTouchInput.Location = new System.Drawing.Point(131, 103);
-            this.RightRingTouchInput.Name = "RightRingTouchInput";
-            this.RightRingTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.RightRingTouchInput.TabIndex = 5;
-            // 
-            // RightPinkyTouchInput
-            // 
-            this.RightPinkyTouchInput.FormattingEnabled = true;
-            this.RightPinkyTouchInput.Location = new System.Drawing.Point(131, 130);
-            this.RightPinkyTouchInput.Name = "RightPinkyTouchInput";
-            this.RightPinkyTouchInput.Size = new System.Drawing.Size(121, 21);
-            this.RightPinkyTouchInput.TabIndex = 6;
-            // 
-            // RightPointerBendInput
-            // 
-            this.RightPointerBendInput.FormattingEnabled = true;
-            this.RightPointerBendInput.Location = new System.Drawing.Point(131, 157);
-            this.RightPointerBendInput.Name = "RightPointerBendInput";
-            this.RightPointerBendInput.Size = new System.Drawing.Size(121, 21);
-            this.RightPointerBendInput.TabIndex = 7;
-            // 
-            // RightMiddleBendInput
-            // 
-            this.RightMiddleBendInput.FormattingEnabled = true;
-            this.RightMiddleBendInput.Location = new System.Drawing.Point(131, 184);
-            this.RightMiddleBendInput.Name = "RightMiddleBendInput";
-            this.RightMiddleBendInput.Size = new System.Drawing.Size(121, 21);
-            this.RightMiddleBendInput.TabIndex = 8;
-            // 
-            // RightRingBendInput
-            // 
-            this.RightRingBendInput.FormattingEnabled = true;
-            this.RightRingBendInput.Location = new System.Drawing.Point(131, 211);
-            this.RightRingBendInput.Name = "RightRingBendInput";
-            this.RightRingBendInput.Size = new System.Drawing.Size(121, 21);
-            this.RightRingBendInput.TabIndex = 9;
-            // 
-            // RightPinkyBendInput
-            // 
-            this.RightPinkyBendInput.FormattingEnabled = true;
-            this.RightPinkyBendInput.Location = new System.Drawing.Point(131, 238);
-            this.RightPinkyBendInput.Name = "RightPinkyBendInput";
-            this.RightPinkyBendInput.Size = new System.Drawing.Size(121, 21);
-            this.RightPinkyBendInput.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 25);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Wrist Motion:";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 52);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(77, 13);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "Pointer Touch:";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 79);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(75, 13);
-            this.label12.TabIndex = 13;
-            this.label12.Text = "Middle Touch:";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 106);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(66, 13);
-            this.label13.TabIndex = 14;
-            this.label13.Text = "Ring Touch:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 133);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(70, 13);
-            this.label14.TabIndex = 15;
-            this.label14.Text = "Pinky Touch:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 160);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(71, 13);
-            this.label15.TabIndex = 16;
-            this.label15.Text = "Pointer Bend:";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 187);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(69, 13);
-            this.label16.TabIndex = 17;
-            this.label16.Text = "Middle Bend:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 214);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(60, 13);
-            this.label17.TabIndex = 18;
-            this.label17.Text = "Ring Bend:";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 241);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(64, 13);
-            this.label18.TabIndex = 19;
-            this.label18.Text = "Pinky Bend:";
+            // comPortLabel
+            // 
+            this.comPortLabel.AutoSize = true;
+            this.comPortLabel.Location = new System.Drawing.Point(12, 9);
+            this.comPortLabel.Name = "comPortLabel";
+            this.comPortLabel.Size = new System.Drawing.Size(70, 17);
+            this.comPortLabel.TabIndex = 7;
+            this.comPortLabel.Text = "Com Port:";
+            // 
+            // comPortDropDown
+            // 
+            this.comPortDropDown.FormattingEnabled = true;
+            this.comPortDropDown.Location = new System.Drawing.Point(88, 6);
+            this.comPortDropDown.Name = "comPortDropDown";
+            this.comPortDropDown.Size = new System.Drawing.Size(121, 24);
+            this.comPortDropDown.TabIndex = 8;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(305, 372);
+            this.ClientSize = new System.Drawing.Size(407, 613);
+            this.Controls.Add(this.comPortDropDown);
+            this.Controls.Add(this.comPortLabel);
             this.Controls.Add(this.Tabs);
-            this.Controls.Add(this.DisconnectButton);
-            this.Controls.Add(this.ConnectButton);
             this.Controls.Add(this.ApplyButton);
-            this.Controls.Add(this.OkButton);
-            this.Controls.Add(this.CancelButton);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Glove Configuration";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -573,16 +817,12 @@
             this.RightSettings.ResumeLayout(false);
             this.RightSettings.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.Button ApplyButton;
-        private System.Windows.Forms.Button ConnectButton;
-        private System.Windows.Forms.Button DisconnectButton;
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.TabPage LeftSettings;
         private System.Windows.Forms.TabPage RightSettings;
@@ -590,42 +830,65 @@
         private System.Windows.Forms.LinkLabel LeftGestureHeader;
         private System.Windows.Forms.Label RightMappingHeader;
         private System.Windows.Forms.LinkLabel RightGestureHeading;
-        private System.Windows.Forms.ComboBox LeftPinkyBendInput;
-        private System.Windows.Forms.ComboBox LeftRingBendInput;
-        private System.Windows.Forms.ComboBox LeftMiddleBendInput;
-        private System.Windows.Forms.ComboBox LeftPointerBendInput;
-        private System.Windows.Forms.ComboBox LeftPinkyTouchInput;
-        private System.Windows.Forms.ComboBox LeftRingTouchInput;
-        private System.Windows.Forms.ComboBox LeftMiddleTouchInput;
-        private System.Windows.Forms.ComboBox LeftPointerTouchInput;
-        private System.Windows.Forms.ComboBox LeftWristMotionInput;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label pitchuplabelL;
+        private System.Windows.Forms.Label touch4labelL;
+        private System.Windows.Forms.Label touch3labelL;
+        private System.Windows.Forms.Label touch2labelL;
+        private System.Windows.Forms.Label touch1labelL;
+        private System.Windows.Forms.Label flex4labelL;
+        private System.Windows.Forms.Label flex3labelL;
+        private System.Windows.Forms.Label flex2labelL;
+        private System.Windows.Forms.Label pitchuplabelR;
+        private System.Windows.Forms.Label touch4labelR;
+        private System.Windows.Forms.Label touch3labelR;
+        private System.Windows.Forms.Label touch2labelR;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label flex4labelR;
+        private System.Windows.Forms.Label flex3labelR;
+        private System.Windows.Forms.Label flex2labelR;
+        private System.Windows.Forms.Label flex1labelR;
+        private System.Windows.Forms.Label flex1LabelL;
+        private System.Windows.Forms.Label pitchdownlabelL;
+        private System.Windows.Forms.TextBox yawrightLtext;
+        private System.Windows.Forms.TextBox yawleftLtext;
+        private System.Windows.Forms.TextBox rollrightLtext;
+        private System.Windows.Forms.TextBox rollleftLtext;
+        private System.Windows.Forms.TextBox pitchdownLtext;
+        private System.Windows.Forms.TextBox pitchupLtext;
+        private System.Windows.Forms.TextBox touch4Ltext;
+        private System.Windows.Forms.TextBox touch3Ltext;
+        private System.Windows.Forms.TextBox touch2Ltext;
+        private System.Windows.Forms.TextBox touch1Ltext;
+        private System.Windows.Forms.TextBox flex4Ltext;
+        private System.Windows.Forms.TextBox flex3Ltext;
+        private System.Windows.Forms.TextBox flex2Ltext;
+        private System.Windows.Forms.TextBox flex1Ltext;
+        private System.Windows.Forms.Label yawrightlabelL;
+        private System.Windows.Forms.Label yawleftlabelL;
+        private System.Windows.Forms.Label rolllrightlabelL;
+        private System.Windows.Forms.Label rollleftlabelL;
+        private System.Windows.Forms.Label yawleftlabelR;
+        private System.Windows.Forms.Label rollrightlabelR;
+        private System.Windows.Forms.Label rollleftlabelR;
+        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox RightPinkyBendInput;
-        private System.Windows.Forms.ComboBox RightRingBendInput;
-        private System.Windows.Forms.ComboBox RightMiddleBendInput;
-        private System.Windows.Forms.ComboBox RightPointerBendInput;
-        private System.Windows.Forms.ComboBox RightPinkyTouchInput;
-        private System.Windows.Forms.ComboBox RightRingTouchInput;
-        private System.Windows.Forms.ComboBox RightMiddleTouchInput;
-        private System.Windows.Forms.ComboBox RightPointerTouchInput;
-        private System.Windows.Forms.ComboBox RightWristMotionInput;
+        private System.Windows.Forms.Label rawrightlabelR;
+        private System.Windows.Forms.TextBox yawrightRtext;
+        private System.Windows.Forms.TextBox yawleftRtext;
+        private System.Windows.Forms.TextBox rollrightRtext;
+        private System.Windows.Forms.TextBox rollleftRtext;
+        private System.Windows.Forms.TextBox pitchdownRtext;
+        private System.Windows.Forms.TextBox pitchupRtext;
+        private System.Windows.Forms.TextBox touch4Rtext;
+        private System.Windows.Forms.TextBox touch3Rtext;
+        private System.Windows.Forms.TextBox touch2Rtext;
+        private System.Windows.Forms.TextBox touch1Rtext;
+        private System.Windows.Forms.TextBox flex4Rtext;
+        private System.Windows.Forms.TextBox flex3Rtext;
+        private System.Windows.Forms.TextBox flex2Rtext;
+        private System.Windows.Forms.TextBox flex1Rtext;
+        private System.Windows.Forms.Label comPortLabel;
+        private System.Windows.Forms.ComboBox comPortDropDown;
     }
 }
 
