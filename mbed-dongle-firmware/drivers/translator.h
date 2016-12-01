@@ -123,9 +123,9 @@ private:
     touchToHID* touch_sensorsL[TOUCH_COUNT];
 
     /* Right Glove Analog Buttons */
-    flexToHID* flex_sensorsR[FLEX_COUNT];
-    imuToHID* imu_axisR[IMU_COUNT];
-    touchToHID* touch_sensorsR[TOUCH_COUNT];
+    //flexToHID* flex_sensorsR[FLEX_COUNT];
+    //imuToHID* imu_axisR[IMU_COUNT];
+    //touchToHID* touch_sensorsR[TOUCH_COUNT];
 
     /* KeyboardMouse Object */
     KeyboardMouse* HIDinput;
