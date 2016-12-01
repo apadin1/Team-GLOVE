@@ -24,7 +24,7 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
     compressed->f2 = raw->flex_sensors[2];
     compressed->f3 = raw->flex_sensors[3];
 
-    ompressed->t = raw->touch_sensor.pack();
+    compressed->t = raw->touch_sensor.pack();
 
     compressed->r = raw->imu.orient_roll;
     compressed->p = raw->imu.orient_pitch;
