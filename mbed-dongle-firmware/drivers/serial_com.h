@@ -42,7 +42,7 @@ void Rx_interrupt() {
     led1 = false;
 
     // STOP BLE SCANNING
-    //getScanner()->stopScan();
+    getScanner()->stopScan();
 
     // Read in data
     int len = 0;
@@ -51,11 +51,12 @@ void Rx_interrupt() {
     }
 
     // Configure the translator
-    //getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
-    rx_buffer[MAX_LEN] = 0;
-    SEND(rx_buffer);
-    
+    getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
+
     led1 = true;
+
+    // START BLE SCANNING
+    getScanner()->startScan();
 }
 
 // MAIN

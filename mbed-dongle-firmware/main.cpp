@@ -55,6 +55,6 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    //launch();
-    uart_test();
+    launch();
+    //uart_test();
 }
