@@ -43,8 +43,6 @@ void launch() {
 }
 */
 
-extern void keyboard_mouse_demo(void);
-
 int main() {
 
     /*
