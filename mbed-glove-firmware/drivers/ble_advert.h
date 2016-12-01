@@ -23,10 +23,22 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
+#include "crc.h"
+
 static const uint16_t ADVERT_ID = 0xBABE;
 static const uint8_t PAYLOAD_DATA_LENGTH = 19;
-//static const uint8_t PAYLOAD_CRC_LENGTH = 2;
-static const uint8_t PAYLOAD_LENGTH = 21;// 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH;
+static const uint8_t PAYLOAD_CRC_LENGTH = 2;
+static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH; // 23
+
+/*
+ * Structure of advertising packet data:
+ *
+ * 00 - ADVERT_ID MSB
+ * 01 - ADVERT_ID LSB
+ * 02-19 - glove_sensors_compressed_t
+ * 21 - CRC MSB
+ * 22 - CRC LSB
+ */
 
 class AdvertBLE {
 public:
@@ -49,6 +61,7 @@ private:
     BLE ble;
     GapAdvertisingData adv;
     uint8_t adv_payload[PAYLOAD_LENGTH];
+    uint16_t crc_result;
 };
 
 #endif /* BLE_ADVERT_H_ */
