@@ -40,7 +40,7 @@ static Scanner * getScanner(void * new_ptr=NULL) {
 // Interupt to read data from serial port
 void Rx_interrupt() {
     led1 = false;
-    
+
     // STOP BLE SCANNING
     //getScanner()->stopScan();
 
