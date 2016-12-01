@@ -60,9 +60,6 @@ static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *para
     else if (id == RIGHT_GLOVE_ID) {
         right_glove();
     }
-    else if (id == HID_CONFIG_ID) {
-        hid_config();
-    }
 }
 
 /************************* SCANNER CLASS ********************/
