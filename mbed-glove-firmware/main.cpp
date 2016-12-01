@@ -56,5 +56,6 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //launch();
-    ble_scan_test();
+    //ble_scan_test();
+    uart_test();
 }

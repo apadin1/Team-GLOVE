@@ -16,14 +16,20 @@ static InterruptIn button1(BUTTON1);
 
 // Interupt to read data from serial port
 void Rx_interrupt() {
-    led1 = false;
+    //led1 = false;
     int len = 0;
-    while (pc.readable() && len < MAX_LEN) {
+    while (len < MAX_LEN) {
         rx_buffer[len++] = pc.getc();
     }
     rx_buffer[len] = 0;
-    SEND(rx_buffer);
-    led1 = true;
+
+    if (rx_buffer[0] == '1') led1 = !led1;
+    if (rx_buffer[0] == '2') led2 = !led2;
+    if (rx_buffer[0] == '3') led3 = !led3;
+    if (rx_buffer[0] == '4') led4 = !led4;
+
+    //SEND(rx_buffer);
+    //led1 = true;
 }
 
 // MAIN
