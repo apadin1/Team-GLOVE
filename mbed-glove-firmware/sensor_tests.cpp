@@ -21,6 +21,32 @@ static DigitalOut l2(LED2);
 static DigitalOut l3(LED3);
 static DigitalOut l4(LED4);
 
+void touch_to_lights() {
+    key_states_t keys;
+    DigitalOut led1(P0_15);
+    DigitalOut led2(P0_14);
+    DigitalOut led3(P0_13);
+    DigitalOut led4(P0_12);
+    I2C i2c(I2C_SDA0, I2C_SCL0); 
+    TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
+    for (;;) {
+        touch_sensor.updateAndWrite(&keys);
+        if (keys.a == 1) 
+            led1 = 0;
+        else led1 = 1;
+        if (keys.b == 1) 
+            led2 = 0;
+        else led2 = 1;
+        if (keys.c == 1) 
+            led3 = 0;
+        else led3 = 1;
+        if (keys.d == 1) 
+            led4 = 0;
+        else led4 = 1;
+        wait_ms(10);
+    }
+}
+
 void blink() {
     l2 = 1;
     led = 0;
