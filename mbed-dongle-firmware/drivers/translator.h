@@ -50,7 +50,7 @@ enum SENSOR {
     rollright,
     yawleft,
     yawright
-}
+};
 
 enum FLEX {
     FLEX1,
