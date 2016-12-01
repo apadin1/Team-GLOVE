@@ -38,11 +38,11 @@ void Collector::updateAndAdvertise() {
 
     compressGloveSensors(&glove_data, &glove_data_compressed);
 
-    //adble.update((uint8_t*)&glove_data_compressed);
+    adble.update((uint8_t*)&glove_data_compressed);
 
     // because
     //Thread::wait(5);
-    wait_ms(5);
+    wait_ms(3);
 
     touch->terminateUpdateThreadIfBlocking();
 

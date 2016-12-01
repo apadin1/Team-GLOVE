@@ -10,7 +10,6 @@ extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
 extern void advert_test(void);
 
-
 class Blink {
 public:
     Blink(AdvertBLE& _adble)
@@ -22,7 +21,7 @@ public:
     void update() {
         d = 0;
         wait_ms(5);
-        adble.update((uint8_t*)"thisBoy", 8);
+        adble.update((uint8_t*)&data, 19);
         d = 1;
     }
 
@@ -34,6 +33,7 @@ private:
     DigitalOut d;
     RtosTimer* update_task_timer;
     AdvertBLE& adble;
+    glove_sensors_compressed_t data;
 };
 
 void launch() {
@@ -46,19 +46,18 @@ void launch() {
     l3 = 1;
     l4 = 1;
 
-    //I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
-    //IMU_BNO055 imu(i2c);
-    //TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
-    //FlexSensors flex_sensors;
+    I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
+    IMU_BNO055 imu(i2c);
+    TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
+    FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
     AdvertBLE adble(100);
 
-    //Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
-    //collector.startUpdateTask(30);
+    Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
+    collector.startUpdateTask(20);
 
-    Blink blk(adble);
-    blk.startUpdateTask();
+    //Blink blk(adble); blk.startUpdateTask();
     l1 = 0;
 
     //glove_sensors_raw_t glove_data;

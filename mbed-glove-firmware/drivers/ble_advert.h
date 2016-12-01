@@ -23,11 +23,10 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-static const uint16_t ADVERT_ID = 0x0202; // 0xFACE
-static const uint8_t PAYLOAD_DATA_LENGTH = 8; //  19;
+static const uint16_t ADVERT_ID = 0xBABE;
+static const uint8_t PAYLOAD_DATA_LENGTH = 19;
 //static const uint8_t PAYLOAD_CRC_LENGTH = 2;
-static const uint8_t PAYLOAD_LENGTH = 10;// 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH;
-static const uint8_t adv_payload[] = {0x03, 0x06, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+static const uint8_t PAYLOAD_LENGTH = 21;// 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH;
 
 class AdvertBLE {
 public:
@@ -49,7 +48,7 @@ public:
 private:
     BLE ble;
     GapAdvertisingData adv;
-    //uint8_t adv_payload[PAYLOAD_LENGTH];
+    uint8_t adv_payload[PAYLOAD_LENGTH];
 };
 
 #endif /* BLE_ADVERT_H_ */
