@@ -29,11 +29,6 @@
 #define TOUCH_COUNT 4
 #define IMU_COUNT 6
 
-/*
- * Default Update Period (in milliseconds)
- */
-const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
-
 enum SENSOR {
     hand,
     flex1,
@@ -103,17 +98,6 @@ public:
      */
     void gestureCheck();
 
-    /*
-     * Calls the start() method on the periodic update task,
-     * an internal timer is set up in the constructor
-     */
-    void startUpdateTask(uint32_t ms=COLLECTOR_UPDATE_PERIOD);
-
-    /*
-     * Calls the stop() method on the periodic update timer,
-     */
-    void stopUpdateTask();
-
 private:
     // NOTE: Arrays indexed by enums
 
@@ -123,9 +107,9 @@ private:
     touchToHID* touch_sensorsL[TOUCH_COUNT];
 
     /* Right Glove Analog Buttons */
-    flexToHID* flex_sensorsR[FLEX_COUNT];
-    imuToHID* imu_axisR[IMU_COUNT];
-    touchToHID* touch_sensorsR[TOUCH_COUNT];
+    //flexToHID* flex_sensorsR[FLEX_COUNT];
+    //imuToHID* imu_axisR[IMU_COUNT];
+    //touchToHID* touch_sensorsR[TOUCH_COUNT];
 
     /* KeyboardMouse Object */
     KeyboardMouse* HIDinput;
@@ -133,10 +117,6 @@ private:
     /* Glove Data */
     glove_sensors_raw_t* glove_dataL;
     glove_sensors_raw_t* glove_dataR;
-
-    /* MBED Objects */
-    RtosTimer* update_task_timer;
-    DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */
