@@ -38,7 +38,7 @@ static getScanner(void * new_ptr=NULL) {
 // Interupt to read data from serial port
 void Rx_interrupt() {
     led1 = false;
-    
+
     // STOP BLE SCANNING
     getScanner()->stopScan();
 
@@ -55,7 +55,7 @@ void Rx_interrupt() {
 }
 
 // MAIN
-void serialInit(Translator * translator) {
+void serialInit(Translator * translator, Scanner * scanner) {
     getTranslator(translator);
     getScanner(scanner);
     pc.attach(&Rx_interrupt, Serial::RxIrq);
