@@ -15,12 +15,9 @@
 
 #include "translator.h"
 
-const PinName TRANSLATOR_DEBUG_PIN = p26;
-
 Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
                        KeyboardMouse* _input)
-    : glove_dataL(_left), glove_dataR(_right), HIDinput(_input),
-      working(TRANSLATOR_DEBUG_PIN) {
+    : glove_dataL(_left), glove_dataR(_right), HIDinput(_input) {
 
     /* Left Glove Setup */
 

@@ -117,10 +117,6 @@ private:
     /* Glove Data */
     glove_sensors_raw_t* glove_dataL;
     glove_sensors_raw_t* glove_dataR;
-
-    /* MBED Objects */
-    RtosTimer* update_task_timer;
-    DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */

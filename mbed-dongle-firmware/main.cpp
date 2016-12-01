@@ -23,6 +23,7 @@ void launch() {
   /* Initialize Translator object */
   Translator translator(&leftGlove, &rightGlove, &input);
   Scanner scanner(&translator);
+  scanner.startUpdateTask(20);
 
   for (;;) {
     rightGlove.touch_sensor.a = 1;
