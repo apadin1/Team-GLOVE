@@ -51,5 +51,25 @@ namespace ConfigApp
         {
 
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flex1Rtext_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flex1Ltext_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
