@@ -178,13 +178,9 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
     imu_axisR[ROLLRIGHT]->change_hid_profile(DISABLED);
     imu_axisR[YAWLEFT]->change_hid_profile(DISABLED);
     imu_axisR[YAWRIGHT]->change_hid_profile(DISABLED);*/
-
-    update_task_timer =
-          new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
 
 void Translator::updateGestureMap(uint8_t* config) {
-  this->stopUpdateTask(); //Stop gestureCheck
 
   /* Left Glove Configuration */
 
@@ -267,8 +263,6 @@ void Translator::updateGestureMap(uint8_t* config) {
       //imu_axisR[i-22]->change_hid_profile(MOUSE, config[i]);
     //}
   //}
-
-  this->startUpdateTask(20); //Resume gestureCheck
 }
 
 void Translator::gestureCheck() {
@@ -626,6 +620,3 @@ void Translator::gestureCheck() {
     //return;
     HIDinput->waitForEvent();
 }
-
-void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }
-void Translator::stopUpdateTask() { update_task_timer->stop(); }
