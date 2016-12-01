@@ -88,7 +88,7 @@ const uint8_t TOUCH_DI = 4;
  *  - only one key in each group can be in detect simultaniously
  *  - group for each key [0..7]
  */
-const uint8_t TOUCH_AKS[] = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
+const uint8_t TOUCH_AKS[] = {0, 1, 2, 3, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
 
 /*
  * Unpacks the _buttonStates byte in AT42QT1070 to
