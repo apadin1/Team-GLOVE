@@ -4,6 +4,6 @@
 
 // MAIN
 void uart_test(void) {
-    serial_com.
+    serialInit((Translator * ) NULL, (Scanner * ) NULL);
     while(1);
 }

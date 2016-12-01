@@ -2,6 +2,8 @@
 #include "drivers/translator.h"
 #include "drivers/scanner.h"
 
+extern void uart_test(void);
+
 void launch() {
   DigitalOut l1(LED1);
   DigitalOut l2(LED2);
@@ -46,5 +48,6 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
+    //launch();
+    uart_test();
 }

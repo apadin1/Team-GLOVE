@@ -4,6 +4,7 @@
 #include "ble/BLE.h"
 
 #include "glove_sensors.h"
+#include "translator.h"
 
 #ifndef SCANNER_H_
 #define SCANNER_H_

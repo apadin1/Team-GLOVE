@@ -4,6 +4,8 @@
 #define SERIAL_COM_H_
 
 #include "mbed.h"
+#include "scanner.h"
+#include "translator.h"
 
 #define SEND(args...) pc.printf(args)
 #define MAX_LEN 28
@@ -16,7 +18,7 @@ static DigitalOut led1(LED1, 1);
 
 /******************** STATIC FUNCTIONS ********************/
 
-static getTranslator(void * new_ptr=NULL) {
+static Translator * getTranslator(void * new_ptr=NULL) {
     static Translator * ptr;
     if (new_ptr != NULL) {
         ptr = (Translator *) new_ptr;
@@ -24,7 +26,7 @@ static getTranslator(void * new_ptr=NULL) {
     return ptr;
 }
 
-static getScanner(void * new_ptr=NULL) {
+static Scanner * getScanner(void * new_ptr=NULL) {
     static Scanner * ptr;
     if (new_ptr != NULL) {
         ptr = (Scanner *) new_ptr;
@@ -40,7 +42,7 @@ void Rx_interrupt() {
     led1 = false;
     
     // STOP BLE SCANNING
-    getScanner()->stopScan();
+    //getScanner()->stopScan();
 
     // Read in data
     int len = 0;
@@ -49,13 +51,15 @@ void Rx_interrupt() {
     }
 
     // Configure the translator
-    getTranslator->updateGestureMap((uint8_t *) rx_buffer);
-
+    //getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
+    rx_buffer[MAX_LEN] = 0;
+    SEND(rx_buffer);
+    
     led1 = true;
 }
 
 // MAIN
-void serialInit(Translator * translator) {
+void serialInit(Translator * translator, Scanner * scanner) {
     getTranslator(translator);
     getScanner(scanner);
     pc.attach(&Rx_interrupt, Serial::RxIrq);
