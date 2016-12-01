@@ -6,8 +6,9 @@ extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
+extern void ble_scan_test(void);
+extern void uart_test(void);
 
-/*
 void launch() {
     DigitalOut l1(LED1);
     DigitalOut l2(LED2);
@@ -39,9 +40,8 @@ void launch() {
         //input.waitForEvent();
         l2 = 1;
     }
-
 }
-*/
+
 
 int main() {
 
@@ -54,6 +54,8 @@ int main() {
     //sensors_to_lights();
     //blink();
     //launch_periodic();
-    keyboard_mouse_demo();
+    //keyboard_mouse_demo();
     //launch();
+    //ble_scan_test();
+    uart_test();
 }

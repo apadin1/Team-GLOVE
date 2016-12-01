@@ -29,6 +29,7 @@ public:
 
     /* Constructor and Destructor*/
     KeyboardMouse();
+    KeyboardMouse(BLE& _ble);
     ~KeyboardMouse();
     
     /******************** MOUSE INTERFACE ********************/
