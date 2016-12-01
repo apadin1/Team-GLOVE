@@ -8,28 +8,32 @@ extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
+extern void advert_test(void);
+
 
 class Blink {
 public:
-    Blink()
-    : d(p14) {
+    Blink(AdvertBLE& _adble)
+    : d(LED4), adble(_adble) {
     update_task_timer =
           new RtosTimer(this, &Blink::update, osTimerPeriodic);
     }
 
     void update() {
-        d = 1;
-        wait_ms(5);
         d = 0;
+        wait_ms(5);
+        adble.update((uint8_t*)"thisBoy", 8);
+        d = 1;
     }
 
     void startUpdateTask() {
-        update_task_timer->start(30);
+        update_task_timer->start(250);
     }
 
 private:
     DigitalOut d;
     RtosTimer* update_task_timer;
+    AdvertBLE& adble;
 };
 
 void launch() {
@@ -37,30 +41,32 @@ void launch() {
     DigitalOut l2(LED2);
     DigitalOut l3(LED3);
     DigitalOut l4(LED4);
-    l1 = 0;
+    l1 = 1;
     l2 = 1;
     l3 = 1;
     l4 = 1;
 
-    I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
-    IMU_BNO055 imu(i2c);
-    TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
-    FlexSensors flex_sensors;
+    //I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
+    //IMU_BNO055 imu(i2c);
+    //TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
+    //FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(50);
+    AdvertBLE adble(100);
 
-    Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
-    collector.startUpdateTask(30);
+    //Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
+    //collector.startUpdateTask(30);
 
-    //Blink blk; blk.startUpdateTask();
+    Blink blk(adble);
+    blk.startUpdateTask();
+    l1 = 0;
 
     //glove_sensors_raw_t glove_data;
 
     for (;;) {
-        l2 = 0;
+        l2 = !l2;
         adble.waitForEvent();
-        l2 = 1;
+        wait_ms(100);
     }
 
     DigitalOut d1(p12);
@@ -94,4 +100,5 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     launch();
+    //advert_test();
 }
