@@ -2,9 +2,7 @@
 #include "drivers/scanner.h"
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
-
-
-extern void uart_test(void);
+#include "uart_test.h"
 
 void launch() {
   DigitalOut l1(LED1);
@@ -55,6 +53,6 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
-    //uart_test();
+    //launch();
+    uart_test();
 }

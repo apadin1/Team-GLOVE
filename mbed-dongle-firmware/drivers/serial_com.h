@@ -7,13 +7,14 @@
 #include "scanner.h"
 #include "translator.h"
 
-#define SEND(args...) pc.printf(args)
-#define MAX_LEN 28
-
 static Serial pc(USBTX, USBRX);
-static char rx_buffer[MAX_LEN];
 
-static DigitalOut led1(LED1, 1);
+#define SEND(args...) pc.printf(args)
+#define CONFIG_LENGTH 28
+
+static char rx_buffer[CONFIG_LENGTH];
+
+static DigitalOut led2(LED2, 1);
 
 
 /******************** STATIC FUNCTIONS ********************/
@@ -26,6 +27,7 @@ static Translator * getTranslator(void * new_ptr=NULL) {
     return ptr;
 }
 
+
 static Scanner * getScanner(void * new_ptr=NULL) {
     static Scanner * ptr;
     if (new_ptr != NULL) {
@@ -35,25 +37,30 @@ static Scanner * getScanner(void * new_ptr=NULL) {
 }
 
 
+void print_config() {
+    for (int i = 0; i < CONFIG_LENGTH; ++i) {
+        printf("%d: %d\r\n", i, rx_buffer[i]);
+    }
+}
+
+
 /******************** INTERRUPT FUNCTIONS ********************/
 
 // Interupt to read data from serial port
 void Rx_interrupt() {
-    led1 = false;
+    static int len = 0;
 
     // STOP BLE SCANNING
     getScanner()->stopScan();
-
+    
     // Read in data
-    int len = 0;
-    while (len < MAX_LEN) {
-        rx_buffer[len++] = pc.getc();
+    while (pc.readable() && (len < CONFIG_LENGTH)) {
+        rx_buffer[len] = pc.getc();
+        len = ((len+1) % CONFIG_LENGTH);
     }
-
+    
     // Configure the translator
-    getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
-
-    led1 = true;
+    //getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
 
     // START BLE SCANNING
     getScanner()->startScan();
@@ -64,7 +71,6 @@ void serialInit(Translator * translator, Scanner * scanner) {
     getTranslator(translator);
     getScanner(scanner);
     pc.attach(&Rx_interrupt, Serial::RxIrq);
-    while(1);
 }
 
 #endif //SERIAL_COM_H_
