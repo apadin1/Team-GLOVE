@@ -1,5 +1,5 @@
 /*
- * Filename:  translator.h
+ * Filename:  collector.h
  * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
@@ -10,30 +10,31 @@
  *     Tim Schumacher
  *
  * Purpose:
- *  Translator to interpret glove data as HID input
+ *  Collect sensor data on the glove, send over ble advertisement
  */
 
-#ifndef TRANSLATOR_H_
-#define TRANSLATOR_H_
-
-#include <vector>
+#ifndef COLLECTOR_H_
+#define COLLECTOR_H_
 
 #include "mbed.h"
 
-#include "analog_button.h"
-#include "keyboard_mouse.h"
 #include "glove_sensors.h"
+<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
 
 #define GESTURE_COUNT 15
 #define FLEX_COUNT 4
 #define TOUCH_COUNT 4
 #define IMU_COUNT 6
+=======
+#include "ble_advert.h"
+>>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
 /*
  * Default Update Period (in milliseconds)
  */
 const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
 
+<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
 enum SENSOR {
     hand,
     flex1,
@@ -76,24 +77,33 @@ enum IMU {
 };
 
 /* Translator
+=======
+/* Collector
+>>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
  *
  * Single class to handle data interpretation between
  * glove data and HID input. Methods are written
  * to update internally, and to write all methods into a
  * data structure
  */
-class Translator {
+class Collector {
 public:
     /*
-     * Constructor for translator
+     * Constructor for collector
      *
+     * TODO try to use refrences instead of pointers
      */
+<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
     Translator(glove_sensors_raw_t* left, glove_sensors_raw_t* right,
                KeyboardMouse* input);
+=======
+    Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch, AdvertBLE& _adble);
+>>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
     /*
      * Update gesture mapping via new configuration arrary.
      */
+<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
     void updateGestureMap(uint8_t* config);
 
     /*
@@ -102,6 +112,9 @@ public:
      * This function designed to be set up as a periodic task.
      */
     void gestureCheck();
+=======
+    void updateAndAdvertise();
+>>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
     /*
      * Calls the start() method on the periodic update task,
@@ -115,6 +128,7 @@ public:
     void stopUpdateTask();
 
 private:
+<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
     // NOTE: Arrays indexed by enums
 
     /* Left Glove Analog Buttons */
@@ -133,9 +147,20 @@ private:
     /* Glove Data */
     glove_sensors_raw_t* glove_dataL;
     glove_sensors_raw_t* glove_dataR;
+=======
+    // Sensor classes (consider &refs)
+    FlexSensors* flex;
+    IMU_BNO055* imu;
+    TouchSensor* touch;
+    AdvertBLE& adble;
+
+    glove_sensors_raw_t glove_data;
+    glove_sensors_compressed_t glove_data_compressed;
+>>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
     /* MBED Objects */
     RtosTimer* update_task_timer;
+    uint32_t period_ms;
     DigitalOut working;
 };
 
