@@ -16,17 +16,19 @@ public:
     : d(LED4), adble(_adble) {
         update_task_timer =
           new RtosTimer(this, &Blink::update, osTimerPeriodic);
+        data.t = 0xff;
     }
 
     void update() {
         d = 0;
         wait_ms(5);
+        data.t = ~data.t;
         adble.update((uint8_t*)&data, 19);
         d = 1;
     }
 
     void startUpdateTask() {
-        update_task_timer->start(250);
+        update_task_timer->start(25);
     }
 
 private:
@@ -46,10 +48,12 @@ void launch() {
     l3 = 1;
     l4 = 1;
 
+    /*
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
     IMU_BNO055 imu(i2c);
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
     FlexSensors flex_sensors;
+    */
 
     // This encapsulates the BLE stack
     AdvertBLE adble(10);

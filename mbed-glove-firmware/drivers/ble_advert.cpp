@@ -35,9 +35,9 @@ AdvertBLE::AdvertBLE(uint32_t advertising_interval_ms) {
     blerr = ble.setAdvertisingData(adv);
 
     ble.setAdvertisingTimeout(0);
-    ble.setAdvertisingType(GapAdvertisingParams::ADV_NON_CONNECTABLE_UNDIRECTED);
-    ble.setAdvertisingInterval(ble.getMinAdvertisingInterval());
-    //ble.setAdvertisingInterval(100);
+    ble.setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
+    //ble.setAdvertisingInterval(ble.getMinAdvertisingInterval());
+    ble.setAdvertisingInterval(21);
     //ble.setAdvertisingInterval(advertising_interval_ms);
 
     blerr = ble.startAdvertising();
