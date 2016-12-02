@@ -30,9 +30,14 @@ void launch() {
 
   /* Initialize Serial Interrupt */
   serialInit(&translator, &scanner);
+  scanner.startScan();
+  scanner.waitForEvent();
 
   for (;;) {
-    scanner.startScan();
+    leftGlove.flex_sensors[0] = 0;
+    wait(5);
+    leftGlove.flex_sensors[0] = 1;
+    wait(1);
     //Inifite loop
   }
 
