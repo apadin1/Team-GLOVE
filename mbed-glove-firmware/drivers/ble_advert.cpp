@@ -16,11 +16,7 @@
 
 #include "ble_advert.h"
 
-static DigitalOut working(p14);
-static DigitalOut err(p12);
-static ble_error_t blerr;
-
-AdvertBLE::AdvertBLE(uint32_t advertising_interval_ms) {
+AdvertBLE::AdvertBLE() {
 
     memset(adv_payload, 0, PAYLOAD_LENGTH);
     adv_payload[0] = (ADVERT_ID >> 8) & 0x00FF;
@@ -36,27 +32,16 @@ AdvertBLE::AdvertBLE(uint32_t advertising_interval_ms) {
 
     ble.setAdvertisingTimeout(0);
     ble.setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
-    //ble.setAdvertisingInterval(ble.getMinAdvertisingInterval());
-    ble.setAdvertisingInterval(21);
-    //ble.setAdvertisingInterval(advertising_interval_ms);
+    ble.setAdvertisingInterval(20); // 20ms is the minimal adverting period for BLE
 
     blerr = ble.startAdvertising();
 }
 
 void AdvertBLE::update(uint8_t* data, uint8_t len) {
-
-    working = 1;
-    /*
-    if (memcmp(data, adv_payload+2, len) == 0) {
-        return;
-    }
-    */
-
-    //for (uint8_t i = 0; i < blerr; ++i) { err=1; err=0; wait_ms(1); } err = 0;
-    // set data in the advertisement
+    // set data in the advertisement, after the ADVERT_ID bytes
     memcpy(adv_payload+2, data, len);
 
-    // CRC
+    // CRC appended at end of payload
     crc_result = crcFast(data, len);
     adv_payload[PAYLOAD_LENGTH-2] = (crc_result >> 8) & 0x00FF;
     adv_payload[PAYLOAD_LENGTH-1] = crc_result & 0x00FF;
@@ -64,9 +49,6 @@ void AdvertBLE::update(uint8_t* data, uint8_t len) {
     // start the new advertisement
     adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
     blerr = ble.setAdvertisingData(adv);
-    //blerr = ble.startAdvertising();
-    //if (blerr) { for (uint8_t i = 0; i < blerr; ++i) { err=1; err=0; wait_ms(1); } err = 0; }
-    working = 0;
 }
 
 void AdvertBLE::waitForEvent() {
