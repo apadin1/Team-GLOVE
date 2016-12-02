@@ -35,7 +35,7 @@ static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENG
  *
  * 00 - ADVERT_ID MSB
  * 01 - ADVERT_ID LSB
- * 02-19 - glove_sensors_compressed_t
+ * 02-20 - glove_sensors_compressed_t
  * 21 - CRC MSB
  * 22 - CRC LSB
  */

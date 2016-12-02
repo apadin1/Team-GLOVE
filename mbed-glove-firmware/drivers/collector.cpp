@@ -17,6 +17,7 @@
 #include "string.h"
 
 const PinName COLLECTOR_DEBUG_PIN = p15;
+static DigitalOut l(LED4);
 
 Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
                      TouchSensor* _touch, AdvertBLE& _adble)
@@ -28,11 +29,11 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 }
 
 void Collector::updateAndAdvertise() {
-    working = 1;
+    working = 1; l = 0;
 
     touch->spawnUpdateThread();
 
-    imu->updateAndWrite(&glove_data.imu); // TODO remove linear data collection
+    imu->updateAndWrite(&glove_data.imu);
     flex->updateAndWrite(&glove_data.flex_sensors[0]);
     touch->writeKeys(&glove_data.touch_sensor);
 
@@ -41,12 +42,12 @@ void Collector::updateAndAdvertise() {
     adble.update((uint8_t*)&glove_data_compressed);
 
     // because
-    //Thread::wait(5);
-    wait_ms(3);
+    Thread::wait(5);
+    //wait_ms(3);
 
     touch->terminateUpdateThreadIfBlocking();
 
-    working = 0;
+    working = 0; l = 1;
     //adble.waitForEvent();
 }
 

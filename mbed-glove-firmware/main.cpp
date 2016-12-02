@@ -54,7 +54,7 @@ void launch() {
     FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(100);
+    AdvertBLE adble(20);
 
     Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
     collector.startUpdateTask(20);
@@ -67,7 +67,7 @@ void launch() {
     for (;;) {
         l2 = !l2;
         adble.waitForEvent();
-        wait_ms(100);
+        Thread::wait(50);
     }
 
     DigitalOut d1(p12);
@@ -102,6 +102,8 @@ int main() {
     //keyboard_mouse_demo();
     //launch();
     //touch_to_lights();
-    imu_to_lights();
+    //imu_to_lights();
+    launch();
+    //touch_to_lights();
     //advert_test();
 }
