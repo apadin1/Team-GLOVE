@@ -32,7 +32,7 @@ void launch() {
   serialInit(&translator, &scanner);
 
   for (;;) {
-    scanner.startScan()
+    scanner.startScan();
     //Inifite loop
   }
 
