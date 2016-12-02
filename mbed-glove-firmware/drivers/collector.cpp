@@ -40,9 +40,8 @@ void Collector::updateAndAdvertise() {
 
     adble.update((uint8_t*)&glove_data_compressed);
 
-    // because
-    //Thread::wait(5);
-    wait_ms(3);
+    // because it works...
+    wait_ms(5);
 
     touch->terminateUpdateThreadIfBlocking();
 
@@ -51,8 +50,7 @@ void Collector::updateAndAdvertise() {
 }
 
 void Collector::startUpdateTask(uint32_t ms) {
-    period_ms = ms;
-    update_task_timer->start(period_ms);
+    update_task_timer->start(ms);
 }
 
 void Collector::stopUpdateTask() {

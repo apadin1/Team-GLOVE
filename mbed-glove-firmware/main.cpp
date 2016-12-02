@@ -48,47 +48,27 @@ void launch() {
     l3 = 1;
     l4 = 1;
 
-    /*
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
     IMU_BNO055 imu(i2c);
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
     FlexSensors flex_sensors;
-    */
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(10);
+    AdvertBLE adble;
 
-    //Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
-    //collector.startUpdateTask(20);
+    Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
+    collector.startUpdateTask(20);
 
-    Blink blk(adble); blk.startUpdateTask();
+    //Blink blk(adble); blk.startUpdateTask();
+
     l1 = 0;
-
-    //glove_sensors_raw_t glove_data;
-
-    /*
-    for (;;) {
-        l2 = !l2;
-        //adble.waitForEvent();
-        //wait_ms(100);
-    }
-    */
-
     DigitalOut d1(p20);
     for (;;) {
-        d1 = 1;
-        /*
-        touch_sensor.spawnUpdateThread();
-        imu.updateAndWrite(&glove_data.imu);
-        flex_sensors.updateAndWrite(&glove_data.flex_sensors[0]);
-        touch_sensor.writeKeys(&glove_data.touch_sensor);
-        wait_ms(5);
-        touch_sensor.terminateUpdateThreadIfBlocking();
-        */
-        //wait_ms(5);
-        d1 = 0;
+        d1 = !d1;
         Thread::wait(40);
     }
+
+    // Just in case
     Thread::wait(osWaitForever);
 }
 
