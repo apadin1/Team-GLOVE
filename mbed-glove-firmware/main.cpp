@@ -52,10 +52,10 @@ void launch() {
     FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(100);
+    AdvertBLE adble(80);
 
     Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
-    collector.startUpdateTask(20);
+    collector.startUpdateTask(300);
 
     //Blink blk(adble); blk.startUpdateTask();
     l1 = 0;
@@ -64,8 +64,8 @@ void launch() {
 
     for (;;) {
         l2 = !l2;
-        adble.waitForEvent();
-        wait_ms(100);
+        //adble.waitForEvent();
+        //wait_ms(100);
     }
 
     DigitalOut d1(p12);

@@ -47,7 +47,7 @@ void Collector::updateAndAdvertise() {
     touch->terminateUpdateThreadIfBlocking();
 
     working = 0;
-    //adble.waitForEvent();
+    adble.waitForEvent();
 }
 
 void Collector::startUpdateTask(uint32_t ms) {
