@@ -10,6 +10,7 @@ extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
 extern void advert_test(void);
 extern void touch_to_lights(void);
+extern void imu_to_lights(void);
 
 class Blink {
 public:
@@ -100,6 +101,7 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //launch();
-    touch_to_lights();
+    //touch_to_lights();
+    imu_to_lights();
     //advert_test();
 }
