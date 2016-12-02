@@ -14,7 +14,7 @@ class Blink {
 public:
     Blink(AdvertBLE& _adble)
     : d(LED4), adble(_adble) {
-    update_task_timer =
+        update_task_timer =
           new RtosTimer(this, &Blink::update, osTimerPeriodic);
     }
 
@@ -52,23 +52,25 @@ void launch() {
     FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(80);
+    AdvertBLE adble(10);
 
-    Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
-    collector.startUpdateTask(300);
+    //Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
+    //collector.startUpdateTask(20);
 
-    //Blink blk(adble); blk.startUpdateTask();
+    Blink blk(adble); blk.startUpdateTask();
     l1 = 0;
 
     //glove_sensors_raw_t glove_data;
 
+    /*
     for (;;) {
         l2 = !l2;
         //adble.waitForEvent();
         //wait_ms(100);
     }
+    */
 
-    DigitalOut d1(p12);
+    DigitalOut d1(p20);
     for (;;) {
         d1 = 1;
         /*
