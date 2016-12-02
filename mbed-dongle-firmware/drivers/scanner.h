@@ -69,7 +69,7 @@ public:
     }
 
     // Stop and start scanning
-    void startScan(int scan_period=15, int scan_duration=10) {
+    void startScan(int scan_period=10, int scan_duration=10) {
         ble.gap().setScanParams(scan_period, scan_duration);
         ble.gap().startScan(advertisementCallback);
     }
