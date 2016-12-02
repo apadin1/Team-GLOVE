@@ -28,14 +28,13 @@ void launch() {
 
   /* Initialize Serial Interrupt */
   serialInit(&translator, &scanner);
-
-  /* Begin Scanner Functionality */
-  scanner.startUpdateTask(20);
+  scanner.startScan();
+  scanner.waitForEvent();
 
   for (;;) {
-    rightGlove.touch_sensor.a = 1;
-    wait(1);
-    rightGlove.touch_sensor.a = 0;
+    leftGlove.flex_sensors[0] = 0;
+    wait(5);
+    leftGlove.flex_sensors[0] = 1;
     wait(1);
     //Inifite loop
   }

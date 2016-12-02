@@ -304,6 +304,15 @@ void Translator::gestureCheck() {
                   }
               }
 
+              /* Middle click */
+              else if (mouse.part == MIDDLECLICK) {
+                if (mouse.value) {
+                    HIDinput->setMouseButton(MIDDLE, DOWN);
+                } else {
+                    HIDinput->setMouseButton(MIDDLE, UP);
+                }
+              }
+
               /* Scroll functionality */
               else if (mouse.part == SCROLLAXIS) {
                   HIDinput->setMouseScroll(mouse.value);
@@ -359,6 +368,15 @@ void Translator::gestureCheck() {
                     } else {
                         HIDinput->setMouseButton(RIGHT, UP);
                     }
+                }
+
+                /* Middle click */
+                else if (mouse.part == MIDDLECLICK) {
+                  if (mouse.value) {
+                      HIDinput->setMouseButton(MIDDLE, DOWN);
+                  } else {
+                      HIDinput->setMouseButton(MIDDLE, UP);
+                  }
                 }
 
                 /* Scroll functionality */
@@ -418,6 +436,15 @@ void Translator::gestureCheck() {
 //                        HIDinput->setMouseButton(RIGHT, UP);
 //                    }
 //                }
+
+                  /* Middle click */
+//                else if (mouse.part == MIDDLECLICK) {
+//                    if (mouse.value) {
+//                        HIDinput->setMouseButton(MIDDLE, DOWN);
+//                    } else {
+//                        HIDinput->setMouseButton(MIDDLE, UP);
+//                    }
+//                }
 //
 //                /* Scroll functionality */
 //                else if (mouse.part == SCROLLAXIS) {
@@ -468,6 +495,7 @@ void Translator::gestureCheck() {
                       //HIDinput->setMouseButton(LEFT, UP);
                   //}
               //}
+
               /* Right click */
               //else if (mouse.part == RBUTTON) {
                   //if (mouse.value) {
@@ -475,6 +503,15 @@ void Translator::gestureCheck() {
                   //} else {
                       //HIDinput->setMouseButton(RIGHT, UP);
                   //}
+              //}
+
+              /* Middle click */
+              //else if (mouse.part == MIDDLECLICK) {
+                //if (mouse.value) {
+                    //HIDinput->setMouseButton(MIDDLE, DOWN);
+                //} else {
+                    //HIDinput->setMouseButton(MIDDLE, UP);
+                //}
               //}
 
               /* Scroll functionality */
@@ -534,6 +571,15 @@ void Translator::gestureCheck() {
                     //}
                 //}
 
+                /* Middle click */
+                //else if (mouse.part == MIDDLECLICK) {
+                  //if (mouse.value) {
+                      //HIDinput->setMouseButton(MIDDLE, DOWN);
+                  //} else {
+                      //HIDinput->setMouseButton(MIDDLE, UP);
+                  //}
+                //}
+
                 /* Scroll functionality */
                 //else if (mouse.part == SCROLLAXIS) {
                     //HIDinput->setMouseScroll(mouse.value);
@@ -589,6 +635,15 @@ void Translator::gestureCheck() {
 //                        HIDinput->setMouseButton(RIGHT, DOWN);
 //                    } else {
 //                        HIDinput->setMouseButton(RIGHT, UP);
+//                    }
+//                }
+
+                  /* Middle click */
+//                else if (mouse.part == MIDDLECLICK) {
+//                    if (mouse.value) {
+//                        HIDinput->setMouseButton(MIDDLE, DOWN);
+//                    } else {
+//                        HIDinput->setMouseButton(MIDDLE, UP);
 //                    }
 //                }
 //

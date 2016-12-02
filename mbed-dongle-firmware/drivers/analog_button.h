@@ -116,6 +116,7 @@ enum hidType {
 enum mousePart {
     LBUTTON = 200,
     RBUTTON,
+    MIDDLECLICK,
     SCROLLAXIS,
     XAXIS,
     YAXIS,

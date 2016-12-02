@@ -22,11 +22,6 @@ extern int right_count;
 
 const PinName SCANNER_DEBUG_PIN = p26;
 
-/*
- * Default Update Period (in milliseconds)
- */
-const uint32_t SCANNER_UPDATE_PERIOD = 20;
-
 /************************* FUNCTIONS ********************/
 
 
@@ -91,27 +86,10 @@ public:
         ble.waitForEvent();
     }
 
-    /*
-     * Calls the start() method on the periodic update task,
-     * an internal timer is set up in the constructor
-     */
-     void startUpdateTask(uint32_t ms=SCANNER_UPDATE_PERIOD) {
-        update_task_timer->start(ms);
-     }
-
-    /*
-     * Calls the stop() method on the periodic update timer,
-     */
-     void stopUpdateTask() {
-        update_task_timer->stop();
-     }
-
 private:
     BLE ble;
     Translator* translator;
 
-    /* MBED Objects */
-    RtosTimer* update_task_timer;
     //DigitalOut working;
 };
 
