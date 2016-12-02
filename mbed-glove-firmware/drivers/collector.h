@@ -71,7 +71,6 @@ private:
     glove_sensors_compressed_t glove_data_compressed;
 
     RtosTimer* update_task_timer;
-    uint32_t period_ms;
     DigitalOut working;
 };
 
