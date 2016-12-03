@@ -72,12 +72,13 @@ void initializeSecurity(BLE &ble) {
 }
 
 /* Initialize BLE */
-void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
+//BLE::InitializationCompleteCallbackContext *params
+void bleInitComplete(BLE &ble) {
 
     /* Retrieve the parameters and check for errors */
-    BLE &ble          = params->ble;
-    ble_error_t error = params->error;
-    if (error != BLE_ERROR_NONE) return;
+    //BLE &ble          = params->ble;
+    //ble_error_t error = params->error;
+    //if (error != BLE_ERROR_NONE) return;
 
     /* Security is required to pair */
     initializeSecurity(ble);
@@ -98,8 +99,8 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
     /* Continue building advertising payload */
     static const uint16_t uuid16_list[] =  {
         GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
-        GattService::UUID_DEVICE_INFORMATION_SERVICE,
-        GattService::UUID_BATTERY_SERVICE
+        GattService::UUID_BATTERY_SERVICE,
+        GattService::UUID_DEVICE_INFORMATION_SERVICE
     };
 
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS, (uint8_t *)uuid16_list, sizeof(uuid16_list));
@@ -113,12 +114,13 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME, (const uint8_t *) SHORT_NAME, sizeof(SHORT_NAME));
     ble.gap().setDeviceName((const uint8_t *) DEVICE_NAME);
 
-    /* Search for nearby devices to comminucate with */
-    ble.gap().startAdvertising();
-
     // see 5.1.2: HID over GATT Specification (pg. 25)
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
     ble.gap().setAdvertisingInterval(50);     // 30ms to 50ms is recommended (5.1.2)
+
+    /* Search for nearby devices to comminucate with */
+    ble.gap().startAdvertising();
+
 }
 
 
@@ -133,7 +135,7 @@ KeyboardMouse::KeyboardMouse() :
     memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
             
     /* Initialize the BLE communication scheme */
-    ble.init(bleInitComplete);
+    bleInitComplete(ble);
     
     /* Initialize HID service pointer */
     service_ptr = getServicePtr(NULL);

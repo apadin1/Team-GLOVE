@@ -264,6 +264,11 @@ void Translator::updateGestureMap(uint8_t* config) {
 
 void Translator::gestureCheck() {
 
+    // Check if keyboard is connected before sending
+    if (!HIDinput->isConnected()) {
+        return;
+    }
+
     /* Left Glove Functionality */
 
     /* Flex Sensor functionality */
@@ -670,5 +675,6 @@ void Translator::gestureCheck() {
     HIDinput->sendMouse();
 
     //return;
-    HIDinput->waitForEvent();
 }
+
+

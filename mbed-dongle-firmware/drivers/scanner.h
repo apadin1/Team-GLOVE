@@ -17,8 +17,8 @@
 static DigitalOut led111(LED1);
 
 // TODO: Testing
-extern int left_count;
-extern int right_count;
+int left_count;
+int right_count;
 
 const PinName SCANNER_DEBUG_PIN = p26;
 
@@ -26,15 +26,13 @@ const PinName SCANNER_DEBUG_PIN = p26;
 
 
 static void left_glove() {
-    static int count = 0;
-    count += 1;
-    printf("left: %d\r\n", count);
+    ++left_count;
+    //printf("left: %d\r\n", count);
 }
 
 static void right_glove() {
-    static int count = 0;
-    count += 1;
-    printf("right: %d\r\n", count);
+    ++right_count;
+    //printf("right: %d\r\n", count);
 }
 
 
@@ -52,12 +50,10 @@ static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *para
     id |= params->advertisingData[3];
 
     if (id == LEFT_GLOVE_ID) {
-        //left_glove();
-        ++left_count;
+        left_glove();
     }
     else if (id == RIGHT_GLOVE_ID) {
-        //right_glove();
-        ++right_count;
+        right_glove();
     }
 }
 
@@ -66,7 +62,9 @@ class Scanner {
 public:
 
     // Scan period and duration are in milliseconds
-    Scanner(Translator* _translator) {
+    Scanner(Translator* _translator) :
+        translator(_translator),
+        ble(BLE::Instance(BLE::DEFAULT_INSTANCE)) {
         ble.init();
         translator = _translator;
     }
@@ -87,7 +85,7 @@ public:
     }
 
 private:
-    BLE ble;
+    BLE &ble;
     Translator* translator;
 
     //DigitalOut working;

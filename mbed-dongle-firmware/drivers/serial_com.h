@@ -60,7 +60,7 @@ void Rx_interrupt() {
     }
     
     // Configure the translator
-    //getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
+    getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
 
     // START BLE SCANNING
     getScanner()->startScan();

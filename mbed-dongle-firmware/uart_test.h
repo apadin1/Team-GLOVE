@@ -2,8 +2,8 @@
 #include "mbed.h"
 #include "serial_com.h"
 
-int left_count;
-int right_count;
+extern int left_count;
+extern int right_count;
 
 
 static InterruptIn button111(BUTTON1);
