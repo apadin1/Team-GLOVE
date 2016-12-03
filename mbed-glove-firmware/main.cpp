@@ -99,8 +99,8 @@ int main() {
     //ble_scan_test();
     //uart_test();
     //touch_to_lights();
-    //imu_to_lights();
-    launch();
+    imu_to_lights();
+    //launch();
     //touch_to_lights();
     //advert_test();
 }
