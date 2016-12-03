@@ -33,6 +33,7 @@ AdvertBLE::AdvertBLE() {
     ble.setAdvertisingInterval(20); // 20ms is the minimal adverting period for BLE
 
     ble.startAdvertising();
+}
 
 void AdvertBLE::update(uint8_t* data, uint8_t len) {
     // set data in the advertisement, after the ADVERT_ID bytes
@@ -51,3 +52,4 @@ void AdvertBLE::update(uint8_t* data, uint8_t len) {
 void AdvertBLE::waitForEvent() {
     ble.waitForEvent();
 }
+
