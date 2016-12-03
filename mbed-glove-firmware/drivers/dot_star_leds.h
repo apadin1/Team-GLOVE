@@ -19,8 +19,8 @@
 #include "mbed.h"
 
 const PinName DOT_STAR_MOSI = p17;
-const PinName DOT_STAR_MISO = p18; // not used, must be declared
-const PinName DOT_STAR_SCLK = p19;
+const PinName DOT_STAR_MISO = p19; // not used, must be declared
+const PinName DOT_STAR_SCLK = p18;
 
 const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 4; // 5-bit value 0-31
 

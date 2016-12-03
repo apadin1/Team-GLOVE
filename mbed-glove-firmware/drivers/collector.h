@@ -1,5 +1,5 @@
 /*
- * Filename:  translator.h
+ * Filename:  collector.h
  * Project:   EECS 473 - Team GLOVE
  * Date:      Fall 2016
  * Authors:
@@ -10,82 +10,44 @@
  *     Tim Schumacher
  *
  * Purpose:
- *  Translator to interpret glove data as HID input
+ *  Collect sensor data on the glove, send over ble advertisement
  */
 
-#ifndef TRANSLATOR_H_
-#define TRANSLATOR_H_
-
-#include <vector>
+#ifndef COLLECTOR_H_
+#define COLLECTOR_H_
 
 #include "mbed.h"
 
-#include "analog_button.h"
-#include "keyboard_mouse.h"
 #include "glove_sensors.h"
-
-#define GESTURE_COUNT 14
-#define FLEX_COUNT 4
-#define TOUCH_COUNT 4
-#define IMU_COUNT 6
+#include "ble_advert.h"
 
 /*
  * Default Update Period (in milliseconds)
  */
 const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
 
-enum FLEX {
-    FLEX1,
-    FLEX2,
-    FLEX3,
-    FLEX4
-};
-
-enum TOUCH {
-    TOUCH1,
-    TOUCH2,
-    TOUCH3,
-    TOUCH4
-};
-
-enum IMU {
-    PITCHUP,
-    PITCHDOWN,
-    ROLLLEFT,
-    ROLLRIGHT,
-    YAWLEFT,
-    YAWRIGHT
-};
-
-/* Translator
+/* Collector
  *
  * Single class to handle data interpretation between
  * glove data and HID input. Methods are written
  * to update internally, and to write all methods into a
  * data structure
  */
-class Translator {
+class Collector {
 public:
     /*
-     * Constructor for translator
+     * Constructor for collector
      *
+     * TODO try to use refrences instead of pointers
      */
-    Translator(FlexSensors* flex, IMU_BNO055* imu, TouchSensor* touch,
-               KeyboardMouse* input);
+    Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch, AdvertBLE& _adble);
 
     /*
      * Update gesture mapping via new configuration vector.
      * Transciever to send the new Vector to bluetooth class,
      * which should then call this function
      */
-    // void updateGestureMap(std::vector<AnalogButton>* updatedMapping);
-
-    /*
-     * Analyze sensors to determine if gesture
-     * is occuring. If so, generate proper HID data to be sent to HID class.
-     * This function designed to be set up as a periodic task.
-     */
-    void gestureCheck();
+    void updateAndAdvertise();
 
     /*
      * Calls the start() method on the periodic update task,
@@ -99,17 +61,14 @@ public:
     void stopUpdateTask();
 
 private:
-    // NOTE: Vector indexed by GESTURE enum
-    flexToHID* flex_sensors[FLEX_COUNT];
-    imuToHID* imu_axis[IMU_COUNT];
-    touchToHID* touch_sensors[TOUCH_COUNT];
-    KeyboardMouse* HIDinput;  // KeyboardMouse object
-
-    // Glove data
+    // Sensor classes (consider &refs)
     FlexSensors* flex;
     IMU_BNO055* imu;
     TouchSensor* touch;
+    AdvertBLE& adble;
+
     glove_sensors_raw_t glove_data;
+    glove_sensors_compressed_t glove_data_compressed;
 
     RtosTimer* update_task_timer;
     DigitalOut working;
