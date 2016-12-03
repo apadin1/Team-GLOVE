@@ -72,30 +72,30 @@ void initializeSecurity(BLE &ble) {
 }
 
 /* Initialize BLE */
-void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
+void bleInitComplete(BLE& ble) {
 
-    /* Retrieve the parameters and check for errors */
-    BLE &ble          = params->ble;
-    ble_error_t error = params->error;
-    if (error != BLE_ERROR_NONE) return;
+    // Retrieve the parameters and check for errors
+    //BLE &ble          = params->ble;
+    //ble_error_t error = params->error;
+    //if (error != BLE_ERROR_NONE) return;
 
-    /* Security is required to pair */
+    // Security is required to pair
     initializeSecurity(ble);
     
-    /* Initialize callbacks */
+    // Initialize callbacks
     ble.gap().onConnection(connectionCallback);
     ble.gap().onDisconnection(disconnectionCallback);
 
-    /* Setup device services */
+    // Setup device services
     KeyboardMouseService * hid_service = new KeyboardMouseService(ble);
     BatteryService * battery_service = new BatteryService(ble, 80);
     DeviceInformationService * device_info_service = 
         new DeviceInformationService(ble, "ARM", "Model1", "SN1", "hw-rev1", "fw-rev1", "soft-rev1");
 
-    /* Back door to let the KeyboardMouse class access the hid service */
+    // Back door to let the KeyboardMouse class access the hid service
     getServicePtr(hid_service);
     
-    /* Continue building advertising payload */
+    // Continue building advertising payload
     static const uint16_t uuid16_list[] =  {
         GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
         GattService::UUID_DEVICE_INFORMATION_SERVICE,
@@ -105,16 +105,13 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LIST_16BIT_SERVICE_IDS, (uint8_t *)uuid16_list, sizeof(uuid16_list));
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::BREDR_NOT_SUPPORTED | GapAdvertisingData::LE_GENERAL_DISCOVERABLE);
 
-    /* This is how the device will initially be known to the computer */
+    // This is how the device will initially be known to the computer
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
     
-    /* Add the device short and full name */
+    // Add the device short and full name
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (const uint8_t *) DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME, (const uint8_t *) SHORT_NAME, sizeof(SHORT_NAME));
     ble.gap().setDeviceName((const uint8_t *) DEVICE_NAME);
-
-    /* Search for nearby devices to comminucate with */
-    ble.gap().startAdvertising();
 
     // see 5.1.2: HID over GATT Specification (pg. 25)
     ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
@@ -125,15 +122,15 @@ void bleInitComplete(BLE::InitializationCompleteCallbackContext *params) {
 /******************** CONSTRUCTOR/DESTRUCTOR ********************/
 
 /* Constructor */
-KeyboardMouse::KeyboardMouse() : 
-        ble(BLE::Instance(BLE::DEFAULT_INSTANCE)),
+KeyboardMouse::KeyboardMouse(BLE& _ble) :
+        ble(_ble),
         len(0) {
     
     /* Initialize keyboard variables */
     memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
             
     /* Initialize the BLE communication scheme */
-    ble.init(bleInitComplete);
+    bleInitComplete(ble);
     
     /* Initialize HID service pointer */
     service_ptr = getServicePtr(NULL);

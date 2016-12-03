@@ -87,9 +87,13 @@ void button4released() {
 
 int keyboard_mouse_demo() {
 
-    KeyboardMouse kbdMouse;
+    // Initialize BLE
+    BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
+    ble.init();
+    
+    KeyboardMouse kbdMouse(ble);
     keyboard_ptr = &kbdMouse;
-
+    
     Callback<void()> wait_callback(waiting);
     RtosTimer wait_timer(wait_callback, osTimerPeriodic);
     wait_timer.start(100);
