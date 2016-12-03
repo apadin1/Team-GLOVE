@@ -1,21 +1,14 @@
-<<<<<<< HEAD
 #include "mbed.h"
-=======
-#include <inttypes.h>
-
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800
 
 extern void blink(void);
 extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
-<<<<<<< HEAD
 extern void ble_scan_test(void);
 extern void uart_test(void);
-=======
 extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
@@ -24,19 +17,21 @@ class Blink {
 public:
     Blink(AdvertBLE& _adble)
     : d(LED4), adble(_adble) {
-    update_task_timer =
+        update_task_timer =
           new RtosTimer(this, &Blink::update, osTimerPeriodic);
+        data.t = 0xff;
     }
 
     void update() {
         d = 0;
         wait_ms(5);
+        data.t = ~data.t;
         adble.update((uint8_t*)&data, 19);
         d = 1;
     }
 
     void startUpdateTask() {
-        update_task_timer->start(250);
+        update_task_timer->start(25);
     }
 
 private:
@@ -45,7 +40,6 @@ private:
     AdvertBLE& adble;
     glove_sensors_compressed_t data;
 };
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800
 
 void launch() {
     DigitalOut l1(LED1);
@@ -63,7 +57,7 @@ void launch() {
     FlexSensors flex_sensors;
 
     // This encapsulates the BLE stack
-    AdvertBLE adble(20);
+    AdvertBLE adble;
 
     Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
     collector.startUpdateTask(20);
@@ -78,26 +72,15 @@ void launch() {
         adble.waitForEvent();
         Thread::wait(50);
     }
-<<<<<<< HEAD
-=======
-
-    DigitalOut d1(p12);
+    l1 = 0;
+    DigitalOut d1(p20);
     for (;;) {
-        d1 = 1;
-        /*
-        touch_sensor.spawnUpdateThread();
-        imu.updateAndWrite(&glove_data.imu);
-        flex_sensors.updateAndWrite(&glove_data.flex_sensors[0]);
-        touch_sensor.writeKeys(&glove_data.touch_sensor);
-        wait_ms(5);
-        touch_sensor.terminateUpdateThreadIfBlocking();
-        */
-        //wait_ms(5);
-        d1 = 0;
+        d1 = !d1;
         Thread::wait(40);
     }
+
+    // Just in case
     Thread::wait(osWaitForever);
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800
 }
 
 int main() {
@@ -113,14 +96,11 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //launch();
-<<<<<<< HEAD
     //ble_scan_test();
-    uart_test();
-=======
+    //uart_test();
     //touch_to_lights();
     //imu_to_lights();
     launch();
     //touch_to_lights();
     //advert_test();
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800
 }

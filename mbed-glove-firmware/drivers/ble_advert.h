@@ -43,7 +43,7 @@ static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENG
 class AdvertBLE {
 public:
 
-    AdvertBLE(uint32_t advertising_interval_ms=20);
+    AdvertBLE();
 
     /*
      * Given pointer to data of length PAYLOAD_DATA_LENGTH,

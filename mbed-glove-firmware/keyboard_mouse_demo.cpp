@@ -16,6 +16,7 @@
 
 #include "mbed.h"
 #include "drivers/keyboard_mouse.h"
+#include "drivers/translator.h"
 #include "glove_sensors.h"
 #include "keyboard_mouse.h"
 #include "flex_sensor.h"
@@ -86,12 +87,12 @@ void button4released() {
 
 int keyboard_mouse_demo() {
 
-    KeyboardMouse kbdMouse;
+    // Initialize BLE
+    BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
+    ble.init();
+    
+    KeyboardMouse kbdMouse(ble);
     keyboard_ptr = &kbdMouse;
-
-    Callback<void()> wait_callback(waiting);
-    RtosTimer wait_timer(wait_callback, osTimerPeriodic);
-    wait_timer.start(100);
 
     led1 = LED_OFF;
     led2 = LED_OFF;

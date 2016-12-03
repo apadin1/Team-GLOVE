@@ -160,7 +160,6 @@ private:
 
     /* MBED Objects */
     RtosTimer* update_task_timer;
-    uint32_t period_ms;
     DigitalOut working;
 };
 
