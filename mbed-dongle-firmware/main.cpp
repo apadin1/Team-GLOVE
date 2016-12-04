@@ -4,19 +4,20 @@
 #include "drivers/translator.h"
 #include "uart_test.h"
 
-static glove_sensors_raw_t leftGlove;
-static glove_sensors_raw_t rightGlove;
+glove_sensors_raw_t leftGlove;
+glove_sensors_raw_t rightGlove;
 static KeyboardMouse * keyboard_ptr;
 static Translator * translator_ptr;
 static Scanner * scanner_ptr;
 
-static BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
 static DigitalOut l1(LED1, 1);
 static DigitalOut l2(LED2, 1);
 static DigitalOut l3(LED3, 1);
 static DigitalOut l4(LED4, 1);
 
+extern int left_count;
+extern int right_count;
 
 static void flex_on() {
     l1 = !l1;
@@ -31,13 +32,17 @@ static void flex_off() {
 static void press_a() {
     l2 = !l2;
     keyboard_ptr->keyPress('a');
-    keyboard_ptr->sendKeyboard();
+    //keyboard_ptr->sendKeyboard();
 }
 
 static void release_a() {
     l2 = !l2;
     keyboard_ptr->keyRelease('a');
-    keyboard_ptr->sendKeyboard();
+    //keyboard_ptr->sendKeyboard();
+}
+
+void printPacketCounts() {
+    printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
 
 
@@ -48,10 +53,14 @@ static void release_a() {
 
 
 void launch() {
-
+    
+    // Turn off LEDs
+    l1 = 1; l2 = 1; l3 = 1; l4 = 1;
+    
     // Setup buttons for testing
     InterruptIn button1(BUTTON1);
     InterruptIn button2(BUTTON2);
+    InterruptIn button3(BUTTON3);
 
     button1.fall(flex_on);
     button1.rise(flex_off);
@@ -59,25 +68,18 @@ void launch() {
     button2.fall(press_a);
     button2.rise(release_a);
 
+    button3.fall(printPacketCounts);
+    
     // Initialize ble
+    BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.init();
     
-    /* Initialize KeyboardMouse object */
+    l4 = 0;
+    
+    // Initialize KeyboardMouse object
     KeyboardMouse input(ble);
     keyboard_ptr = &input;
-
-    /* Initialize glove_sensors_raw_t for each glove */
-
-    /* Initialize Translator and Scanner objects */
-    Translator translator(&leftGlove, &rightGlove, &input);
-    translator_ptr = &translator;
-    Scanner scanner(&translator);
-
-    /* Initialize Serial Interrupt */
-    //serialInit(&translator, &scanner);
-    //scanner.startScan();
-    //scanner.waitForEvent();
-    
+        
     // Translator ticker
     //Ticker translate_ticker;
     //translate_ticker.attach(gestureCheck, 0.1);
@@ -86,14 +88,32 @@ void launch() {
         l3 = !l3;
         ble.waitForEvent();
     }
+
+    // Initialize Translator and Scanner objects
+    Translator translator(&leftGlove, &rightGlove, &input);
+    translator_ptr = &translator;
+    Scanner scanner(&translator);
     
+    // Initialize serial interrupt
+    serialInit(&translator, &scanner);
+    
+    //Inifite loop
     for (;;) {
-        l3 = !l3;
-        //if (check_gestures) {
-        translator.gestureCheck();
-        //ble.waitForEvent();
-        wait(0.2);
-        //Inifite loop
+        l4 = !l4;
+        
+        // Scan for packets
+        scanner.startScan();
+        wait( 0.02 );
+        scanner.stopScan();
+        
+        // Translate current sensor data into gestures
+        //translator.gestureCheck();
+
+        // Send HID to computer
+        input.sendKeyboard();
+        ble.waitForEvent();
+        input.sendMouse();
+        ble.waitForEvent();
     }
 
 }

@@ -148,7 +148,7 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
     flex_sensorsL[FLEX2]->change_hid_profile(DISABLED);
     flex_sensorsL[FLEX3]->change_hid_profile(DISABLED);
     flex_sensorsL[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensorsL[TOUCH1]->change_hid_profile(KEYBOARD, 'a');
+    touch_sensorsL[TOUCH1]->change_hid_profile(KEYBOARD, 'b');
     touch_sensorsL[TOUCH2]->change_hid_profile(DISABLED);
     touch_sensorsL[TOUCH3]->change_hid_profile(DISABLED);
     touch_sensorsL[TOUCH4]->change_hid_profile(DISABLED);
@@ -676,11 +676,11 @@ void Translator::gestureCheck() {
     led4 = true;
 
     /* Send HID inputs */
-    HIDinput->sendKeyboard();
-    HIDinput->waitForEvent();
+    //HIDinput->sendKeyboard();
+    //HIDinput->waitForEvent();
 
-    HIDinput->sendMouse();
-    HIDinput->waitForEvent();
+    //HIDinput->sendMouse();
+    //HIDinput->waitForEvent();
 
     //return;
 }
