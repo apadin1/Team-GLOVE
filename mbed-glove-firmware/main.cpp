@@ -2,6 +2,7 @@
 
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
+#include "drivers/dot_star_leds.h"
 
 extern void blink(void);
 extern void boot_delay(uint8_t);

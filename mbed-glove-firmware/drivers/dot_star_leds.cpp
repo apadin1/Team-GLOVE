@@ -82,7 +82,7 @@ void DotStarLEDs::set_RGB_all(uint8_t red, uint8_t green, uint8_t blue,
         uint8_t brightness) {
 
     for (uint8_t led = 0; led < num_leds; ++led) {
-        set_led_rgb(led, red, green. blue, brightness);
+        set_led_rgb(led, red, green, blue, brightness);
     }
     flush_to_spi();
 }
