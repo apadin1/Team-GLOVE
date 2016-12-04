@@ -102,6 +102,10 @@ public:
      * For debuggs
      */
     void print(Serial& debug_out);
+    
+    uint8_t hwDebugCheckVal () {
+        return imu.read_calib_status(); 
+    }
 
 private:
     BNO055 imu;

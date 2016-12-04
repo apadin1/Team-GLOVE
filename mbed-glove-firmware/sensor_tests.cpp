@@ -53,19 +53,28 @@ void imu_to_lights() {
   DigitalOut led2(P0_14);
   DigitalOut led3(P0_13);
   DigitalOut led4(P0_12);
+  led3 = 1;
+  led1 = 1;
+  led4 = 1;
+  led2 = 1;
   I2C i2c(I2C_SDA0, I2C_SCL0);
   IMU_BNO055 imu(i2c);
-  led3 = 1;
-  led4 = 1;
-  led1 = 1;
-  led2 = 1;
+  
+  /*DEBUG if (imu.hwDebugCheckVal()) {
+      led4 = 1;
+      wait_ms(500);
+    }
+  for (;;) {
+      led2 = !led2;
+      wait_ms(20);
+  }*/
   for (;;) {
     led4 = !led4;
     imu.updateAndWrite(&data);
     if (data.orient_pitch > 30) {
-      led1 = 0;
+      led3 = 0;
     }
-    else led1 = 1;
+    else led3 = 1;
     if (data.orient_roll > 40) {
       led2 = 0;
     }
@@ -77,6 +86,7 @@ void imu_to_lights() {
     wait_ms(20);
   }
 }
+
 
 void blink() {
     l2 = 1;
