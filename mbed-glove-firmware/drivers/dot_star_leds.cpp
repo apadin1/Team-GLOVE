@@ -74,7 +74,7 @@ void DotStarLEDs::set_color_all(DotStarColor color, uint8_t brightness) {
 void DotStarLEDs::set_RGB(uint8_t led, uint8_t red,
         uint8_t green, uint8_t blue, uint8_t brightness) {
 
-    set_led_rgb(led, red, green. blue, brightness);
+    set_led_rgb(led, red, green, blue, brightness);
     flush_to_spi();
 }
 
