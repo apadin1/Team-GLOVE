@@ -50,6 +50,9 @@ void launch() {
     l3 = 1;
     l4 = 1;
 
+    DotStarLEDs ds_leds;
+    ds_leds.set_color_all(White);
+
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
     IMU_BNO055 imu(i2c);
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
@@ -63,15 +66,15 @@ void launch() {
 
     //Blink blk(adble); blk.startUpdateTask();
 
-    l1 = 0;
-    DigitalOut d1(p20);
     for (;;) {
-        d1 = !d1;
-        Thread::wait(40);
-    }
+        ds_leds.set_color(0, Cyan);
+        ds_leds.set_color(1, Magenta);
+        Thread::wait(250);
 
-    // Just in case
-    Thread::wait(osWaitForever);
+        ds_leds.set_color(0, Red);
+        ds_leds.set_color(1, Orange);
+        Thread::wait(250);
+    }
 }
 
 int main() {
@@ -86,9 +89,9 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    //launch();
+    launch();
     //touch_to_lights();
-    imu_to_lights();
+    //imu_to_lights();
     //launch();
     //touch_to_lights();
     //advert_test();
