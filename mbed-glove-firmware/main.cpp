@@ -51,7 +51,7 @@ void launch() {
     l3 = 1;
     l4 = 1;
 
-    DotStarLEDs ds_leds;
+    DotStarLEDs ds_leds(2);
     ds_leds.set_color_all(White);
 
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
@@ -68,13 +68,24 @@ void launch() {
     //Blink blk(adble); blk.startUpdateTask();
 
     for (;;) {
-        ds_leds.set_color(0, Cyan);
-        ds_leds.set_color(1, Magenta);
-        Thread::wait(250);
+        l1 = !l1;
 
         ds_leds.set_color(0, Red);
-        ds_leds.set_color(1, Orange);
-        Thread::wait(250);
+        ds_leds.set_color(1, Magenta);
+        Thread::wait(500);
+
+        ds_leds.set_color(0, Green);
+        ds_leds.set_color(1, Yellow);
+        Thread::wait(500);
+
+        ds_leds.set_color(0, Blue);
+        ds_leds.set_color(1, Cyan);
+        Thread::wait(500);
+
+        ds_leds.set_color(0, White);
+        ds_leds.set_color(1, Off);
+        Thread::wait(500);
+
     }
 }
 

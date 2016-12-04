@@ -29,7 +29,7 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 }
 
 void Collector::updateAndAdvertise() {
-    working = 1; l = 0;
+    working = 1; l = !l;
 
     touch->spawnUpdateThread();
 

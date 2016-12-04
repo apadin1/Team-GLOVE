@@ -42,20 +42,20 @@ void color_to_RGB(DotStarColor color, uint8_t& red, uint8_t& green, uint8_t& blu
         case(Blue):
             red = 0; green = 0; blue = 255; break;
         case(Orange):
-            red = 200; green = 100; blue = 0; break;
+            red = 250; green = 100; blue = 0; break;
         case(Yellow):
-            red = 255; green = 255; blue = 0; break;
+            red = 255; green = 230; blue = 0; break;
         case(Purple):
             red = 180; green = 0; blue = 255; break;
         case(Cyan):
-            red = 0; green = 255; blue = 255; break;
+            red = 0; green = 200; blue = 200; break;
         case(Magenta):
-            red = 255; green = 0; blue = 255; break;
+            red = 200; green = 0; blue = 200; break;
         case(Off):
             red = 0; green = 0; blue = 0; break;
         case(White):
         default:
-            red = 255, green = 255, blue = 255;
+            red = 200, green = 200, blue = 200;
     }
 }
 

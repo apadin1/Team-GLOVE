@@ -22,7 +22,7 @@ const PinName DOT_STAR_MOSI = p17;
 const PinName DOT_STAR_MISO = p19; // not used, must be declared
 const PinName DOT_STAR_SCLK = p18;
 
-const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 4; // 5-bit value 0-31
+const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 3; // 5-bit value 0-31
 
 enum DotStarColor {Red, Green, Blue, Orange, Yellow, Purple, Cyan, Magenta, White, Off};
 
