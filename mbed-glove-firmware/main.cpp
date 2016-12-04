@@ -88,8 +88,8 @@ int main() {
     //keyboard_mouse_demo();
     //launch();
     //touch_to_lights();
-    //imu_to_lights();
-    launch();
+    imu_to_lights();
+    //launch();
     //touch_to_lights();
     //advert_test();
 }
