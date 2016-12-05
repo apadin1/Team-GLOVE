@@ -34,9 +34,9 @@
 *.b\#*
 
 # mbed submodules
-mbed-glove-firmware/mbed-os/
-mbed-glove-firmware/BUILD/
-mbed-glove-firmware/BLE_API/
+mbed-*-firmware/mbed-os/
+mbed-*-firmware/BUILD/
+mbed-*-firmware/BLE_API/
 .build
 .mbed
 projectfiles
