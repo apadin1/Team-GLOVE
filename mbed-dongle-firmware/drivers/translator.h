@@ -97,6 +97,17 @@ public:
      */
     void gestureCheck();
 
+    /*
+     * Calls the start() method on the periodic update task,
+     * an internal timer is set up in the constructor
+     */
+     void startUpdateTask(uint32_t ms=10);
+
+    /*
+     * Calls the stop() method on the periodic update timer,
+     */
+     void stopUpdateTask();
+
 private:
     // NOTE: Arrays indexed by enums
 
@@ -111,6 +122,7 @@ private:
     /* Glove Data */
     glove_sensors_raw_t* glove_data;
 
+    RtosTimer* update_task_timer;
     DigitalOut working;
 };
 

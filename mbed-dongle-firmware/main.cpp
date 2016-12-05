@@ -10,7 +10,6 @@ static KeyboardMouse * keyboard_ptr;
 static Translator * translator_ptr;
 static Scanner * scanner_ptr;
 
-
 static DigitalOut l1(LED1, 1);
 static DigitalOut l2(LED2, 1);
 static DigitalOut l3(LED3, 1);
@@ -18,18 +17,6 @@ static DigitalOut l4(LED4, 1);
 
 extern int left_count;
 extern int right_count;
-
-static void flex_on() {
-    //l1 = !l1;
-    leftGlove.touch_sensor.a = 1;
-    translator_ptr->gestureCheck();
-}
-
-static void flex_off() {
-    //l1 = !l1;
-    leftGlove.touch_sensor.a = 0;
-    translator_ptr->gestureCheck();
-}
 
 static void press_a() {
     //l2 = !l2;
@@ -53,6 +40,11 @@ void printPacketCounts() {
 //    translator_ptr->gestureCheck();
 //}
 
+void waitForEventAndNothingElse() {
+    for (;;) {
+        keyboard_ptr->waitForEvent();
+    }
+}
 
 void launch() {
 
@@ -61,14 +53,14 @@ void launch() {
 
     // Setup buttons for testing
     //InterruptIn button1(BUTTON1);
-    //InterruptIn button2(BUTTON2);
+    InterruptIn button2(BUTTON2);
     //InterruptIn button3(BUTTON3);
 
     //button1.fall(flex_on);
     //button1.rise(flex_off);
 
-    //button2.fall(press_a);
-    //button2.rise(release_a);
+    button2.fall(press_a);
+    button2.rise(release_a);
 
     //button3.fall(printPacketCounts);
 
@@ -82,17 +74,23 @@ void launch() {
 
     // Initialize Translator and Scanner objects
     Translator translator(&leftGlove, &input);
+    translator.startUpdateTask(20);
     //translator_ptr = &translator;
     //Scanner scanner(&translator);
 
-    while (!input.isConnected()) {
-        ble.waitForEvent();
-    }
+    //while (!input.isConnected()) {
+      //ble.waitForEvent();
+    //}
+
+    Thread waitForFuckingEvent(waitForEventAndNothingElse);
 
     // Initialize serial interrupt
     //serialInit(&translator, &scanner);
 
     leftGlove.touch_sensor.a = 1;
+    leftGlove.touch_sensor.b = 1;
+    leftGlove.touch_sensor.c = 1;
+    leftGlove.touch_sensor.d = 1;
     //Inifite loop
     for (;;) {
         //l4 = !l4;
@@ -103,9 +101,11 @@ void launch() {
         //scanner.stopScan();
 
         // Translate current sensor data into gestures
-        l1 = leftGlove.touch_sensor.a;
+        //l1 = leftGlove.touch_sensor.a;
         leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
-        translator.gestureCheck();
+        leftGlove.touch_sensor.b = !leftGlove.touch_sensor.b;
+        leftGlove.touch_sensor.c = !leftGlove.touch_sensor.c;
+        leftGlove.touch_sensor.d = !leftGlove.touch_sensor.d;
 
         // Send HID to computer
         //input.sendKeyboard();
