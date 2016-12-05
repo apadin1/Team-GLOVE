@@ -39,7 +39,7 @@ static void right_glove() {
 // Does most of the work of filtering packets
 static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *params) {
 
-    led111 = !led111;
+    //led111 = !led111;
     // Filter advertisements by length
     if (params->advertisingDataLen < MIN_PACKET_LENGTH) {
         return;

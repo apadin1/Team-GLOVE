@@ -15,6 +15,11 @@
 
 #include "translator.h"
 
+DigitalOut led1(LED1);
+DigitalOut led2(LED2);
+DigitalOut led3(LED3);
+DigitalOut led4(LED4);
+
 Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
                        KeyboardMouse* _input)
     : glove_dataL(_left), glove_dataR(_right), HIDinput(_input) {
@@ -178,7 +183,7 @@ Translator::Translator(glove_sensors_raw_t* _left, glove_sensors_raw_t* _right,
 }
 
 void Translator::updateGestureMap(uint8_t* config) {
-    
+
   /* Left Glove Configuration */
 
   /* Flex Sensor Configuration */
@@ -263,20 +268,17 @@ void Translator::updateGestureMap(uint8_t* config) {
 }
 
 void Translator::gestureCheck() {
-    
-    if (!HIDinput->isConnected()) {
-        return;
-    }
-    
-    DigitalOut led4(LED4);
-    led4 = false;
+
+    //if (!HIDinput->isConnected()) {
+        //return;
+    //}
 
     /* Left Glove Functionality */
 
     /* Flex Sensor functionality */
     //for (int i = 0; i < FLEX_COUNT; ++i) {
 
-      int i = 0;
+      int i = TOUCH1;
       /* Keyboard functionality */
       //if (flex_sensorsL[i]->is_keyboard()) {
           //keyboardData keyboard = flex_sensorsL[i]->get_keyboard_data();
@@ -341,18 +343,21 @@ void Translator::gestureCheck() {
 
     /* Touch Sensor functionality */
     //for (int i = 0; i < TOUCH_COUNT; ++i) {
-
         /* Keyboard functionality */
         if (touch_sensorsL[i]->is_keyboard()) {
+            led3 = false;
             keyboardData keyboard = touch_sensorsL[i]->get_keyboard_data();
             if (keyboard.valid) {
+                led2 = false;
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
+                    led4 = false;
                 } else {
                     HIDinput->keyRelease(keyboard.key);
+                    led4 = true;
                 }
-            }
-        }  // keyboard
+            } else {led2 = true;}
+        } else {led3 = true;}  // keyboard
 
         /* Mouse functionality */
         //else if (touch_sensorsL[i]->is_mouse()) {
@@ -673,8 +678,6 @@ void Translator::gestureCheck() {
 //        }  // mouse
 //    }  // for
 
-    led4 = true;
-
     /* Send HID inputs */
     //HIDinput->sendKeyboard();
     //HIDinput->waitForEvent();
@@ -684,5 +687,3 @@ void Translator::gestureCheck() {
 
     //return;
 }
-
-

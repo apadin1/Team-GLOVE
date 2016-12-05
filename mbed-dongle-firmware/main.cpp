@@ -20,23 +20,25 @@ extern int left_count;
 extern int right_count;
 
 static void flex_on() {
-    l1 = !l1;
+    //l1 = !l1;
     leftGlove.touch_sensor.a = 1;
+    translator_ptr->gestureCheck();
 }
 
 static void flex_off() {
-    l1 = !l1;
+    //l1 = !l1;
     leftGlove.touch_sensor.a = 0;
+    translator_ptr->gestureCheck();
 }
 
 static void press_a() {
-    l2 = !l2;
+    //l2 = !l2;
     keyboard_ptr->keyPress('a');
     //keyboard_ptr->sendKeyboard();
 }
 
 static void release_a() {
-    l2 = !l2;
+    //l2 = !l2;
     keyboard_ptr->keyRelease('a');
     //keyboard_ptr->sendKeyboard();
 }
@@ -53,67 +55,71 @@ void printPacketCounts() {
 
 
 void launch() {
-    
+
     // Turn off LEDs
     l1 = 1; l2 = 1; l3 = 1; l4 = 1;
-    
+
     // Setup buttons for testing
-    InterruptIn button1(BUTTON1);
-    InterruptIn button2(BUTTON2);
-    InterruptIn button3(BUTTON3);
+    //InterruptIn button1(BUTTON1);
+    //InterruptIn button2(BUTTON2);
+    //InterruptIn button3(BUTTON3);
 
-    button1.fall(flex_on);
-    button1.rise(flex_off);
-    
-    button2.fall(press_a);
-    button2.rise(release_a);
+    //button1.fall(flex_on);
+    //button1.rise(flex_off);
 
-    button3.fall(printPacketCounts);
-    
+    //button2.fall(press_a);
+    //button2.rise(release_a);
+
+    //button3.fall(printPacketCounts);
+
     // Initialize ble
     BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.init();
-    
-    l4 = 0;
-    
+
     // Initialize KeyboardMouse object
     KeyboardMouse input(ble);
     keyboard_ptr = &input;
-        
+
     // Translator ticker
     //Ticker translate_ticker;
     //translate_ticker.attach(gestureCheck, 0.1);
-    
+
     while (!input.isConnected()) {
-        l3 = !l3;
         ble.waitForEvent();
     }
 
     // Initialize Translator and Scanner objects
     Translator translator(&leftGlove, &rightGlove, &input);
-    translator_ptr = &translator;
-    Scanner scanner(&translator);
-    
+    //translator_ptr = &translator;
+    //Scanner scanner(&translator);
+
     // Initialize serial interrupt
-    serialInit(&translator, &scanner);
-    
+    //serialInit(&translator, &scanner);
+
+    leftGlove.touch_sensor.a = 1;
     //Inifite loop
     for (;;) {
-        l4 = !l4;
-        
+        //l4 = !l4;
+
         // Scan for packets
-        scanner.startScan();
-        wait( 0.02 );
-        scanner.stopScan();
-        
+        //scanner.startScan();
+        //wait( 0.02 );
+        //scanner.stopScan();
+
         // Translate current sensor data into gestures
         //translator.gestureCheck();
+        l1 = leftGlove.touch_sensor.a;
+        leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
+        translator.gestureCheck();
 
         // Send HID to computer
         input.sendKeyboard();
         ble.waitForEvent();
-        input.sendMouse();
-        ble.waitForEvent();
+
+        wait(1);
+
+        //input.sendMouse();
+        //ble.waitForEvent();
     }
 
 }
