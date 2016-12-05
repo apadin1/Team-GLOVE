@@ -13,6 +13,7 @@
 
 #define MIN_PACKET_LENGTH 4
 
+#include <string.h>
 static glove_sensors_raw_t glove_sensors;
 static glove_sensors_compressed_t glove_sensors_compressed;
 
@@ -39,6 +40,7 @@ void summarizeAdvertisement(const Gap::AdvertisementCallbackParams_t *params) {
     id |= params->advertisingData[3];
 
     if (id == LEFT_GLOVE_ID || id == RIGHT_GLOVE_ID) {
+        memcpy(&glove_sensors_compressed, params->advertisingData+4, sizeof(glove_sensors_compressed_t));
     }
 }
 
@@ -66,7 +68,11 @@ void calibration_summary() {
         //ble.waitForEvent();
         Thread::wait(2000);
         l1 = 0;
-        printf("count: %d\r\n", packet_count);
+        printf("count: %d | ", packet_count);
+        printf("f0: %d, f1: %d, f2: %d | t: 0x%x\r\n",
+                glove_sensors_compressed.f0, glove_sensors_compressed.f1,
+                glove_sensors_compressed.f2, glove_sensors_compressed.f3,
+                glove_sensors_compressed.t);
         l1 = 1;
     }
 }

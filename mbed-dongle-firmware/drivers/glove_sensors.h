@@ -14,7 +14,6 @@
  *  of the bluetooth connection, and it contains synchronization things.
  *
  */
-
 #ifndef GLOVE_SENSORS_H_
 #define GLOVE_SENSORS_H_
 
