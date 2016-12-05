@@ -4,7 +4,7 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-#include "drivers/scanner.h"
+//#include "drivers/scanner.h"
 #include "drivers/translator.h"
 #include "drivers/glove_sensors.h"
 
@@ -13,12 +13,8 @@
 
 #define MIN_PACKET_LENGTH 4
 
-
 static glove_sensors_raw_t glove_sensors;
 static glove_sensors_compressed_t glove_sensors_compressed;
-
-static Translator * translator_ptr;
-static Scanner * scanner_ptr;
 
 static DigitalOut l1(LED1, 1);
 static DigitalOut l2(LED2, 1);
@@ -59,5 +55,4 @@ void calibration_summary() {
         printf("count: %d\r\n", packet_count);
         packet_count = 0;
     }
-
 }
