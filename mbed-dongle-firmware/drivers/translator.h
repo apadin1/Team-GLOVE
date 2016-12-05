@@ -83,8 +83,7 @@ public:
      * Constructor for translator
      *
      */
-    Translator(glove_sensors_raw_t* left, glove_sensors_raw_t* right,
-               KeyboardMouse* input);
+    Translator(glove_sensors_raw_t* glove, KeyboardMouse* input);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -102,21 +101,17 @@ private:
     // NOTE: Arrays indexed by enums
 
     /* Left Glove Analog Buttons */
-    flexToHID* flex_sensorsL[FLEX_COUNT];
-    imuToHID* imu_axisL[IMU_COUNT];
-    touchToHID* touch_sensorsL[TOUCH_COUNT];
-
-    /* Right Glove Analog Buttons */
-    //flexToHID* flex_sensorsR[FLEX_COUNT];
-    //imuToHID* imu_axisR[IMU_COUNT];
-    //touchToHID* touch_sensorsR[TOUCH_COUNT];
+    flexToHID* flex_sensors[FLEX_COUNT];
+    imuToHID* imu_axis[IMU_COUNT];
+    touchToHID* touch_sensors[TOUCH_COUNT];
 
     /* KeyboardMouse Object */
     KeyboardMouse* HIDinput;
 
     /* Glove Data */
-    glove_sensors_raw_t* glove_dataL;
-    glove_sensors_raw_t* glove_dataR;
+    glove_sensors_raw_t* glove_data;
+
+    DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */

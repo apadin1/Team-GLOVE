@@ -80,18 +80,14 @@ void launch() {
     KeyboardMouse input(ble);
     keyboard_ptr = &input;
 
-    // Translator ticker
-    //Ticker translate_ticker;
-    //translate_ticker.attach(gestureCheck, 0.1);
+    // Initialize Translator and Scanner objects
+    Translator translator(&leftGlove, &input);
+    //translator_ptr = &translator;
+    //Scanner scanner(&translator);
 
     while (!input.isConnected()) {
         ble.waitForEvent();
     }
-
-    // Initialize Translator and Scanner objects
-    Translator translator(&leftGlove, &rightGlove, &input);
-    //translator_ptr = &translator;
-    //Scanner scanner(&translator);
 
     // Initialize serial interrupt
     //serialInit(&translator, &scanner);
@@ -107,17 +103,15 @@ void launch() {
         //scanner.stopScan();
 
         // Translate current sensor data into gestures
-        //translator.gestureCheck();
         l1 = leftGlove.touch_sensor.a;
         leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
         translator.gestureCheck();
 
         // Send HID to computer
-        input.sendKeyboard();
-        ble.waitForEvent();
+        //input.sendKeyboard();
+        //input.waitForEvent();
 
-        wait(1);
-
+        Thread::wait(500);
         //input.sendMouse();
         //ble.waitForEvent();
     }
