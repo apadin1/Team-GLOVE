@@ -121,21 +121,9 @@ void bleInitComplete(BLE& ble) {
 
 /******************** CONSTRUCTOR/DESTRUCTOR ********************/
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* Default Constructor */
-KeyboardMouse::KeyboardMouse() :
-        ble(BLE::Instance(BLE::DEFAULT_INSTANCE)),
-=======
 /* Constructor */
 KeyboardMouse::KeyboardMouse(BLE& _ble) :
         ble(_ble),
->>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
-=======
-/* Constructor */
-KeyboardMouse::KeyboardMouse(BLE& _ble) :
-        ble(_ble),
->>>>>>> reciever
         len(0) {
     
     /* Initialize keyboard variables */

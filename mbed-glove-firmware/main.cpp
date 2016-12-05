@@ -1,5 +1,4 @@
-#include <inttypes.h>
-
+#include "mbed.h"
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
 #include "drivers/dot_star_leds.h"
@@ -10,9 +9,11 @@ extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> reciever
 extern void ble_scan_test(void);
 extern void uart_test(void);
-=======
 extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
@@ -44,7 +45,10 @@ private:
     AdvertBLE& adble;
     glove_sensors_compressed_t data;
 };
+<<<<<<< HEAD
 >>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
+=======
+>>>>>>> reciever
 
 void launch() {
     DigitalOut l1(LED1);
@@ -71,7 +75,20 @@ void launch() {
     collector.startUpdateTask(20);
 
     //Blink blk(adble); blk.startUpdateTask();
+    l1 = 0;
 
+<<<<<<< HEAD
+=======
+    //glove_sensors_raw_t glove_data;
+
+    for (;;) {
+        l2 = !l2;
+        adble.waitForEvent();
+        Thread::wait(50);
+    }
+    l1 = 0;
+    DigitalOut d1(p20);
+>>>>>>> reciever
     for (;;) {
         l1 = !l1;
 
@@ -85,12 +102,15 @@ void launch() {
         //input.waitForEvent();
         l2 = 1;
     }
+<<<<<<< HEAD
 }
 
 =======
         ds_leds.set_color(0, Green);
         ds_leds.set_color(1, Yellow);
         Thread::wait(500);
+=======
+>>>>>>> reciever
 
         ds_leds.set_color(0, Blue);
         ds_leds.set_color(1, Cyan);
@@ -102,7 +122,10 @@ void launch() {
 
     }
 }
+<<<<<<< HEAD
 >>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
+=======
+>>>>>>> reciever
 
 int main() {
 
@@ -117,15 +140,24 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
 <<<<<<< HEAD
+<<<<<<< HEAD
     //launch();
     //ble_scan_test();
     uart_test();
 =======
     launch();
+=======
+    //launch();
+    //ble_scan_test();
+    //uart_test();
+>>>>>>> reciever
     //touch_to_lights();
     //imu_to_lights();
     //launch();
     //touch_to_lights();
     //advert_test();
+<<<<<<< HEAD
 >>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
+=======
+>>>>>>> reciever
 }

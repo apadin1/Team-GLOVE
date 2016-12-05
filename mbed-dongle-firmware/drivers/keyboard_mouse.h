@@ -28,13 +28,6 @@ class KeyboardMouse {
 public:
 
     /* Constructor and Destructor*/
-<<<<<<< HEAD
-<<<<<<< HEAD
-    KeyboardMouse();
-=======
->>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
-=======
->>>>>>> reciever
     KeyboardMouse(BLE& _ble);
     ~KeyboardMouse();
     
@@ -102,6 +95,7 @@ public:
 
     /* Check if the device is paired to a computer */
     bool isConnected() { return service_ptr->isConnected(); }
+    //bool isSecure() { return security_initialized; }
     
     /* Wait to be interrupted */
     void waitForEvent() { ble.waitForEvent(); }
@@ -119,6 +113,7 @@ private:
 
     uint8_t keyboard_keys[KBD_USAGE_LENGTH];
     int len; /* Current number of keys pressed */
+    //bool security_initialized;
 
 };
 
