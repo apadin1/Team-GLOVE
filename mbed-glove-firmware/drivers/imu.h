@@ -34,7 +34,7 @@ const uint32_t IMU_UPDATE_PERIOD = 10;
 /*
  * Section 3.4 Axis Remap, p.25
  * On prototype in P1
- * On PCB in P?
+ * On PCB in P1
  */
 const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P1;
 
@@ -102,9 +102,9 @@ public:
      * For debuggs
      */
     void print(Serial& debug_out);
-    
+
     uint8_t hwDebugCheckVal () {
-        return imu.read_calib_status(); 
+        return imu.read_calib_status();
     }
 
 private:
