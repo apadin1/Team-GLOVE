@@ -56,6 +56,8 @@ void calibration_summary() {
     // Turn off LEDs
     l1 = 1; l2 = 1; l3 = 1; l4 = 1;
 
+    memset(&glove_sensors_compressed, 0, sizeof(glove_sensors_compressed_t));
+
     // Initialize ble
     ble.init();
 
