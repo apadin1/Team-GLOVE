@@ -42,9 +42,11 @@ private:
 };
 
 bool button_leds(TouchSensor& touch_sensor, DotStarLEDs& ds_leds) {
-    if (touch_sensor.isPressed()) {
-        ds_leds.set_color(0, Yellow);
-        ds_leds.set_color(1, Blue);
+    static key_states_t keys;
+    touch_sensor.writeKeys(&keys);
+    if (keys.a == 1 || keys.b == 1 || keys.c == 1 || keys.d == 1) {
+        ds_leds.set_color(0, Yellow, 10);
+        ds_leds.set_color(1, Blue, 10);
         return true;
     }
     return false;
@@ -76,33 +78,36 @@ void launch() {
 
     //Blink blk(adble); blk.startUpdateTask();
 
+    /* The following main loop sets the light pattern on the
+     * gloves after all the sensors have been initialized,
+     * the BLE advertising set up, and the collector is running
+     */
     for (;;) {
         l1 = !l1;
 
-        if (!button_leds(touch_sensor, ds_leds)) {
-            ds_leds.set_color(0, Red);
-            ds_leds.set_color(1, Magenta);
+        for (int i=0; i < 50; ++i) {
+            if (!button_leds(touch_sensor, ds_leds)) {
+                ds_leds.set_color(0, Red);
+                ds_leds.set_color(1, Magenta);
+            }
+            Thread::wait(10);
         }
-        Thread::wait(500);
 
-        if (!button_leds(touch_sensor, ds_leds)) {
-            ds_leds.set_color(0, Green);
-            ds_leds.set_color(1, Yellow);
+        for (int i=0; i < 50; ++i) {
+            if (!button_leds(touch_sensor, ds_leds)) {
+                ds_leds.set_color(0, Green);
+                ds_leds.set_color(1, Yellow);
+            }
+            Thread::wait(10);
         }
-        Thread::wait(500);
 
-        if (!button_leds(touch_sensor, ds_leds)) {
-            ds_leds.set_color(0, Blue);
-            ds_leds.set_color(1, Cyan);
+        for (int i=0; i < 50; ++i) {
+            if (!button_leds(touch_sensor, ds_leds)) {
+                ds_leds.set_color(0, Blue);
+                ds_leds.set_color(1, Cyan);
+            }
+            Thread::wait(10);
         }
-        Thread::wait(500);
-
-        if (!button_leds(touch_sensor, ds_leds)) {
-            ds_leds.set_color(0, White);
-            ds_leds.set_color(1, Off);
-        }
-        Thread::wait(500);
-
     }
 }
 
@@ -118,10 +123,10 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
+    //launch();
     //touch_to_lights();
     //imu_to_lights();
-    //launch();
+    launch();
     //touch_to_lights();
     //advert_test();
 }

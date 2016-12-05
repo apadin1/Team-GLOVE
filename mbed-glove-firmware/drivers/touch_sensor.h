@@ -197,10 +197,6 @@ public:
      */
     static void print(Serial& pc, key_states_t&);
 
-    bool isPressed() {
-        return keys.a || keys.b || keys.c || keys.d;
-    }
-
 private:
     void initialize(PinName intr);
 

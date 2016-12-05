@@ -37,6 +37,7 @@
 mbed-*-firmware/mbed-os/
 mbed-*-firmware/BUILD/
 mbed-*-firmware/BLE_API/
+mbed-*-firmware/JLINK/
 .build
 .mbed
 projectfiles
