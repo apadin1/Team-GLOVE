@@ -4,6 +4,8 @@
 #include "drivers/translator.h"
 #include "uart_test.h"
 
+extern void calibration_summary(void);
+
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
 static KeyboardMouse * keyboard_ptr;
@@ -77,21 +79,17 @@ void launch() {
     ble.init();
 
     // Initialize KeyboardMouse object
-    KeyboardMouse input(ble);
-    keyboard_ptr = &input;
+    //KeyboardMouse input(ble);
+    //keyboard_ptr = &input;
 
     // Translator ticker
     //Ticker translate_ticker;
     //translate_ticker.attach(gestureCheck, 0.1);
 
-    while (!input.isConnected()) {
-        ble.waitForEvent();
-    }
-
     // Initialize Translator and Scanner objects
-    Translator translator(&leftGlove, &rightGlove, &input);
+    //Translator translator(&leftGlove, &rightGlove, &input);
     //translator_ptr = &translator;
-    //Scanner scanner(&translator);
+    Scanner scanner(NULL);
 
     // Initialize serial interrupt
     //serialInit(&translator, &scanner);
@@ -135,6 +133,7 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
+    //launch();
     //uart_test();
+    calibration_summary();
 }

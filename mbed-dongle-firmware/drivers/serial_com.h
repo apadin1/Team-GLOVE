@@ -9,8 +9,7 @@
 
 static Serial pc(USBTX, USBRX);
 
-#define SEND(args...) pc.printf(args)
-#define CONFIG_LENGTH 28
+#define SEND(args...) pc.printf(args) #define CONFIG_LENGTH 28
 
 static char rx_buffer[CONFIG_LENGTH];
 
@@ -52,13 +51,13 @@ void Rx_interrupt() {
 
     // STOP BLE SCANNING
     getScanner()->stopScan();
-    
+
     // Read in data
     while (pc.readable() && (len < CONFIG_LENGTH)) {
         rx_buffer[len] = pc.getc();
         len = ((len+1) % CONFIG_LENGTH);
     }
-    
+
     // Configure the translator
     getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
 
