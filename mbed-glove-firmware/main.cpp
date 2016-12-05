@@ -41,10 +41,13 @@ private:
     glove_sensors_compressed_t data;
 };
 
+flex_sensor_t f[4];
+
 bool button_leds(TouchSensor& touch_sensor, DotStarLEDs& ds_leds) {
     static key_states_t keys;
     touch_sensor.writeKeys(&keys);
-    if (keys.a == 1 || keys.b == 1 || keys.c == 1 || keys.d == 1) {
+    //if (keys.a == 1 || keys.b == 1 || keys.c == 1 || keys.d == 1) {
+    if (f[0] < 350) {
         ds_leds.set_color(0, Yellow, 10);
         ds_leds.set_color(1, Blue, 10);
         return true;
@@ -86,6 +89,7 @@ void launch() {
         l1 = !l1;
 
         for (int i=0; i < 50; ++i) {
+            flex_sensors.writeSensors(f);
             if (!button_leds(touch_sensor, ds_leds)) {
                 ds_leds.set_color(0, Red);
                 ds_leds.set_color(1, Magenta);
@@ -94,6 +98,7 @@ void launch() {
         }
 
         for (int i=0; i < 50; ++i) {
+            flex_sensors.writeSensors(f);
             if (!button_leds(touch_sensor, ds_leds)) {
                 ds_leds.set_color(0, Green);
                 ds_leds.set_color(1, Yellow);
@@ -102,6 +107,7 @@ void launch() {
         }
 
         for (int i=0; i < 50; ++i) {
+            flex_sensors.writeSensors(f);
             if (!button_leds(touch_sensor, ds_leds)) {
                 ds_leds.set_color(0, Blue);
                 ds_leds.set_color(1, Cyan);
