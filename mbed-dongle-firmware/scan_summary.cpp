@@ -22,8 +22,12 @@ static DigitalOut l3(LED3, 1);
 static DigitalOut l4(LED4, 1);
 
 static int packet_count = 0;
+//static BLE* ble_p;
+static BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
-static void summarizeAdvertisement(const Gap::AdvertisementCallbackParams_t *params) {
+void summarizeAdvertisement(const Gap::AdvertisementCallbackParams_t *params) {
+    packet_count += 1;
+    l2=0;l2=1;
 
     // Filter advertisements by length
     if (params->advertisingDataLen < MIN_PACKET_LENGTH) {
@@ -36,7 +40,14 @@ static void summarizeAdvertisement(const Gap::AdvertisementCallbackParams_t *par
 
     if (id == LEFT_GLOVE_ID || id == RIGHT_GLOVE_ID) {
     }
-    packet_count += 1;
+}
+
+void waitForEventAndNothingElse() {
+    for (;;) {
+        ble.waitForEvent();
+        l4 = 0;
+        l4 = 1;
+    }
 }
 
 void calibration_summary() {
@@ -44,15 +55,18 @@ void calibration_summary() {
     l1 = 1; l2 = 1; l3 = 1; l4 = 1;
 
     // Initialize ble
-    BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.init();
 
-    ble.gap().setScanParams(10, 10);
+    ble.gap().setScanParams(100, 100);
     ble.gap().startScan(summarizeAdvertisement);
 
+    Thread waitForFuckingEvent(waitForEventAndNothingElse);
+
     for (;;) {
-        Thread::wait(5000);
+        //ble.waitForEvent();
+        Thread::wait(2000);
+        l1 = 0;
         printf("count: %d\r\n", packet_count);
-        packet_count = 0;
+        l1 = 1;
     }
 }
