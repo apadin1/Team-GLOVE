@@ -87,10 +87,8 @@ void launch() {
     // Initialize serial interrupt
     //serialInit(&translator, &scanner);
 
-    leftGlove.touch_sensor.a = 1;
-    leftGlove.touch_sensor.b = 1;
-    leftGlove.touch_sensor.c = 1;
-    leftGlove.touch_sensor.d = 1;
+    //leftGlove.imu.
+    Thread::wait(2000);
     //Inifite loop
     for (;;) {
         //l4 = !l4;
@@ -102,10 +100,10 @@ void launch() {
 
         // Translate current sensor data into gestures
         //l1 = leftGlove.touch_sensor.a;
-        leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
-        leftGlove.touch_sensor.b = !leftGlove.touch_sensor.b;
-        leftGlove.touch_sensor.c = !leftGlove.touch_sensor.c;
-        leftGlove.touch_sensor.d = !leftGlove.touch_sensor.d;
+        leftGlove.flex_sensors[0] = 900;
+        leftGlove.flex_sensors[1] = 900;
+        leftGlove.flex_sensors[2] = 900;
+        leftGlove.flex_sensors[3] = 900;
 
         // Send HID to computer
         //input.sendKeyboard();

@@ -33,18 +33,18 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     flex_sensors[FLEX1] = &flex1;
 
     /* FLEX2 */
-    flexToHID flex2(&(glove_data->flex_sensors[1]), 300, 800, 20,
-                                      false);
+    flexToHID flex2(&(glove_data->flex_sensors[1]), 300, 800, 0.05,
+                                      true);
     flex_sensors[FLEX2] = &flex2;
 
     /* FLEX3 */
-    flexToHID flex3(&(glove_data->flex_sensors[2]), 300, 800, 20,
-                                      false);
+    flexToHID flex3(&(glove_data->flex_sensors[2]), 300, 800, 0.05,
+                                      true);
     flex_sensors[FLEX3] = &flex3;
 
     /* FLEX4 */
-    flexToHID flex4(&(glove_data->flex_sensors[3]), 300, 800, 20,
-                                      false);
+    flexToHID flex4(&(glove_data->flex_sensors[3]), 300, 800, 0.05,
+                                      true);
     flex_sensors[FLEX4] = &flex4;
 
     /* TOUCH1 */
@@ -88,14 +88,14 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
-    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
-    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
-    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
-    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'a');
-    touch_sensors[TOUCH2]->change_hid_profile(MOUSE, 0, LBUTTON);
-    touch_sensors[TOUCH3]->change_hid_profile(MOUSE, 0, RBUTTON);
-    touch_sensors[TOUCH4]->change_hid_profile(MOUSE, 0, MIDDLECLICK);
+    flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
+    flex_sensors[FLEX2]->change_hid_profile(MOUSE, 0, LBUTTON);
+    flex_sensors[FLEX3]->change_hid_profile(MOUSE, 0, RBUTTON);
+    flex_sensors[FLEX4]->change_hid_profile(MOUSE, 0, MIDDLECLICK);
+    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
     imu_axis[PITCHUP]->change_hid_profile(DISABLED);
     imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
     imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
@@ -154,75 +154,74 @@ void Translator::updateGestureMap(uint8_t* config) {
 }
 
 void Translator::gestureCheck() {
-    uint32_t i = 0;
 
     /* Glove Functionality */
 
     /* Flex Sensor functionality */
-//    for (int i = 0; i < FLEX_COUNT; ++i) {
-//
+    for (int i = 0; i < FLEX_COUNT; ++i) {
+
       /* Keyboard functionality */
-//      if (flex_sensors[i]->is_keyboard()) {
-//          keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
-//          if (keyboard.valid) {
-//              if (keyboard.value) {
-//                  HIDinput->keyPress(keyboard.key);
-//              } else {
-//                  HIDinput->keyRelease(keyboard.key);
-//              }
-//          }
-//      }  // keyboard
+      if (flex_sensors[i]->is_keyboard()) {
+          keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
+          if (keyboard.valid) {
+              if (keyboard.value) {
+                  HIDinput->keyPress(keyboard.key);
+              } else {
+                  HIDinput->keyRelease(keyboard.key);
+              }
+          }
+      }  // keyboard
 
       /* Mouse functionality */
-//      else if (flex_sensors[i]->is_mouse()) {
-//          mouseData mouse =
-//                flex_sensors[i]->get_mouse_data();  // Grab mouse data
-//          if (mouse.valid) {
+      else if (flex_sensors[i]->is_mouse()) {
+          mouseData mouse =
+                flex_sensors[i]->get_mouse_data();  // Grab mouse data
+          if (mouse.valid) {
 
               /* Left click */
-//              if (mouse.part == LBUTTON) {
-//                  if (mouse.value) {
-//                      HIDinput->setMouseButton(LEFT, DOWN);
-//                  } else {
-//                      HIDinput->setMouseButton(LEFT, UP);
-//                  }
-//              }
+              if (mouse.part == LBUTTON) {
+                  if (mouse.value) {
+                      HIDinput->setMouseButton(LEFT, DOWN);
+                  } else {
+                      HIDinput->setMouseButton(LEFT, UP);
+                  }
+              }
 
               /* Right click */
-//              else if (mouse.part == RBUTTON) {
-//                  if (mouse.value) {
-//                      HIDinput->setMouseButton(RIGHT, DOWN);
-//                  } else {
-//                      HIDinput->setMouseButton(RIGHT, UP);
-//                  }
-//              }
+              else if (mouse.part == RBUTTON) {
+                  if (mouse.value) {
+                      HIDinput->setMouseButton(RIGHT, DOWN);
+                  } else {
+                      HIDinput->setMouseButton(RIGHT, UP);
+                  }
+              }
 
               /* Middle click */
-//              else if (mouse.part == MIDDLECLICK) {
-//                if (mouse.value) {
-//                    HIDinput->setMouseButton(MIDDLE, DOWN);
-//                } else {
-//                    HIDinput->setMouseButton(MIDDLE, UP);
-//                }
-//              }
+              else if (mouse.part == MIDDLECLICK) {
+                if (mouse.value) {
+                    HIDinput->setMouseButton(MIDDLE, DOWN);
+                } else {
+                    HIDinput->setMouseButton(MIDDLE, UP);
+                }
+              }
 
               /* Scroll functionality */
-//              else if (mouse.part == SCROLLAXIS) {
-//                  HIDinput->setMouseScroll(mouse.value);
-//              }
+              else if (mouse.part == SCROLLAXIS) {
+                  HIDinput->setMouseScroll(mouse.value);
+              }
 
               /* X-axis functionality */
-//              else if (mouse.part == XAXIS) {
-//                  HIDinput->setMouseSpeedX(mouse.value);
-//              }
+              else if (mouse.part == XAXIS) {
+                  HIDinput->setMouseSpeedX(mouse.value);
+              }
 
                 /* Y-axis functionality */
-//                else if (mouse.part == YAXIS) {
-//                    HIDinput->setMouseSpeedY(mouse.value);
-//                }
-//            }  // for
-//        }  // mouse
-    //}  // for
+                else if (mouse.part == YAXIS) {
+                    HIDinput->setMouseSpeedY(mouse.value);
+                }
+            }  // for
+        }  // mouse
+      }  // for
 
     /* Touch Sensor functionality */
     for (int i = 0; i < TOUCH_COUNT; ++i) {
@@ -231,10 +230,8 @@ void Translator::gestureCheck() {
             keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
             if (keyboard.valid) {
                 if (keyboard.value) {
-                    led1 = 0;
                     HIDinput->keyPress(keyboard.key);
                 } else {
-                    led1 = 1;
                     HIDinput->keyRelease(keyboard.key);
                 }
             }
@@ -249,10 +246,8 @@ void Translator::gestureCheck() {
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(LEFT, DOWN);
-                        led2 = 0;
                     } else {
                         HIDinput->setMouseButton(LEFT, UP);
-                        led2 = 1;
                     }
                 }
 
@@ -260,10 +255,8 @@ void Translator::gestureCheck() {
                 else if (mouse.part == RBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(RIGHT, DOWN);
-                        led3 = 0;
                     } else {
                         HIDinput->setMouseButton(RIGHT, UP);
-                        led3 = 1;
                     }
                 }
 
@@ -271,10 +264,8 @@ void Translator::gestureCheck() {
                 else if (mouse.part == MIDDLECLICK) {
                   if (mouse.value) {
                       HIDinput->setMouseButton(MIDDLE, DOWN);
-                      led4 = 0;
                   } else {
                       HIDinput->setMouseButton(MIDDLE, UP);
-                      led4 = 1;
                   }
                 }
 
@@ -297,19 +288,22 @@ void Translator::gestureCheck() {
       }  // for
 
     /* IMU functionality */
-//    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
 
       /* Keyboard functionality */
-//      if (imu_axis[i]->is_keyboard()) {
-//         keyboardData keyboard = imu_axis[i]->get_keyboard_data();
-//            if (keyboard.valid) {
-//                if (keyboard.value) {
-//                    HIDinput->keyPress(keyboard.key);
-//                } else {
-//                    HIDinput->keyRelease(keyboard.key);
-//                }
-//            }
-//        }  // keyboard
+      if (imu_axis[i]->is_keyboard()) {
+         keyboardData keyboard = imu_axis[i]->get_keyboard_data();
+            if (keyboard.valid) {
+                if (keyboard.value) {
+                    HIDinput->keyPress(keyboard.key);
+                    led1 = 1;
+                } else {
+                    HIDinput->keyRelease(keyboard.key);
+                    led1 = 0;
+                }
+            }
+        }  // keyboard
+      }
 
         /* Mouse functionality */
 //        else if (imu_axis[i]->is_mouse()) {
