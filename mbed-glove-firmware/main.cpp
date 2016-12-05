@@ -41,6 +41,15 @@ private:
     glove_sensors_compressed_t data;
 };
 
+bool button_leds(TouchSensor& touch_sensor, DotStarLEDs& ds_leds) {
+    if (touch_sensor.isPressed()) {
+        ds_leds.set_color(0, Yellow);
+        ds_leds.set_color(1, Blue);
+        return true;
+    }
+    return false;
+}
+
 void launch() {
     DigitalOut l1(LED1);
     DigitalOut l2(LED2);
@@ -70,20 +79,28 @@ void launch() {
     for (;;) {
         l1 = !l1;
 
-        ds_leds.set_color(0, Red);
-        ds_leds.set_color(1, Magenta);
+        if (!button_leds(touch_sensor, ds_leds)) {
+            ds_leds.set_color(0, Red);
+            ds_leds.set_color(1, Magenta);
+        }
         Thread::wait(500);
 
-        ds_leds.set_color(0, Green);
-        ds_leds.set_color(1, Yellow);
+        if (!button_leds(touch_sensor, ds_leds)) {
+            ds_leds.set_color(0, Green);
+            ds_leds.set_color(1, Yellow);
+        }
         Thread::wait(500);
 
-        ds_leds.set_color(0, Blue);
-        ds_leds.set_color(1, Cyan);
+        if (!button_leds(touch_sensor, ds_leds)) {
+            ds_leds.set_color(0, Blue);
+            ds_leds.set_color(1, Cyan);
+        }
         Thread::wait(500);
 
-        ds_leds.set_color(0, White);
-        ds_leds.set_color(1, Off);
+        if (!button_leds(touch_sensor, ds_leds)) {
+            ds_leds.set_color(0, White);
+            ds_leds.set_color(1, Off);
+        }
         Thread::wait(500);
 
     }
