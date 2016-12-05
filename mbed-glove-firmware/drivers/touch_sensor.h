@@ -40,7 +40,7 @@
 
 const PinName TOUCH_I2C_SCL = I2C_SCL0;  // = p7
 const PinName TOUCH_I2C_SDA = I2C_SDA0;  // = p30
-const PinName TOUCH_INTERRUPT = p13;  // CHANGE interrupt line (active low)
+const PinName TOUCH_INTERRUPT = p16;  // CHANGE interrupt line (active low) (p16 on PCB)
 const PinName TOUCH_NO_INTERRUPT = NC; // Don't use an interrupt
 const bool TOUCH_DIGITALIN_CHANGE = true; // use DigitalIn instead of InterruptIn
 
@@ -88,7 +88,7 @@ const uint8_t TOUCH_DI = 4;
  *  - only one key in each group can be in detect simultaniously
  *  - group for each key [0..7]
  */
-const uint8_t TOUCH_AKS[] = {0, 0, 0, 0, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
+const uint8_t TOUCH_AKS[] = {1, 1, 1, 1, 0, 0, 0}; //{0, 1, 2, 1, 2, 0, 0};
 
 /*
  * Unpacks the _buttonStates byte in AT42QT1070 to

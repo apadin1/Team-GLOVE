@@ -28,7 +28,10 @@ class KeyboardMouse {
 public:
 
     /* Constructor and Destructor*/
+<<<<<<< HEAD
     KeyboardMouse();
+=======
+>>>>>>> a6fbfaffffe4011488c53125adb9f006d3d02660
     KeyboardMouse(BLE& _ble);
     ~KeyboardMouse();
     

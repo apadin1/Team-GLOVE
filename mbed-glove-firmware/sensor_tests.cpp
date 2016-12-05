@@ -12,14 +12,81 @@
 const PinName GLOVE_I2C_SDA = p30; //I2C_SDA0; // p30
 const PinName GLOVE_I2C_SCL = p7; //I2C_SCL0; // p7
 
-I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
+static I2C i2c(GLOVE_I2C_SDA, GLOVE_I2C_SCL);
 
-Serial pc(USBTX, USBRX);
+static Serial pc(USBTX, USBRX);
 
-DigitalOut led(p12);
-DigitalOut l2(p13);
-DigitalOut l3(p14);
-DigitalOut l4(p15);
+static DigitalOut led(LED1);
+static DigitalOut l2(LED2);
+static DigitalOut l3(LED3);
+static DigitalOut l4(LED4);
+
+void touch_to_lights() {
+    key_states_t keys;
+    DigitalOut led1(P0_15);
+    DigitalOut led2(P0_14);
+    DigitalOut led3(P0_13);
+    DigitalOut led4(P0_12);
+    I2C i2c(I2C_SDA0, I2C_SCL0);
+    TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
+    for (;;) {
+        touch_sensor.updateAndWrite(&keys);
+        if (keys.a == 1)
+            led1 = 0;
+        else led1 = 1;
+        if (keys.b == 1)
+            led2 = 0;
+        else led2 = 1;
+        if (keys.c == 1)
+            led3 = 0;
+        else led3 = 1;
+        if (keys.d == 1)
+            led4 = 0;
+        else led4 = 1;
+        wait_ms(10);
+    }
+}
+
+void imu_to_lights() {
+  bno_imu_t data;
+  DigitalOut led1(P0_15);
+  DigitalOut led2(P0_14);
+  DigitalOut led3(P0_13);
+  DigitalOut led4(P0_12);
+  led3 = 1;
+  led1 = 1;
+  led4 = 1;
+  led2 = 1;
+  I2C i2c(I2C_SDA0, I2C_SCL0);
+  IMU_BNO055 imu(i2c);
+  
+  /*DEBUG if (imu.hwDebugCheckVal()) {
+      led4 = 1;
+      wait_ms(500);
+    }
+  for (;;) {
+      led2 = !led2;
+      wait_ms(20);
+  }*/
+  for (;;) {
+    led4 = !led4;
+    imu.updateAndWrite(&data);
+    if (data.orient_pitch > 30) {
+      led3 = 0;
+    }
+    else led3 = 1;
+    if (data.orient_roll > 40) {
+      led2 = 0;
+    }
+    else led2 = 1;
+    //if (data.orient_yaw > 15) {
+    //  led3 = 0;
+    //}
+    //else led3 = 1;
+    wait_ms(20);
+  }
+}
+
 
 void blink() {
     l2 = 1;
