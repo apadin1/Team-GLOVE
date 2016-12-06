@@ -59,7 +59,7 @@ void imu_to_lights() {
   led2 = 1;
   I2C i2c(I2C_SDA0, I2C_SCL0);
   IMU_BNO055 imu(i2c);
-  
+
   /*DEBUG if (imu.hwDebugCheckVal()) {
       led4 = 1;
       wait_ms(500);
@@ -170,11 +170,14 @@ void sensors_to_lights() {
      * Light one is the combined IMU status
      */
     for (;;) {
+        led = !led;
         touch_sensor.spawnUpdateThread();
 
         imu.updateAndWrite(&imu_vals);
         flex_sensors.updateAndWrite(flex_vals);
         touch_sensor.writeKeys(&keys);
+
+        printf("f: %d, t: 0x%x, y: %f\r\n", flex_vals[0], keys.pack(), imu_vals.orient_pitch);
 
         if (flex_vals[0] < flex_min) {
             flex_min = flex_vals[0];
@@ -203,6 +206,6 @@ void sensors_to_lights() {
         }
 
         touch_sensor.terminateUpdateThreadIfBlocking();
-        Thread::wait(40);
+        Thread::wait(1000);
     }
 }

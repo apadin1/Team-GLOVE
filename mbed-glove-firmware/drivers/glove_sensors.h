@@ -57,4 +57,3 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
 void extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed);
 
 #endif /* GLOVE_SENSORS_H_ */
-

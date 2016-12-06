@@ -111,7 +111,7 @@ void TouchSensor::updateTask() {
         update();
     }
 }
-
+static DigitalOut l3(LED3);
 void TouchSensor::singleUpdate() {
     //if (needs_restart) {
         //reset(); // This broke everything :( cuz it takes too long (disable irq??)
@@ -120,7 +120,9 @@ void TouchSensor::singleUpdate() {
     //}
 
     needs_restart = true;
+    l3 = 0;
     update();
+    l3 = 1;
     needs_restart = false;
 
     update_thread->terminate();

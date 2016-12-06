@@ -24,19 +24,34 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
     : flex(_flex), imu(_imu), touch(_touch), adble(_adble),
       working(COLLECTOR_DEBUG_PIN) {
 
+    flex_data = glove_data.flex_sensors; // ptr to the first flex_sensor_t
+    touch_data = &(glove_data.touch_sensor); // ptr to the key_states_t struct
+    imu_data = &(glove_data.imu); // ptr to the bno_imu_t struct in glove data
+
     update_task_timer =
           new RtosTimer(this, &Collector::updateAndAdvertise, osTimerPeriodic);
 }
 
 void Collector::updateAndAdvertise() {
-    working = 1; l = !l;
+    static int count = 0;
+    //static Serial pc(USBTX, USBRX);
+    working = 1; l = 0;
 
     touch->spawnUpdateThread();
 
     imu->updateAndWrite(&glove_data.imu);
     flex->updateAndWrite(&glove_data.flex_sensors[0]);
     touch->writeKeys(&glove_data.touch_sensor);
+    /*
+    imu->updateAndWrite(imu_data);
+    flex->updateAndWrite(flex_data);
+    touch->writeKeys(touch_data);
+    */
 
+    if (count++ > 100) {
+        printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
+        count = 0;
+    }
     compressGloveSensors(&glove_data, &glove_data_compressed);
 
     adble.update((uint8_t*)&glove_data_compressed);
@@ -46,7 +61,7 @@ void Collector::updateAndAdvertise() {
 
     touch->terminateUpdateThreadIfBlocking();
 
-    working = 0;
+    working = 0; l = 1;
     adble.waitForEvent();
 }
 

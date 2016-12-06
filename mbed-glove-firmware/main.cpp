@@ -3,9 +3,7 @@
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
 #include "drivers/dot_star_leds.h"
-
-extern void blink(void);
-extern void boot_delay(uint8_t);
+extern void blink(void); extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
 extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
@@ -87,6 +85,7 @@ void launch() {
      */
     for (;;) {
         l1 = !l1;
+        printf("f: %d, t: 0x%x\r\n", collector.flex_data[0], collector.touch_data->pack());
 
         for (int i=0; i < 50; ++i) {
             flex_sensors.writeSensors(f);
@@ -126,13 +125,13 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
     //sensors_to_lights();
+    launch();
+    //touch_to_lights();
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
     //launch();
-    //touch_to_lights();
     //imu_to_lights();
-    launch();
     //touch_to_lights();
     //advert_test();
 }
