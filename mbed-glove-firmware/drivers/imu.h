@@ -47,13 +47,13 @@ const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P1;
  * and sent over BLE
  */
 typedef struct {
-    float orient_pitch;
-    float orient_roll;
-    float orient_yaw;
+    double orient_pitch;
+    double orient_roll;
+    double orient_yaw;
 
-    float accel_x;
-    float accel_y;
-    float accel_z;
+    double accel_x;
+    double accel_y;
+    double accel_z;
 } bno_imu_t;
 
 class IMU_BNO055 {
