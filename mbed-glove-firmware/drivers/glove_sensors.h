@@ -32,6 +32,9 @@ typedef struct {
     bno_imu_t imu;
 } glove_sensors_raw_t;
 
+int16_t compress_double(double);
+double extract_double(int16_t);
+
 /*
  * Needs to be, like, <26 B
  *
@@ -40,19 +43,16 @@ typedef struct {
 const size_t glove_sensors_compressed_size = 24;
 typedef struct {
     // flex sensors (12*4 = 48b = 6B)
-    uint16_t f[4];
+    uint16_t f[3];
 
     // touch sensors (4*1 = 4b = 1B)
     uint16_t t;
 
     // imu (3*4B = 12B | 6*4B = 24B)
     // convert by *100, store as decimal
-    int16_t roll;
-    int16_t pitch;
-    int16_t yaw;
-    int16_t x;
-    int16_t y;
-    int16_t z;
+    float roll;
+    float pitch;
+    float yaw;
 
     // CRC
     uint16_t checksum;
