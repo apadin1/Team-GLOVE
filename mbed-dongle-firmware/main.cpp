@@ -34,12 +34,6 @@ void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
 
-
-//static void gestureCheck() {
-//    l2 = !l2;
-//    translator_ptr->gestureCheck();
-//}
-
 void waitForEventAndNothingElse() {
     for (;;) {
         keyboard_ptr->waitForEvent();
@@ -52,15 +46,11 @@ void launch() {
     l1 = 1; l2 = 1; l3 = 1; l4 = 1;
 
     // Setup buttons for testing
-    //InterruptIn button1(BUTTON1);
-    InterruptIn button2(BUTTON2);
+    //InterruptIn button2(BUTTON2);
     //InterruptIn button3(BUTTON3);
 
-    //button1.fall(flex_on);
-    //button1.rise(flex_off);
-
-    button2.fall(press_a);
-    button2.rise(release_a);
+    //button2.fall(press_a);
+    //button2.rise(release_a);
 
     //button3.fall(printPacketCounts);
 
@@ -75,20 +65,18 @@ void launch() {
     // Initialize Translator and Scanner objects
     Translator translator(&leftGlove, &input);
     translator.startUpdateTask(20);
-    //translator_ptr = &translator;
-    //Scanner scanner(&translator);
+    translator_ptr = &translator;
+    Scanner scanner(&translator);
 
-    //while (!input.isConnected()) {
-      //ble.waitForEvent();
-    //}
+    while (!input.isConnected()) {
+      ble.waitForEvent();
+    }
 
-    Thread waitForFuckingEvent(waitForEventAndNothingElse);
+    //Thread waitForFuckingEvent(waitForEventAndNothingElse);
 
     // Initialize serial interrupt
-    //serialInit(&translator, &scanner);
+    serialInit(&translator, &scanner);
 
-    //leftGlove.imu.
-    Thread::wait(2000);
     //Inifite loop
     for (;;) {
         //l4 = !l4;
@@ -98,20 +86,7 @@ void launch() {
         //wait( 0.02 );
         //scanner.stopScan();
 
-        // Translate current sensor data into gestures
-        //l1 = leftGlove.touch_sensor.a;
-        leftGlove.flex_sensors[0] = 900;
-        leftGlove.flex_sensors[1] = 900;
-        leftGlove.flex_sensors[2] = 900;
-        leftGlove.flex_sensors[3] = 900;
-
-        // Send HID to computer
-        //input.sendKeyboard();
-        //input.waitForEvent();
-
         Thread::wait(500);
-        //input.sendMouse();
-        //ble.waitForEvent();
     }
 
 }
