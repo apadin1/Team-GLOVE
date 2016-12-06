@@ -18,16 +18,6 @@
 
 #include "glove_sensors.h"
 
-/*
- * Convert double keeping only 2 decimal places
- */
-int16_t compress_double(double num) {
-    return int(num * 100);
-}
-double extract_double(int16_t num) {
-    return double(num) / 100.0;
-}
-
 void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed) {
     compressed->f[0] = ((raw->flex_sensors[0] & 0x0FFF) << 4) | ((raw->flex_sensors[1] & 0x0FFF) >> 8);
     compressed->f[1] = ((raw->flex_sensors[1] & 0x00FF) << 8) | ((raw->flex_sensors[2] & 0x0FFF) >> 4);
@@ -38,13 +28,20 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
     compressed->roll = compress_double(raw->imu.orient_roll);
     compressed->pitch = compress_double(raw->imu.orient_pitch);
     compressed->yaw = compress_double(raw->imu.orient_yaw);
+
+    compressed->checksum = crcFast((uint8_t*)compressed, glove_sensors_compressed_size_no_crc);
 }
 
-void extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed) {
-    raw->flex_sensors[0] = compressed->f[0];
-    raw->flex_sensors[1] = compressed->f[1];
-    raw->flex_sensors[2] = compressed->f[2];
-    raw->flex_sensors[3] = compressed->f[3];
+int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed) {
+    uint16_t crc_result = crcFast((uint8_t*)compressed, glove_sensors_compressed_size_no_crc);
+    if (crc_result != compressed->checksum) {
+        return -1;
+    }
+
+    raw->flex_sensors[0] = (compressed->f[0] >> 4);
+    raw->flex_sensors[1] = ((compressed->f[0] & 0x000F) << 8) | (compressed->f[1] >> 8);
+    raw->flex_sensors[2] = ((compressed->f[1] & 0x00FF) << 4) | (compressed->f[2] >> 12);
+    raw->flex_sensors[3] = (compressed->f[2] & 0x0FFF);
 
     raw->touch_sensor.a = (compressed->t & 0x8) >> 3;
     raw->touch_sensor.b = (compressed->t & 0x4) >> 2;
@@ -54,4 +51,6 @@ void extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* c
     raw->imu.orient_roll = extract_double(compressed->roll);
     raw->imu.orient_pitch = extract_double(compressed->pitch);
     raw->imu.orient_yaw = extract_double(compressed->yaw);
+
+    return 0;
 }
