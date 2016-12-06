@@ -62,29 +62,32 @@ void launch() {
     KeyboardMouse input(ble);
     keyboard_ptr = &input;
 
+    while (!input.isConnected()) {
+      ble.waitForEvent();
+    }
+
     // Initialize Translator and Scanner objects
     Translator translator(&leftGlove, &input);
     translator.startUpdateTask(20);
     translator_ptr = &translator;
     Scanner scanner(&translator);
 
-    while (!input.isConnected()) {
-      ble.waitForEvent();
-    }
-
     //Thread waitForFuckingEvent(waitForEventAndNothingElse);
 
     // Initialize serial interrupt
-    serialInit(&translator, &scanner);
+    //serialInit(&translator, &scanner);
 
+    leftGlove.touch_sensor.a = 1;
     //Inifite loop
     for (;;) {
-        //l4 = !l4;
+        l4 = !l4;
 
         // Scan for packets
         //scanner.startScan();
         //wait( 0.02 );
         //scanner.stopScan();
+
+        leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
 
         Thread::wait(500);
     }
