@@ -47,12 +47,14 @@ void Collector::updateAndAdvertise() {
     flex->updateAndWrite(flex_data);
     touch->writeKeys(touch_data);
 
+    /*
     if (count++ > 100) {
         printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
         compressGloveSensors(&glove_data, &glove_data_compressed);
         printf("c f: %d, p: %f\r\n", glove_data_compressed.f[0], glove_data_compressed.pitch);
         count = 0;
     }
+    */
 
     adble.update((uint8_t*)&glove_data_compressed);
 

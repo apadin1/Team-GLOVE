@@ -23,12 +23,10 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-#include "crc.h"
+#include "glove_sensors.h"
 
 static const uint16_t ADVERT_ID = 0xBABE;
-static const uint8_t PAYLOAD_DATA_LENGTH = 19;
-static const uint8_t PAYLOAD_CRC_LENGTH = 2;
-static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH; // 23
+static const uint8_t PAYLOAD_LENGTH = 2 + glove_sensors_compressed_size;
 
 /*
  * Structure of advertising packet data:

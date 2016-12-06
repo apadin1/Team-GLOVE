@@ -63,6 +63,9 @@ void launch() {
     DotStarLEDs ds_leds(2);
     ds_leds.set_color_all(White);
 
+    // used by glove sensors compressGloveData
+    crcInit();
+
     I2C i2c(I2C_SDA0, I2C_SCL0); // Initialize i2c bus for imu and touch_sensor
     IMU_BNO055 imu(i2c);
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);

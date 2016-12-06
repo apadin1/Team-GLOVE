@@ -25,9 +25,9 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
 
     compressed->t = 0x00FF & raw->touch_sensor.pack();
 
-    compressed->roll = compress_double(raw->imu.orient_roll);
-    compressed->pitch = compress_double(raw->imu.orient_pitch);
-    compressed->yaw = compress_double(raw->imu.orient_yaw);
+    compressed->roll = (raw->imu.orient_roll);
+    compressed->pitch = (raw->imu.orient_pitch);
+    compressed->yaw = (raw->imu.orient_yaw);
 
     compressed->checksum = crcFast((uint8_t*)compressed, glove_sensors_compressed_size_no_crc);
 }
@@ -48,9 +48,9 @@ int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* co
     raw->touch_sensor.c = (compressed->t & 0x2) >> 1;
     raw->touch_sensor.d = (compressed->t & 0x1);
 
-    raw->imu.orient_roll = extract_double(compressed->roll);
-    raw->imu.orient_pitch = extract_double(compressed->pitch);
-    raw->imu.orient_yaw = extract_double(compressed->yaw);
+    raw->imu.orient_roll = (compressed->roll);
+    raw->imu.orient_pitch = (compressed->pitch);
+    raw->imu.orient_yaw = (compressed->yaw);
 
     return 0;
 }
