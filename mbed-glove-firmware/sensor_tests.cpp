@@ -152,10 +152,8 @@ void sensors_to_lights() {
     FlexSensors flex_sensors;
     flex_sensor_t flex_vals[4];
 
-    //touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
     //TouchSensor touch_sensor(i2c, p16);
     key_states_t keys;
-    //touch_sensor_thread.set_priority(osPriorityBelowNormal);
 
     float flex_val;
 

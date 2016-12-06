@@ -83,9 +83,15 @@ void launch() {
      * gloves after all the sensors have been initialized,
      * the BLE advertising set up, and the collector is running
      */
+    //DigitalOut dso(p13); dso = 0;
     for (;;) {
         l1 = !l1;
-        printf("f: %d, t: 0x%x\r\n", collector.flex_data[0], collector.touch_data->pack());
+        //printf("f: %d, t: 0x%x\r\n", collector.flex_data[0], collector.touch_data->pack());
+
+        /*
+        int val = sizeof(glove_sensors_compressed_t);
+        for (int i=0; i<val; ++i) {dso=1;dso=0;}
+        */
 
         for (int i=0; i < 50; ++i) {
             flex_sensors.writeSensors(f);
@@ -124,8 +130,8 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
-    //sensors_to_lights();
-    launch();
+    sensors_to_lights();
+    //launch();
     //touch_to_lights();
     //blink();
     //launch_periodic();

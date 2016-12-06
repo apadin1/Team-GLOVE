@@ -34,7 +34,6 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
 
 void Collector::updateAndAdvertise() {
     static int count = 0;
-    //static Serial pc(USBTX, USBRX);
     working = 1; l = 0;
 
     touch->spawnUpdateThread();
@@ -49,7 +48,7 @@ void Collector::updateAndAdvertise() {
     */
 
     if (count++ > 100) {
-        printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
+        //printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
         count = 0;
     }
     compressGloveSensors(&glove_data, &glove_data_compressed);
