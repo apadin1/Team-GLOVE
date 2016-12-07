@@ -2,6 +2,7 @@
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
 #include "gpio.h"
+#include "drivers/crc.h"
 
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
@@ -53,6 +54,9 @@ void launch() {
     led2 = 1;
     led3 = 1;
     led4 = 1;
+
+    // needed for the extractGloveData to work
+    crcInit();
 
     // Setup buttons for testing
     //button2.fall(press_a);
