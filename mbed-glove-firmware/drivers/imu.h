@@ -24,7 +24,7 @@
  */
 //const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
 //const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
-const PinName IMU_RST = p12;
+const PinName IMU_RST = p20;
 
 /*
  * Update Period (in milliseconds)

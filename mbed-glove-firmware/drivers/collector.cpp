@@ -24,29 +24,42 @@ Collector::Collector(FlexSensors* _flex, IMU_BNO055* _imu,
     : flex(_flex), imu(_imu), touch(_touch), adble(_adble),
       working(COLLECTOR_DEBUG_PIN) {
 
+    flex_data = glove_data.flex_sensors; // ptr to the first flex_sensor_t
+    touch_data = &(glove_data.touch_sensor); // ptr to the key_states_t struct
+    imu_data = &(glove_data.imu); // ptr to the bno_imu_t struct in glove data
+
     update_task_timer =
           new RtosTimer(this, &Collector::updateAndAdvertise, osTimerPeriodic);
 }
 
 void Collector::updateAndAdvertise() {
-    working = 1; l = !l;
+    static int count = 0;
+    working = 1; l = 0;
 
     touch->spawnUpdateThread();
 
-    imu->updateAndWrite(&glove_data.imu);
-    flex->updateAndWrite(&glove_data.flex_sensors[0]);
-    touch->writeKeys(&glove_data.touch_sensor);
+    imu->updateAndWrite(imu_data);
+    flex->updateAndWrite(flex_data);
+    touch->writeKeys(touch_data);
+
+#if 0
+    if (count++ > 100) {
+        printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
+        compressGloveSensors(&glove_data, &glove_data_compressed);
+        printf("c f: %d, p: %f\r\n", glove_data_compressed.f[0]>>4, glove_data_compressed.pitch);
+        count = 0;
+    }
+#endif
 
     compressGloveSensors(&glove_data, &glove_data_compressed);
-
-    adble.update((uint8_t*)&glove_data_compressed);
+    adble.update((uint8_t*)&glove_data_compressed, glove_sensors_compressed_size);
 
     // because it works...
     wait_ms(5);
 
     touch->terminateUpdateThreadIfBlocking();
 
-    working = 0;
+    working = 0; l = 1;
     adble.waitForEvent();
 }
 

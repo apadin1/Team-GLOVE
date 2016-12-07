@@ -60,6 +60,10 @@ public:
      */
     void stopUpdateTask();
 
+    const glove_sensors_raw_t& getGloveSensorData() {
+        return glove_data;
+    }
+
 private:
     // Sensor classes (consider &refs)
     FlexSensors* flex;
@@ -67,8 +71,15 @@ private:
     TouchSensor* touch;
     AdvertBLE& adble;
 
+    // glove sensor data struct(s)
     glove_sensors_raw_t glove_data;
     glove_sensors_compressed_t glove_data_compressed;
+
+    // alias pointers into the glove_data struct
+    // to be passed into the write() methods of sensors
+    flex_sensor_t* flex_data;
+    key_states_t* touch_data;
+    bno_imu_t* imu_data;
 
     RtosTimer* update_task_timer;
     DigitalOut working;
