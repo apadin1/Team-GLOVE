@@ -70,7 +70,7 @@ void launch() {
     Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
-    //serialInit(&translator, &scanner);
+    //serialInit(&leftTranslator, &rightTranslator, &scanner);
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);

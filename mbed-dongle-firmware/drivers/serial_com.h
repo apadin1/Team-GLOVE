@@ -18,12 +18,20 @@ static char rx_buffer[CONFIG_LENGTH];
 
 /******************** STATIC FUNCTIONS ********************/
 
-static Translator * getTranslator(void * new_ptr=NULL) {
-    static Translator * ptr;
+static Translator * getleftTranslator(void * new_ptr=NULL) {
+    static Translator * leftptr;
     if (new_ptr != NULL) {
-        ptr = (Translator *) new_ptr;
+        leftptr = (Translator *) new_ptr;
     }
-    return ptr;
+    return leftptr;
+}
+
+static Translator * getrightTranslator(void * new_ptr=NULL) {
+  static Translator * rightptr;
+  if (new_ptr != NULL) {
+      rightptr = (Translator *) new_ptr;
+  }
+  return rightptr;
 }
 
 
@@ -47,12 +55,13 @@ void print_config() {
 
 // Deferred interrupt implementation
 void gestureConfig(void const *argument) {
-    
+
     static int len = 0;
 
     // STOP BLE SCANNING/TRANSLATING
     getScanner()->stopScan();
-    getTranslator()->stopUpdateTask();
+    getleftTranslator()->stopUpdateTask();
+    getrightTranslator()->stopUpdateTask();
 
     // Read in data
     while (pc.readable() && (len < CONFIG_LENGTH)) {
@@ -60,11 +69,17 @@ void gestureConfig(void const *argument) {
         len = ((len+1) % CONFIG_LENGTH);
     }
 
-    // Configure the translator
-    getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
+    // Pointer to rx_buff
+    uint8_t* rxptr = (uint8_t*) &rx_buffer;
+
+    // Configure the translators
+    getleftTranslator()->updateGestureMap(rxptr);
+    rxptr += 14;
+    getrightTranslator()->updateGestureMap(rxptr);
 
     // START BLE SCANNING/TRANSLATING
-    getTranslator()->startUpdateTask(30);
+    getleftTranslator()->startUpdateTask(20);
+    getrightTranslator()->startUpdateTask(20);
     getScanner()->startScan();
 }
 
@@ -79,8 +94,10 @@ void Rx_interrupt() {
 }
 
 // MAIN
-void serialInit(Translator * translator, Scanner * scanner) {
-    getTranslator(translator);
+void serialInit(Translator * leftTranslator, Translator * rightTranslator,
+                Scanner * scanner) {
+    getleftTranslator(leftTranslator);
+    getrightTranslator(rightTranslator);
     getScanner(scanner);
     pc.attach(&Rx_interrupt, Serial::RxIrq);
 }
