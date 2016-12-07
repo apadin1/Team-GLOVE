@@ -90,9 +90,9 @@ void launch() {
         Thread::wait(1000);
 
         // Start scanning and translating
-        rightTranslator.startUpdateTask(20);
-        Thread::wait(10);
-        leftTranslator.startUpdateTask(20);
+        rightTranslator.startUpdateTask(40);
+        Thread::wait(20);
+        leftTranslator.startUpdateTask(40);
 
         // Scan for packets
         scanner.startScan();
@@ -101,13 +101,13 @@ void launch() {
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(300);
-            leftGlove.touch_sensor.a = 1;
+            //leftGlove.touch_sensor.a = 1;
             //input.keyPress('a');
             //input.sendKeyboard();
 
             led4 = 1;
             Thread::wait(300);
-            leftGlove.touch_sensor.a = 0;
+            //leftGlove.touch_sensor.a = 0;
             //input.keyRelease('a');
             //input.sendKeyboard();
         }
