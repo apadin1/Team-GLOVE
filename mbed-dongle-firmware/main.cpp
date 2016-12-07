@@ -119,79 +119,114 @@ void launch() {
     }
 }
 
+glove_sensors_compressed_t left_compressed;
+glove_sensors_compressed_t right_compressed;
+glove_sensors_raw_t left_raw, left_max, left_min;
+glove_sensors_raw_t right_raw, right_max, right_min;
 
-   glove_sensors_compressed_t left_compressed;
-   glove_sensors_compressed_t right_compressed;
-   glove_sensors_raw_t left_raw;
-   glove_sensors_raw_t right_raw;
+void print_raw_data(glove_sensors_raw_t raw_data) {
+    for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
+        printf("%d, ", raw_data.flex_sensors[i]);
+    }
 
-   void print_raw_data(glove_sensors_raw_t raw_data) {
-   for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
-   printf("%d, ", raw_data.flex_sensors[i]);
-   }
+    printf("%d%d%d%d, ",
+            raw_data.touch_sensor.a,
+            raw_data.touch_sensor.b,
+            raw_data.touch_sensor.c,
+            raw_data.touch_sensor.d);
 
-   printf("%d, %d, %d, %d, ",
-   raw_data.touch_sensor.a,
-   raw_data.touch_sensor.b,
-   raw_data.touch_sensor.c,
-   raw_data.touch_sensor.d);
+    printf("%.2f, %.2f, %.2f\r\n",
+            raw_data.imu.orient_pitch,
+            raw_data.imu.orient_roll,
+            raw_data.imu.orient_yaw);
+}
 
-   printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f",
-   raw_data.imu.orient_pitch,
-   raw_data.imu.orient_roll,
-   raw_data.imu.orient_yaw,
-   raw_data.imu.accel_x,
-   raw_data.imu.accel_y,
-   raw_data.imu.accel_z);
+void update_max_min(glove_sensors_raw_t& g_raw,
+                    glove_sensors_raw_t& g_max,
+                    glove_sensors_raw_t& g_min) {
 
-   printf("\r\n");
-   }
-//*/
-   void decompress_and_print() {
-   static int count = 0;
-   count += 1;
+    // TODO: I could do rolling averages too
+    for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
+        if (g_raw.flex_sensors[i] < g_min.flex_sensors[i]) {
+            g_min.flex_sensors[i] = g_raw.flex_sensors[i];
+        }
+        if (g_raw.flex_sensors[i] > g_max.flex_sensors[i]) {
+            g_max.flex_sensors[i] = g_raw.flex_sensors[i];
+        }
+    }
+    if (g_raw.imu.orient_pitch < g_min.imu.orient_pitch) {
+        g_min.imu.orient_pitch = g_raw.imu.orient_pitch;
+    }
+    if (g_raw.imu.orient_pitch > g_max.imu.orient_pitch) {
+        g_max.imu.orient_pitch = g_raw.imu.orient_pitch;
+    }
+    if (g_raw.imu.orient_roll < g_min.imu.orient_roll) {
+        g_min.imu.orient_roll = g_raw.imu.orient_roll;
+    }
+    if (g_raw.imu.orient_roll > g_max.imu.orient_roll) {
+        g_max.imu.orient_roll = g_raw.imu.orient_roll;
+    }
+    if (g_raw.imu.orient_yaw < g_min.imu.orient_yaw) {
+        g_min.imu.orient_yaw = g_raw.imu.orient_yaw;
+    }
+    if (g_raw.imu.orient_yaw > g_max.imu.orient_yaw) {
+        g_max.imu.orient_yaw = g_raw.imu.orient_yaw;
+    }
+}
 
-   extractGloveSensors(&left_raw, &left_compressed);
-   extractGloveSensors(&right_raw, &right_compressed);
+void decompress_and_print() {
+    static int count = 0;
+    count += 1;
 
-   printf("[%d] Left:  ", count);
-   print_raw_data(left_raw);
+    extractGloveSensors(&left_raw, &left_compressed);
+    extractGloveSensors(&right_raw, &right_compressed);
 
-   Thread::wait(10);
+    printf("Left:  ");
+    print_raw_data(left_raw);
 
-   printf("[%d] Right: ", count);
-   print_raw_data(right_raw);
+    Thread::wait(10);
 
-   printf("\r\n");
-   }
+    printf("Right: ");
+    print_raw_data(right_raw);
+
+    printf("\r\n");
+
+    if ((count % 20) == 0) {
+        printf("R Max: ");
+        print_raw_data(right_max);
+        printf("R Min: ", count);
+        print_raw_data(right_min);
+        printf("L Max: ");
+        print_raw_data(left_max);
+        printf("L Min: ", count);
+        print_raw_data(left_min);
+    }
+}
 
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
 
-led1 = 1;
-led2 = 1;
-led3 = 1;
-led4 = 1;
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
 
-// Initialize scanning
-ble.init();
-Scanner scanner(ble, &left_compressed, &right_compressed);
-scanner.startScan();
-//Thread bleWaitForEvent(bleWaitForEventLoop);
+    // Initialize scanning
+    ble.init();
+    Scanner scanner(ble, &left_compressed, &right_compressed);
+    scanner.startScan();
+    //Thread bleWaitForEvent(bleWaitForEventLoop);
 
-// Decompress the raw data and print it
-crcInit();
-RtosTimer decompressTask(decompress_and_print);
-decompressTask.start(1000);
+    // Decompress the raw data and print it
+    crcInit();
+    RtosTimer decompressTask(decompress_and_print);
+    decompressTask.start(1000);
 
-// Spin
-while (true) {
-ble.waitForEvent();
+    // Spin
+    while (true) {
+        ble.waitForEvent();
+    }
 }
-}
-//*/
-
-
 
 int main() {
     /*
