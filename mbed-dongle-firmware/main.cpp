@@ -90,9 +90,9 @@ void launch() {
         Thread::wait(1000);
 
         // Start scanning and translating
-        rightTranslator.startUpdateTask(100);
-        Thread::wait(25);
-        leftTranslator.startUpdateTask(100);
+        rightTranslator.startUpdateTask(20);
+        Thread::wait(10);
+        leftTranslator.startUpdateTask(20);
 
         // Scan for packets
         scanner.startScan();

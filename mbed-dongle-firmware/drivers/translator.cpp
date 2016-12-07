@@ -185,8 +185,8 @@ void Translator::gestureCheck() {
         glove_data->imu.orient_pitch = 0;
     else
         glove_data->imu.orient_pitch = 33;
-    bool MOUSE_CHANGED = false;
-    bool KEYBOARD_CHANGED = false;
+    //bool MOUSE_CHANGED = false;
+    //bool KEYBOARD_CHANGED = false;
     led2 = 0;//DEBUG
 
     // Flex Sensor functionality
@@ -239,9 +239,9 @@ void Translator::gestureCheck() {
 
 
     /* Send HID inputs */
-    if (KEYBOARD_CHANGED == true)
+    //if (KEYBOARD_CHANGED == true)
         HIDinput->sendKeyboard();
-    if (MOUSE_CHANGED == true)
+    //if (MOUSE_CHANGED == true)
         HIDinput->sendMouse();
     led2 = 1;
 }
