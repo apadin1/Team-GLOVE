@@ -37,10 +37,8 @@ class Collector {
 public:
     /*
      * Constructor for collector
-     *
-     * TODO try to use refrences instead of pointers
      */
-    Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch, AdvertBLE& _adble);
+    Collector(FlexSensors& _flex, IMU_BNO055& _imu, TouchSensor& _touch, AdvertBLE& _adble);
 
     /*
      * Update gesture mapping via new configuration vector.
@@ -66,9 +64,9 @@ public:
 
 private:
     // Sensor classes (consider &refs)
-    FlexSensors* flex;
-    IMU_BNO055* imu;
-    TouchSensor* touch;
+    FlexSensors& flex;
+    IMU_BNO055& imu;
+    TouchSensor& touch;
     AdvertBLE& adble;
 
     // glove sensor data struct(s)
@@ -82,7 +80,6 @@ private:
     bno_imu_t* imu_data;
 
     RtosTimer* update_task_timer;
-    DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */
