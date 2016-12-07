@@ -83,8 +83,6 @@ void launch() {
     collector.startUpdateTask(20);
     const glove_sensors_raw_t& glove_data = collector.getGloveSensorData();
 
-    //Blink blk(adble); blk.startUpdateTask();
-
     /* The following main loop sets the light pattern on the
      * gloves after all the sensors have been initialized,
      * the BLE advertising set up, and the collector is running
