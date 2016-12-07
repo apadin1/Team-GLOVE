@@ -12,13 +12,23 @@ extern void touch_to_lights(void);
 extern void imu_to_lights(void);
 
 typedef pair<DotStarColor, DotStarColor> color_pair_t;
+#if defined RIGHT_GLOVE
 const uint8_t num_led_patterns_c = 2;
+#elif defined LEFT_GLOVE
+const uint8_t num_led_patterns_c = 3;
+#endif
+
 const color_pair_t led_patterns_c[num_led_patterns_c] = {
     //color_pair_t(Blue, Cyan),
     //color_pair_t(Red, Magenta),
     //color_pair_t(Green, Yellow),
+#if defined RIGHT_GLOVE
     color_pair_t(Blue, Maize),
     color_pair_t(Maize, Blue),
+#elif defined LEFT_GLOVE
+    color_pair_t(White, Pink),
+    color_pair_t(Maize, Blue),
+#endif
 };
 
 /*
@@ -80,7 +90,7 @@ void launch() {
     // This encapsulates the BLE stack
     AdvertBLE adble;
 
-    Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
+    Collector collector(flex_sensors, imu, touch_sensor, adble);
     collector.startUpdateTask(20);
     const glove_sensors_raw_t& glove_data = collector.getGloveSensorData();
 
@@ -88,7 +98,6 @@ void launch() {
      * gloves after all the sensors have been initialized,
      * the BLE advertising set up, and the collector is running
      */
-    DigitalOut dso(p13); dso = 0;
     for (;;) {
         //printf("f: %d, t: 0x%x\r\n", collector.flex_data[0], collector.touch_data->pack());
         //printf("comp: %d, fp: %f\r\n", compress_double(110.565), extract_double(11056));
@@ -115,12 +124,4 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
     launch();
-    //sensors_to_lights();
-    //touch_to_lights();
-    //blink();
-    //launch_periodic();
-    //keyboard_mouse_demo();
-    //launch();
-    //imu_to_lights();
-    //advert_test();
 }

@@ -53,6 +53,8 @@ void color_to_RGB(DotStarColor color, uint8_t& red, uint8_t& green, uint8_t& blu
             red = 0; green = 200; blue = 200; break;
         case(Magenta):
             red = 200; green = 0; blue = 200; break;
+        case(Pink):
+            red = 200; green = 80; blue = 80; break;
         case(Off):
             red = 0; green = 0; blue = 0; break;
         case(White):

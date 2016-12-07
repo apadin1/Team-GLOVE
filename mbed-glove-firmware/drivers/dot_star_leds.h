@@ -24,7 +24,7 @@ const PinName DOT_STAR_SCLK = p18;
 
 const uint8_t DOT_STAR_DEFAULT_BRIGHTNESS = 3; // 5-bit value 0-31
 
-enum DotStarColor {Red, Green, Blue, Orange, Yellow, Maize, Purple, Cyan, Magenta, White, Off};
+enum DotStarColor {Red, Green, Blue, Orange, Yellow, Maize, Purple, Cyan, Magenta, Pink, White, Off};
 
 class DotStarLEDs {
 public:

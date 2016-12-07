@@ -25,7 +25,14 @@
 
 #include "glove_sensors.h"
 
-static const uint16_t ADVERT_ID = 0xBABE; // BEEF is left, BABE is right
+#ifdef LEFT_GLOVE
+static const uint16_t ADVERT_ID = 0xBEEF;
+#elif defined RIGHT_GLOVE
+static const uint16_t ADVERT_ID = 0xBABE;
+#else
+#error "Must define either LEFT_GLOVE or RIGHT_GLOVE"
+#endif
+
 static const uint8_t PAYLOAD_LENGTH = 2 + glove_sensors_compressed_size;
 
 /*
