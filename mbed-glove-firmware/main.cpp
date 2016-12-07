@@ -27,7 +27,8 @@ const color_pair_t led_patterns_c[num_led_patterns_c] = {
     color_pair_t(Maize, Blue),
 #elif defined LEFT_GLOVE
     color_pair_t(White, Pink),
-    color_pair_t(Maize, Blue),
+    color_pair_t(Pink, Red),
+    color_pair_t(Red, White),
 #endif
 };
 
