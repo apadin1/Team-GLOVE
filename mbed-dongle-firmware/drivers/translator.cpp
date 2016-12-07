@@ -90,7 +90,7 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     flex_sensors[FLEX2]->change_hid_profile(DISABLED);
     flex_sensors[FLEX3]->change_hid_profile(DISABLED);
     flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'a');
+    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
     touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
     touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
     touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
@@ -106,10 +106,9 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
           new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
 }
 
-//TODO: Change protocol
 void Translator::updateGestureMap(uint8_t* config) {
-    
-    /* Left Glove Configuration */
+
+  /* Left Glove Configuration */
 
   /* Flex Sensor Configuration */
   for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -149,7 +148,6 @@ void Translator::updateGestureMap(uint8_t* config) {
       imu_axis[i-8]->change_hid_profile(MOUSE, config[i]);
     }
   }
-
 }
 
 void Translator::gestureCheck() {
@@ -158,8 +156,6 @@ void Translator::gestureCheck() {
     if (!HIDinput->isConnected()) {
         return;
     }
-    
-    pin10 = 1;
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -226,9 +222,6 @@ void Translator::gestureCheck() {
             }  // for
         }  // mouse
       }  // for
-      
-    pin10 = 0;
-    pin11 = 1;
 
     /* Touch Sensor functionality */
     for (int i = 0; i < TOUCH_COUNT; ++i) {
@@ -294,11 +287,8 @@ void Translator::gestureCheck() {
         }  // mouse
       }  // for
 
-    pin11 = 0;
-    pin12 = 1;
-    
     /*
-    
+
     // IMU functionality
     for (int i = 0; i < 4; i++) {
 
@@ -364,18 +354,10 @@ void Translator::gestureCheck() {
         }  // mouse
     }  // for
     */
-    
-    pin12 = 0;
-    
-    
-    
-    pin13 = 1;
-    
+
     /* Send HID inputs */
     HIDinput->sendKeyboard();
     HIDinput->sendMouse();
-    
-    pin13 = 0;
 }
 
 void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }

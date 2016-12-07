@@ -47,23 +47,26 @@ void print_config() {
 
 // Interupt to read data from serial port
 void Rx_interrupt() {
-    
+
     static int len = 0;
 
-    // STOP BLE SCANNING
+    // STOP BLE SCANNING/TRANSLATING
     getScanner()->stopScan();
-    
+    getTranslator()->stopUpdateTask();
+
     // Read in data
     while (pc.readable() && (len < CONFIG_LENGTH)) {
         rx_buffer[len] = pc.getc();
         len = ((len+1) % CONFIG_LENGTH);
     }
-    
+
     // Configure the translator
     getTranslator()->updateGestureMap((uint8_t *) rx_buffer);
 
-    // START BLE SCANNING
+    // START BLE SCANNING/TRANSLATING
+    getTranslator()->startUpdateTask(30);
     getScanner()->startScan();
+    pin10 = 0;
 }
 
 // MAIN
