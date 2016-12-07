@@ -43,7 +43,7 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
      * Indicate the first flex sensor is pulled
      */
     if (glove_data.flex_sensors[0] < 450) {
-        leds.set_color_all(Cyan, 10);
+        leds.set_color_all(Red, 10);
         return false;
     }
 

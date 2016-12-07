@@ -25,7 +25,7 @@
 
 #include "glove_sensors.h"
 
-static const uint16_t ADVERT_ID = 0xBABE; // BEEF is left, BABE is right
+static const uint16_t ADVERT_ID = 0xBEEF; // BEEF is left, BABE is right
 static const uint8_t PAYLOAD_LENGTH = 2 + glove_sensors_compressed_size;
 
 /*
