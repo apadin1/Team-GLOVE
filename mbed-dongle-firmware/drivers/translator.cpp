@@ -70,19 +70,19 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     imu_axis[PITCHDOWN] = &pitchdown;
 
     /* ROLLLEFT */
-    imuToHID rollleft(&(glove_data->imu.orient_roll), 0, 45, 0.15, true);
+    imuToHID rollleft(&(glove_data->imu.orient_roll), 0, 45, 0.15, false);
     imu_axis[ROLLLEFT] = &rollleft;
 
     /* ROLLRIGHT */
-    imuToHID rollright(&(glove_data->imu.orient_roll), -45, 0, 0.15, false);
+    imuToHID rollright(&(glove_data->imu.orient_roll), -45, 0, 0.15, true);
     imu_axis[ROLLRIGHT] = &rollright;
 
     /* YAWLEFT */
-    imuToHID yawleft(&(glove_data->imu.orient_yaw), 0, 20, 0.15, true);
+    imuToHID yawleft(&(glove_data->imu.orient_yaw), 0, 20, 0.15, false);
     imu_axis[YAWLEFT] = &yawleft;
 
     /* YAWRIGHT */
-    imuToHID yawright(&(glove_data->imu.orient_yaw), -20, 0, 0.15, false);
+    imuToHID yawright(&(glove_data->imu.orient_yaw), -20, 0, 0.15, true);
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
@@ -215,7 +215,7 @@ void Translator::gestureCheck() {
                   HIDinput->setMouseSpeedX(mouse.value);
               }
 
-                /* Y-axis functionality */
+              /* Y-axis functionality */
                 else if (mouse.part == YAXIS) {
                     HIDinput->setMouseSpeedY(mouse.value);
                 }
@@ -242,6 +242,7 @@ void Translator::gestureCheck() {
             mouseData mouse =
                   touch_sensors[i]->get_mouse_data();
             if (mouse.valid) {
+
                 /* Left click */
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
@@ -287,8 +288,6 @@ void Translator::gestureCheck() {
         }  // mouse
       }  // for
 
-    /*
-
     // IMU functionality
     for (int i = 0; i < 4; i++) {
 
@@ -304,9 +303,9 @@ void Translator::gestureCheck() {
             }
       }  // keyboard
 
-        // Mouse functionality
-        else if (imu_axis[i]->is_mouse()) {
-            mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
+      // Mouse functionality
+      else if (imu_axis[i]->is_mouse()) {
+          mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
             if (mouse.valid) {
 
                 // Left click
@@ -353,7 +352,6 @@ void Translator::gestureCheck() {
             }  // if
         }  // mouse
     }  // for
-    */
 
     /* Send HID inputs */
     HIDinput->sendKeyboard();

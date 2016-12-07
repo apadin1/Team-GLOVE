@@ -2,7 +2,7 @@
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
 #include "gpio.h"
-#include "drivers/crc.h"
+//#include "drivers/crc.h"
 
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
@@ -56,7 +56,7 @@ void launch() {
     led4 = 1;
 
     // needed for the extractGloveData to work
-    crcInit();
+    //crcInit();
 
     // Setup buttons for testing
     //button2.fall(press_a);
@@ -110,11 +110,11 @@ void launch() {
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(50);
-            leftGlove.touch_sensor.a = 1;
+            //leftGlove.touch_sensor.a = 1;
 
             led4 = 1;
             Thread::wait(500);
-            leftGlove.touch_sensor.a = 0;
+            //leftGlove.touch_sensor.a = 0;
         }
 
         led4 = 1;

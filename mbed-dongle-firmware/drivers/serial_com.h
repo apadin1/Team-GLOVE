@@ -44,7 +44,7 @@ void print_config() {
 
 
 /******************** INTERRUPT FUNCTIONS ********************/
-
+//TODO: Deferred interrupt
 // Interupt to read data from serial port
 void Rx_interrupt() {
 
