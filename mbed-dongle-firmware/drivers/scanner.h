@@ -19,6 +19,7 @@
 int left_count;
 int right_count;
 
+extern glove_sensors_compressed_t rightGloveCompressed;
 
 /************************* FUNCTIONS ********************/
 
@@ -44,11 +45,12 @@ static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *para
     id |= params->advertisingData[3];
 
     if (id == LEFT_GLOVE_ID) {
-        left_glove();
+        //memcpy(&compressed_data, (params->advertisingData + 4), sizeof(compressed_data));
         // this is the thing TODO
         //memcpy(&glove_sensors_compressed, params->advertisingData+4, sizeof(glove_sensors_compressed_t));
     }
     else if (id == RIGHT_GLOVE_ID) {
+        memcpy(&rightGloveCompressed, (params->advertisingData + 4), sizeof(rightGloveCompressed));
         right_glove();
     }
 }

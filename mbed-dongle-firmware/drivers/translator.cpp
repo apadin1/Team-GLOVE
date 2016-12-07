@@ -16,6 +16,9 @@
 #include "translator.h"
 #include "gpio.h"
 
+extern glove_sensors_compressed_t rightGloveCompressed;
+
+
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
@@ -86,7 +89,7 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     imu_axis[YAWRIGHT] = &yawright;
 
     /* BUTTON MAPPING */
-    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
+    flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
     flex_sensors[FLEX2]->change_hid_profile(DISABLED);
     flex_sensors[FLEX3]->change_hid_profile(DISABLED);
     flex_sensors[FLEX4]->change_hid_profile(DISABLED);
@@ -156,6 +159,9 @@ void Translator::gestureCheck() {
     if (!HIDinput->isConnected()) {
         return;
     }
+    
+    // Decompress
+    extractGloveSensors(glove_data, &rightGloveCompressed);
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {

@@ -5,8 +5,11 @@
 #include "gpio.h"
 //#include "drivers/crc.h"
 
+glove_sensors_compressed_t leftGloveCompressed;
+glove_sensors_compressed_t rightGloveCompressed;
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
+
 static KeyboardMouse * keyboard_ptr;
 static Translator * translator_ptr;
 static Scanner * scanner_ptr;
@@ -40,9 +43,9 @@ void printPacketCounts() {
 // gets serviced in a reasonable time
 void bleWaitForEventLoop() {
     while (true) {
-        pin10 = 1;
+        led3 = 1;
         ble.waitForEvent();
-        pin10 = 0;
+        led3 = 0;
     }
 }
 
@@ -79,6 +82,8 @@ void launch() {
     // Initialize translator and scanner
     Translator translator(&leftGlove, &input);
     translator_ptr = &translator;
+    
+    crcInit();
     Scanner scanner(ble, &translator);
     scanner_ptr = &scanner;
 
@@ -124,56 +129,71 @@ void launch() {
     }
 }
 
-
-static glove_sensors_compressed_t compressed_data;
-
-
 void decompress_and_print() {
     static glove_sensors_raw_t raw_data;
     static int count = 0;
     
     count += 1;
     
+    //printf("%d: ", right_count);
+    
     printf("[%d]: ", count);
     
+    /*
+    uint8_t * compressed_ptr = (uint8_t *) &compressed_data;
+    for (int i = 0; i < sizeof(compressed_data); ++i) {
+        printf("%d, ", compressed_ptr[i]);
+    }
+    */
     
-    extractGloveSensors(&raw_data, &compressed_data);
-    
+    int error = extractGloveSensors(&raw_data, &rightGloveCompressed);
+    //printf("Error: %d", error);
+        
     for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
         printf("%d, ", raw_data.flex_sensors[i]);
     }
 
-    printf("%d, %d, %d, %d", 
+    printf("%d, %d, %d, %d, ", 
             raw_data.touch_sensor.a,
             raw_data.touch_sensor.b,
             raw_data.touch_sensor.c,
             raw_data.touch_sensor.d);
     
-    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
+    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f",
             raw_data.imu.orient_pitch,
             raw_data.imu.orient_roll,
             raw_data.imu.orient_yaw,
             raw_data.imu.accel_x,
             raw_data.imu.accel_y,
             raw_data.imu.accel_z);
+            
+    printf("\r\n");
 }
 
 
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
+    
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
 
     // Initialize scanning
     ble.init();
     Scanner scanner(ble, NULL);
     scanner.startScan();
-    Thread bleWaitForEvent(bleWaitForEventLoop);
+    //Thread bleWaitForEvent(bleWaitForEventLoop);
 
     // Decompress the raw data and print it
+    crcInit();
     RtosTimer decompressTask(decompress_and_print);
     decompressTask.start(1000);
     
     // Spin
-    while (true) {    }
+    while (true) {
+        ble.waitForEvent();
+    }
 }
 
 
@@ -190,7 +210,7 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    //launch();
     //uart_test();
-    scan_sensor_data();
+    //scan_sensor_data();
+    launch();
 }
