@@ -4,33 +4,17 @@
 #include "glove_sensors.h"
 #include "gpio.h"
 
-//static KeyboardMouse * keyboard_ptr;
-//static Translator * translator_ptr;
-//static Scanner * scanner_ptr;
 
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
+
+// TODO: Debug function
 extern int left_count;
 extern int right_count;
-
-
-/*
-static void press_a() {
-    //l2 = !l2;
-    keyboard_ptr->keyPress('a');
-    //keyboard_ptr->sendKeyboard();
-}
-
-static void release_a() {
-    //l2 = !l2;
-    keyboard_ptr->keyRelease('a');
-    //keyboard_ptr->sendKeyboard();
-}
-*/
-
 void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
+
 
 // Wait for events in a constant loop to make sure the BLE stack
 // gets serviced in a reasonable time
@@ -74,19 +58,12 @@ void launch() {
     //keyboard_ptr = &input;
 
     // Initialize translators
-    Translator leftTranslator(&leftGlove,
-                              &leftGloveCompressed,
-                              &input);
-
-    Translator rightTranslator(&rightGlove,
-                               &rightGloveCompressed,
-                               &input);
+    Translator leftTranslator(&leftGlove, &leftGloveCompressed, &input);
+    Translator rightTranslator(&rightGlove, &rightGloveCompressed, &input);
 
     // Init scanner
     crcInit();
-    Scanner scanner(ble,
-                    &leftGloveCompressed,
-                    &rightGloveCompressed);
+    Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
     //serialInit(&translator, &scanner);
@@ -100,7 +77,7 @@ void launch() {
 
         // UNCONNECTED STATE
         while (!input.isConnected()) {
-            led1 = !led1;
+            led4 = !led4;
             Thread::wait(10);
         }
         
@@ -109,8 +86,9 @@ void launch() {
         Thread::wait(1000);
 
         // Start scanning and translating
-        rightTranslator.startUpdateTask(50);
-        leftTranslator.startUpdateTask(50);
+        rightTranslator.startUpdateTask(100);
+        Thread::wait(50);
+        leftTranslator.startUpdateTask(100);
 
         // Scan for packets
         scanner.startScan();
@@ -138,24 +116,12 @@ void launch() {
 }
 
 /*
-void decompress_and_print() {
-    static glove_sensors_raw_t raw_data;
-    static int count = 0;
-    
-    count += 1;
-    
-    //printf("%d: ", right_count);
-    
-    printf("[%d]: ", count);
-    
-    uint8_t * compressed_ptr = (uint8_t *) &compressed_data;
-    for (int i = 0; i < sizeof(compressed_data); ++i) {
-        printf("%d, ", compressed_ptr[i]);
-    }
-    
-    int error = extractGloveSensors(&raw_data, &rightGloveCompressed);
-    //printf("Error: %d", error);
-        
+glove_sensors_compressed_t left_compressed;
+glove_sensors_compressed_t right_compressed;
+glove_sensors_raw_t left_raw;
+glove_sensors_raw_t right_raw;
+
+void print_raw_data(glove_sensors_raw_t raw_data) {
     for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
         printf("%d, ", raw_data.flex_sensors[i]);
     }
@@ -177,6 +143,23 @@ void decompress_and_print() {
     printf("\r\n");
 }
 
+void decompress_and_print() {
+    static int count = 0;
+    count += 1;
+    
+    extractGloveSensors(&left_raw, &left_compressed);
+    extractGloveSensors(&right_raw, &right_compressed);
+
+    printf("[%d] Left:  ", count);
+    print_raw_data(left_raw);
+    
+    Thread::wait(10);
+    
+    printf("[%d] Right: ", count);
+    print_raw_data(right_raw);    
+
+    printf("\r\n");
+}
 
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
@@ -188,7 +171,7 @@ void scan_sensor_data(void) {
 
     // Initialize scanning
     ble.init();
-    Scanner scanner(ble, NULL);
+    Scanner scanner(ble, &left_compressed, &right_compressed);
     scanner.startScan();
     //Thread bleWaitForEvent(bleWaitForEventLoop);
 
@@ -202,7 +185,7 @@ void scan_sensor_data(void) {
         ble.waitForEvent();
     }
 }
-*/
+//*/
 
 
 

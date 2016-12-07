@@ -44,10 +44,10 @@ void print_config() {
 
 
 /******************** INTERRUPT FUNCTIONS ********************/
-//TODO: Deferred interrupt
-// Interupt to read data from serial port
-void Rx_interrupt() {
 
+// Deferred interrupt implementation
+void gestureConfig(void const *argument) {
+    
     static int len = 0;
 
     // STOP BLE SCANNING/TRANSLATING
@@ -66,7 +66,16 @@ void Rx_interrupt() {
     // START BLE SCANNING/TRANSLATING
     getTranslator()->startUpdateTask(30);
     getScanner()->startScan();
-    pin10 = 0;
+}
+
+
+//TODO: Deferred interrupt
+// Interupt to read data from serial port
+void Rx_interrupt() {
+
+    // Setup deferred interrupt
+    RtosTimer configTask(gestureConfig, osTimerOnce, NULL);
+    configTask.start(1000);
 }
 
 // MAIN
@@ -75,5 +84,6 @@ void serialInit(Translator * translator, Scanner * scanner) {
     getScanner(scanner);
     pc.attach(&Rx_interrupt, Serial::RxIrq);
 }
+
 
 #endif //SERIAL_COM_H_
