@@ -240,9 +240,9 @@ void Translator::gestureCheck() {
 
     /* Send HID inputs */
     //if (KEYBOARD_CHANGED == true)
-        HIDinput->sendKeyboard();
+       // HIDinput->sendKeyboard();
     //if (MOUSE_CHANGED == true)
-        HIDinput->sendMouse();
+       // HIDinput->sendMouse();
     led2 = 1;
 }
 

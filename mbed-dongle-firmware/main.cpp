@@ -4,9 +4,9 @@
 #include "glove_sensors.h"
 #include "gpio.h"
 #include "string.h"
+#include "drivers/translate_task.h"
 
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
-
 
 // TODO: Debug function
 extern int left_count;
@@ -14,7 +14,6 @@ extern int right_count;
 void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
-
 
 // Wait for events in a constant loop to make sure the BLE stack
 // gets serviced in a reasonable time
@@ -25,7 +24,6 @@ void bleWaitForEventLoop() {
         led3 = 0;
     }
 }
-
 
 // Driver for dongle
 void launch() {
@@ -64,7 +62,8 @@ void launch() {
     // Initialize translators
     Translator leftTranslator(&leftGlove, &leftGloveCompressed, &input);
     Translator rightTranslator(&rightGlove, &rightGloveCompressed, &input);
-
+    TranslateTask combinedTask(&leftTranslator, &rightTranslator, &input);
+    
     // Init scanner
     crcInit();
     Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
@@ -74,7 +73,6 @@ void launch() {
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
-
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected
     while (true) {
@@ -90,10 +88,10 @@ void launch() {
         Thread::wait(1000);
 
         // Start scanning and translating
-        rightTranslator.startUpdateTask(40);
-        Thread::wait(20);
-        leftTranslator.startUpdateTask(40);
-
+        //rightTranslator.startUpdateTask(40);
+        //Thread::wait(20);
+        //leftTranslator.startUpdateTask(40);
+        combinedTask.startUpdateTask(100);
         // Scan for packets
         scanner.startScan();
 
@@ -184,7 +182,7 @@ void decompress_and_print() {
     printf("Left:  ");
     print_raw_data(left_raw);
 
-    Thread::wait(10);
+    Thread::wait(20);
 
     printf("Right: ");
     print_raw_data(right_raw);
