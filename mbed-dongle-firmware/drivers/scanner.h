@@ -14,18 +14,16 @@
 #define RIGHT_GLOVE_ID 0xBABE
 
 // Size of data packet that is expected
-const int PACKET_LENGTH = 
+const int PACKET_LENGTH =
     (2 + /* BLE advertisement overhead */
-     2 + /* Vendor/Manufacturer ID */ 
-     sizeof(glove_sensors_compressed_t) + /* Data */
-     2 - 
-     10); /* CRC (Checksum) */
+     2 + /* Vendor/Manufacturer ID */
+     glove_sensors_compressed_size /* Data + checksum */
+     );
 
-     
+
 // TODO: Testing
 int left_count;
 int right_count;
-
 
 /************************* SCANNER CLASS ********************/
 class Scanner {
@@ -35,7 +33,7 @@ public:
     Scanner(BLE &_ble,
             glove_sensors_compressed_t* _left_compressed,
             glove_sensors_compressed_t* _right_compressed) :
-            
+
         ble(_ble),
         left_compressed(_left_compressed),
         right_compressed(_right_compressed) {
@@ -50,14 +48,14 @@ public:
     void stopScan() {
         ble.gap().stopScan();
     }
-    
+
     // Callback for when an advertisement is received
     // Filters the packets and copies glove data
     void advertisementCallback(
             const Gap::AdvertisementCallbackParams_t *params) {
 
         // Filter advertisements by length
-        if (params->advertisingDataLen < PACKET_LENGTH) {
+        if (params->advertisingDataLen < (PACKET_LENGTH-4)) {
             return;
         }
 
@@ -69,8 +67,8 @@ public:
         if (id == LEFT_GLOVE_ID) {
 
             // Copy glove data
-            memcpy(left_compressed, 
-                   (params->advertisingData + 4), 
+            memcpy(left_compressed,
+                   (params->advertisingData + 4),
                    sizeof(glove_sensors_compressed_t));
             ++left_count;
         }
@@ -79,8 +77,8 @@ public:
         else if (id == RIGHT_GLOVE_ID) {
 
             // Copy glove data
-            memcpy(right_compressed, 
-                   (params->advertisingData + 4), 
+            memcpy(right_compressed,
+                   (params->advertisingData + 4),
                    sizeof(glove_sensors_compressed_t));
             ++right_count;
         }
@@ -93,7 +91,7 @@ private:
     // Pointers to both compressed structures
     glove_sensors_compressed_t* left_compressed;
     glove_sensors_compressed_t* right_compressed;
-        
+
 };
 
 #endif // SCANNER_H_
