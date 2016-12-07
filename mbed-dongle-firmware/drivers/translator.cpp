@@ -93,12 +93,12 @@ Translator::Translator(glove_sensors_raw_t* _glove,
 
     /* BUTTON MAPPING */
     flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
-//    flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
+    flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
     flex_sensors[FLEX3]->change_hid_profile(KEYBOARD, 'c');
     flex_sensors[FLEX4]->change_hid_profile(KEYBOARD, 'd');
-//    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
-//    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
-//    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
+    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
+    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
+    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
     touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'h');
     imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'i');
     imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 'j');
@@ -109,12 +109,12 @@ Translator::Translator(glove_sensors_raw_t* _glove,
 
     //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
 //    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
-    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
+//    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
 //    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
 //    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
+//    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+//    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
+//    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
 //    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
 //   imu_axis[PITCHUP]->change_hid_profile(DISABLED);
 //    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
@@ -320,7 +320,7 @@ void Translator::gestureCheck() {
         }  // mouse
       }  // for
 
-    /*
+    
       
     // IMU functionality
     for (int i = 0; i < 4; i++) {
@@ -387,7 +387,7 @@ void Translator::gestureCheck() {
         }  // mouse
     }  // for imu
     
-    */
+    
 
     /* Send HID inputs */
     if (KEYBOARD_CHANGED == true)

@@ -98,14 +98,14 @@ void launch() {
             led4 = 0;
             Thread::wait(300);
             //leftGlove.flex_sensors[0] = 350;
-            input.keyPress('a');
-            input.sendKeyboard();
+            //input.keyPress('a');
+            //input.sendKeyboard();
             
             led4 = 1;
             Thread::wait(300);
             //leftGlove.flex_sensors[0] = 750;
-            input.keyRelease('a');
-            input.sendKeyboard();
+            //input.keyRelease('a');
+            //input.sendKeyboard();
         }
 
         led4 = 1;
