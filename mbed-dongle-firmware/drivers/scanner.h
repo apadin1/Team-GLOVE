@@ -45,6 +45,8 @@ static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *para
 
     if (id == LEFT_GLOVE_ID) {
         left_glove();
+        // this is the thing TODO
+        //memcpy(&glove_sensors_compressed, params->advertisingData+4, sizeof(glove_sensors_compressed_t));
     }
     else if (id == RIGHT_GLOVE_ID) {
         right_glove();
@@ -71,14 +73,10 @@ public:
         ble.gap().stopScan();
     }
 
-    // Convenience function - either one can be used
-    void waitForEvent() {
-        ble.waitForEvent();
-    }
-
 private:
     BLE &ble;
     Translator* translator;
+    // need both glove sensors raw TODO
 };
 
 #endif // SCANNER_H_

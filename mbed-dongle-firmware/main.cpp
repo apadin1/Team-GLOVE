@@ -2,6 +2,7 @@
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
 #include "gpio.h"
+#include "drivers/crc.h"
 
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
@@ -54,19 +55,22 @@ void launch() {
     led3 = 1;
     led4 = 1;
 
+    // needed for the extractGloveData to work
+    crcInit();
+
     // Setup buttons for testing
     //button2.fall(press_a);
     //button2.rise(release_a);
 
     button3.fall(printPacketCounts);
-    
+
     //Ticker still_alive;
     //still_alive.attach(stillAlive, 1.0);
     //button1.fall(stillAlive);
 
     // Initialize ble
     ble.init();
-    
+
     // Initialize serial interrupts for configuration
     //serialInit(&translator, &scanner);
 
@@ -79,20 +83,20 @@ void launch() {
     translator_ptr = &translator;
     Scanner scanner(ble, &translator);
     scanner_ptr = &scanner;
-    
+
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
 
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected
     while (true) {
-    
+
         // UNCONNECTED STATE
         while (!input.isConnected()) {
             led1 = !led1;
             Thread::wait(10);
         }
-        
+
         // Wait for connection to take place
         Thread::wait(1000);
 
@@ -101,13 +105,13 @@ void launch() {
 
         // Scan for packets
         scanner.startScan();
-                
+
         // CONNECTED STATE
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(500);
             leftGlove.touch_sensor.a = 1;
-            
+
             led4 = 1;
             Thread::wait(500);
             leftGlove.touch_sensor.a = 0;

@@ -21,6 +21,7 @@
 #include "flex_sensor.h"
 #include "touch_sensor.h"
 #include "imu.h"
+#include "crc.h"
 
 /*
  * Condenced sensor data struct used on either
@@ -33,28 +34,39 @@ typedef struct {
 } glove_sensors_raw_t;
 
 /*
- * Needs to be, like, <26 B
- *
- * With no linear accelerations, 19B
+ * compressed version of all the
+ * sensor data that fits in a BLE advertisement
  */
+const size_t glove_sensors_compressed_size = 22;
+const size_t glove_sensors_compressed_size_no_crc = 20;
 typedef struct {
     // flex sensors (12*4 = 48b = 6B)
-    uint16_t f0 : 12;
-    uint16_t f1 : 12;
-    uint16_t f2 : 12;
-    uint16_t f3 : 12;
+    uint16_t f[3];
 
     // touch sensors (4*1 = 4b = 1B)
     uint8_t t;
 
-    // imu (3*4B = 12B | 6*4B = 24B)
-    float r;
-    float p;
-    float y;
+    // pads the touch sensor byte, use this for whatevs
+    uint8_t status;
+
+    // imu (3*4B = 12B)
+    float roll;
+    float pitch;
+    float yaw;
+
+    // CRC
+    uint16_t checksum;
 } glove_sensors_compressed_t;
 
+/*
+ * Computes and includes the checksum
+ *
+ * NOTE: need to call crcInit() before using
+ */
 void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed);
-void extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed);
+/*
+ * Runs the checksum and returns -1 without changing glove_sensors_raw if that fails
+ */
+int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed);
 
 #endif /* GLOVE_SENSORS_H_ */
-
