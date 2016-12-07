@@ -116,13 +116,12 @@ int main() {
      * Just change your local one to call the test loop you need.
      */
     //sensors_to_lights();
-    launch();
-    //touch_to_lights();
+    touch_to_lights();
+    //launch();
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
     //launch();
     //imu_to_lights();
-    //touch_to_lights();
     //advert_test();
 }
