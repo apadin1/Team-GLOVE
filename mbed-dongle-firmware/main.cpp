@@ -1,6 +1,7 @@
 #include "drivers/scanner.h"
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
+#include "glove_sensors.h"
 #include "gpio.h"
 //#include "drivers/crc.h"
 
@@ -124,6 +125,58 @@ void launch() {
 }
 
 
+static glove_sensors_compressed_t compressed_data;
+
+
+void decompress_and_print() {
+    static glove_sensors_raw_t raw_data;
+    static int count = 0;
+    
+    count += 1;
+    
+    printf("[%d]: ", count);
+    
+    
+    extractGloveSensors(&raw_data, &compressed_data);
+    
+    for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
+        printf("%d, ", raw_data.flex_sensors[i]);
+    }
+
+    printf("%d, %d, %d, %d", 
+            raw_data.touch_sensor.a,
+            raw_data.touch_sensor.b,
+            raw_data.touch_sensor.c,
+            raw_data.touch_sensor.d);
+    
+    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
+            raw_data.imu.orient_pitch,
+            raw_data.imu.orient_roll,
+            raw_data.imu.orient_yaw,
+            raw_data.imu.accel_x,
+            raw_data.imu.accel_y,
+            raw_data.imu.accel_z);
+}
+
+
+// Tested compressing and decompressing
+void scan_sensor_data(void) {
+
+    // Initialize scanning
+    ble.init();
+    Scanner scanner(ble, NULL);
+    scanner.startScan();
+    Thread bleWaitForEvent(bleWaitForEventLoop);
+
+    // Decompress the raw data and print it
+    RtosTimer decompressTask(decompress_and_print);
+    decompressTask.start(1000);
+    
+    // Spin
+    while (true) {    }
+}
+
+
 
 
 int main() {
@@ -137,6 +190,7 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
+    //launch();
     //uart_test();
+    scan_sensor_data();
 }
