@@ -6,8 +6,7 @@
  *     Nick Bertoldi
  *     Ben Heckathorn
  *     Ryan O’Keefe
- *     Adrian Padin
- *     Tim Schumacher
+ *     Adrian Padin *     Tim Schumacher
  *
  * Purpose:
  *  Translator to interpret glove data as HID input
@@ -109,6 +108,10 @@ public:
      * Calls the stop() method on the periodic update timer,
      */
      void stopUpdateTask();
+
+private:
+     void handleKeyboardInput(keyboardData&);
+     void handleMouseInput(mouseData&);
 
 private:
     // NOTE: Arrays indexed by enums
