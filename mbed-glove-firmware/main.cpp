@@ -49,8 +49,8 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
     /*
      * Indicate a touch has occured
      */
-    if (glove_data.touch_sensor.a || glove_data.touch_sensor.b ||
-            glove_data.touch_sensor.c || glove_data.touch_sensor.d) {
+    //if (glove_data.touch_sensor.a || glove_data.touch_sensor.b || glove_data.touch_sensor.c || glove_data.touch_sensor.d) {
+    if (glove_data.touch_sensor.b) {
         leds.set_color_all(Magenta, 8);
         return false;
     }
@@ -115,9 +115,9 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
+    launch();
     //sensors_to_lights();
-    touch_to_lights();
-    //launch();
+    //touch_to_lights();
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
