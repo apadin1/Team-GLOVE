@@ -23,22 +23,32 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-static const uint16_t ADVERT_ID = 0xFACE; // 0xFACE
-static const uint8_t PAYLOAD_DATA_LENGTH = 19;
-static const uint8_t PAYLOAD_CRC_LENGTH = 2;
-static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH;
+#include "glove_sensors.h"
+
+static const uint16_t ADVERT_ID = 0xBABE;
+static const uint8_t PAYLOAD_LENGTH = 2 + glove_sensors_compressed_size;
+
+/*
+ * Structure of advertising packet data:
+ *
+ * 00 - ADVERT_ID MSB
+ * 01 - ADVERT_ID LSB
+ * 02-20 - glove_sensors_compressed_t
+ * 21 - CRC MSB
+ * 22 - CRC LSB
+ */
 
 class AdvertBLE {
 public:
 
-    AdvertBLE(uint32_t advertising_interval_ms=15);
+    AdvertBLE();
 
     /*
-     * Given pointer to data of length PAYLOAD_DATA_LENGTH,
+     * Given pointer to data of length PAYLOAD_LENGTH,
      * update the advertisement data and the CRC, if the data
      * differs from the payload being advertised
      */
-    void update(uint8_t* data, uint8_t len=PAYLOAD_DATA_LENGTH);
+    void update(uint8_t* data, uint8_t len=PAYLOAD_LENGTH);
 
     /*
      * Calls ble.waitForEvent()
@@ -49,6 +59,7 @@ private:
     BLE ble;
     GapAdvertisingData adv;
     uint8_t adv_payload[PAYLOAD_LENGTH];
+    uint16_t crc_result;
 };
 
 #endif /* BLE_ADVERT_H_ */

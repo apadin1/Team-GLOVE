@@ -20,15 +20,13 @@
 
 IMU_BNO055::IMU_BNO055(I2C& i2c)
     : imu(i2c, IMU_RST, BNO055_G_CHIP_ADDR, MODE_NDOF) {
-
     imu.set_mounting_position(IMU_MOUNT_POSITION);
-
+    // add calib?
     if (imu.chip_ready() == 0) {
         do {
             wait_ms(10);
         } while (imu.reset());
     }
-
     imu.read_id_inf(&bno055_id_inf);
 
     //update_task_timer = new RtosTimer(this, &IMU_BNO055::update, osTimerPeriodic);
