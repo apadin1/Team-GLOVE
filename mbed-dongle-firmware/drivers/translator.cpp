@@ -180,11 +180,11 @@ void Translator::gestureCheck() {
     }
 
     // Decompress
-    //extractGloveSensors(glove_data, glove_compressed);
-    if (glove_data->imu.orient_pitch > 0)
-        glove_data->imu.orient_pitch = 0;
-    else
-        glove_data->imu.orient_pitch = 33;
+    extractGloveSensors(glove_data, glove_compressed);
+    //if (glove_data->imu.orient_pitch > 0)
+    //    glove_data->imu.orient_pitch = 0;
+    //else
+    //    glove_data->imu.orient_pitch = 33;
     //bool MOUSE_CHANGED = false;
     //bool KEYBOARD_CHANGED = false;
     led2 = 0;//DEBUG
