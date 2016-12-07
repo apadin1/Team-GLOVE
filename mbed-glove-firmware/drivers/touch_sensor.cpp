@@ -14,8 +14,7 @@
  *   which uses I2C and can communicate the values of up to 7 sensors
  *
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
- *   to indicate a change in state of the sensors.
- */
+ *   to indicate a change in state of the sensors.  */
 #include "touch_sensor.h"
 
 TouchSensor::TouchSensor(PinName sda, PinName scl, PinName intr) : qt(sda, scl) {
@@ -69,11 +68,20 @@ void TouchSensor::writeKeys(key_states_t* key_states) {
 }
 
 void TouchSensor::update() {
+    /*
+     * After a predetermined count of updates, recalibrate the sensor
+     */
+    static int calibration_count = 0;
+    calibration_count += 1;
 
     /* Use the change line to avoid unnessescary
      * I2C I/O, but without being an interrupt
      */
     if (*change_line == 1) {
+        if (calibration_count >= 500) { //3s
+            qt.calibrate();
+            wait_ms(2);
+        }
         return;
     }
     uint8_t buttons = qt.getButtonsState();
