@@ -90,10 +90,10 @@ void DotStarLEDs::set_RGB_all(uint8_t red, uint8_t green, uint8_t blue,
 void DotStarLEDs::set_led_rgb(uint8_t led, uint8_t red, uint8_t green,
         uint8_t blue, uint8_t brightness) {
 
-    uint32_t led = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
+    uint32_t new_led_val = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
 
-    if (leds[led+1] != led) {
-        leds[led+1] = led;
+    if (leds[led+1] != new_led_val) {
+        leds[led+1] = new_led_val;
         clean = false;
     }
 }
