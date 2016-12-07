@@ -7,17 +7,18 @@
 
 extern void blink(void); extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
-extern void keyboard_mouse_demo(void);
 extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
 
 typedef pair<DotStarColor, DotStarColor> color_pair_t;
-const uint8_t num_led_patterns_c = 3;
+const uint8_t num_led_patterns_c = 2;
 const color_pair_t led_patterns_c[num_led_patterns_c] = {
-    color_pair_t(Blue, Cyan),
-    color_pair_t(Red, Magenta),
-    color_pair_t(Green, Yellow),
+    //color_pair_t(Blue, Cyan),
+    //color_pair_t(Red, Magenta),
+    //color_pair_t(Green, Yellow),
+    color_pair_t(Blue, Yellow),
+    color_pair_t(Yellow, Blue),
 };
 
 /*
@@ -49,8 +50,7 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
     /*
      * Indicate a touch has occured
      */
-    //if (glove_data.touch_sensor.a || glove_data.touch_sensor.b || glove_data.touch_sensor.c || glove_data.touch_sensor.d) {
-    if (glove_data.touch_sensor.b) {
+    if (glove_data.touch_sensor.a || glove_data.touch_sensor.b || glove_data.touch_sensor.c || glove_data.touch_sensor.d) {
         leds.set_color_all(Magenta, 8);
         return false;
     }

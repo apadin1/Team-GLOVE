@@ -33,7 +33,6 @@ void TouchSensor::initialize(PinName intr) {
     qt.getButtonsState();
 
     // Associate the update function with the interrupt CHANGE line
-    /*
     if (intr != NC) {
         if (TOUCH_DIGITALIN_CHANGE) {
             change_line = new DigitalIn(intr);
@@ -43,8 +42,6 @@ void TouchSensor::initialize(PinName intr) {
             change_event->fall(this, &TouchSensor::changeEventHandler);
         }
     }
-    */
-    change_line = new DigitalIn(intr);
     keys.a = 0;
     keys.b = 0;
     keys.c = 0;
