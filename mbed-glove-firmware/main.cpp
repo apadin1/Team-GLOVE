@@ -39,10 +39,18 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
     }
 
     /*
+     * Indicate the first flex sensor is pulled
+     */
+    if (glove_data.flex_sensors[0] < 450) {
+        leds.set_color_all(Cyan, 10);
+        return false;
+    }
+
+    /*
      * Indicate a touch has occured
      */
     if (glove_data.touch_sensor.pack()) {
-        leds.set_color_all(Blue, 5);
+        leds.set_color_all(Magenta, 8);
         return false;
     }
 
