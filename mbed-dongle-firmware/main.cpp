@@ -102,7 +102,7 @@ void launch() {
             led1 = !led1;
             Thread::wait(10);
         }
-
+        led1 = 1;
         // Wait for connection to take place
         Thread::wait(1000);
 
@@ -115,12 +115,12 @@ void launch() {
         // CONNECTED STATE
         while (input.isConnected()) {
             led4 = 0;
-            Thread::wait(50);
-            //leftGlove.touch_sensor.a = 1;
+            Thread::wait(500);
+            leftGlove.touch_sensor.a = 1;
 
             led4 = 1;
             Thread::wait(500);
-            //leftGlove.touch_sensor.a = 0;
+            leftGlove.touch_sensor.a = 0;
         }
 
         led4 = 1;

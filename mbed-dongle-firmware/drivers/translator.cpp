@@ -122,7 +122,7 @@ void Translator::updateGestureMap(uint8_t* config) {
       flex_sensors[i]->change_hid_profile(KEYBOARD, config[i]);
     }
     else {
-      flex_sensors[i]->change_hid_profile(MOUSE, config[i]);
+      flex_sensors[i]->change_hid_profile(MOUSE, 0, static_cast<mousePart>(config[i]));
     }
   }
 
@@ -135,7 +135,7 @@ void Translator::updateGestureMap(uint8_t* config) {
       touch_sensors[i-4]->change_hid_profile(KEYBOARD, config[i]);
     }
     else {
-      touch_sensors[i-4]->change_hid_profile(MOUSE, config[i]);
+      touch_sensors[i-4]->change_hid_profile(MOUSE, 0, static_cast<mousePart>(config[i]));
     }
   }
 
@@ -148,7 +148,7 @@ void Translator::updateGestureMap(uint8_t* config) {
       imu_axis[i-8]->change_hid_profile(KEYBOARD, config[i]);
     }
     else {
-      imu_axis[i-8]->change_hid_profile(MOUSE, config[i]);
+      imu_axis[i-8]->change_hid_profile(MOUSE, 0, static_cast<mousePart>(config[i]));
     }
   }
 }
@@ -159,9 +159,11 @@ void Translator::gestureCheck() {
     if (!HIDinput->isConnected()) {
         return;
     }
-    
+
     // Decompress
     extractGloveSensors(glove_data, &rightGloveCompressed);
+
+    led2 = 0;//DEBUG
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -228,7 +230,6 @@ void Translator::gestureCheck() {
             }  // for
         }  // mouse
       }  // for
-
     /* Touch Sensor functionality */
     for (int i = 0; i < TOUCH_COUNT; ++i) {
         /* Keyboard functionality */
@@ -362,6 +363,7 @@ void Translator::gestureCheck() {
     /* Send HID inputs */
     HIDinput->sendKeyboard();
     HIDinput->sendMouse();
+    led2 = 1;
 }
 
 void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }
