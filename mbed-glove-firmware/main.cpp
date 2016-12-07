@@ -41,7 +41,7 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
     /*
      * Indicate a touch has occured
      */
-    if ( not glove_data.touch_sensor.a) {
+    if (glove_data.touch_sensor.pack()) {
         leds.set_color_all(Blue, 5);
         return false;
     }
