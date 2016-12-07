@@ -115,7 +115,7 @@ void bleInitComplete(BLE& ble) {
     ble.gap().setDeviceName((const uint8_t *) DEVICE_NAME);
 
     // see 5.1.2: HID over GATT Specification (pg. 25)
-    ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_UNDIRECTED);
+    ble.gap().setAdvertisingType(GapAdvertisingParams::ADV_CONNECTABLE_DIRECTED);
     ble.gap().setAdvertisingInterval(50);     // 30ms to 50ms is recommended (5.1.2)
 }
 
