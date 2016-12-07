@@ -3,16 +3,10 @@
 #include "drivers/translator.h"
 #include "glove_sensors.h"
 #include "gpio.h"
-//#include "drivers/crc.h"
 
-glove_sensors_compressed_t leftGloveCompressed;
-glove_sensors_compressed_t rightGloveCompressed;
-glove_sensors_raw_t leftGlove;
-glove_sensors_raw_t rightGlove;
-
-static KeyboardMouse * keyboard_ptr;
-static Translator * translator_ptr;
-static Scanner * scanner_ptr;
+//static KeyboardMouse * keyboard_ptr;
+//static Translator * translator_ptr;
+//static Scanner * scanner_ptr;
 
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
@@ -38,7 +32,6 @@ void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
 
-
 // Wait for events in a constant loop to make sure the BLE stack
 // gets serviced in a reasonable time
 void bleWaitForEventLoop() {
@@ -59,36 +52,44 @@ void launch() {
     led3 = 1;
     led4 = 1;
 
-    // needed for the extractGloveData to work
-    //crcInit();
-
-    // Setup buttons for testing
+    // Debugging
+    //button1.fall(stillAlive);
     //button2.fall(press_a);
     //button2.rise(release_a);
-
     button3.fall(printPacketCounts);
-
     //Ticker still_alive;
     //still_alive.attach(stillAlive, 1.0);
-    //button1.fall(stillAlive);
-
+    
+    // Glove data structs
+    glove_sensors_compressed_t leftGloveCompressed;
+    glove_sensors_compressed_t rightGloveCompressed;
+    glove_sensors_raw_t leftGlove;
+    glove_sensors_raw_t rightGlove;
+    
     // Initialize ble
     ble.init();
 
     // Initialize KeyboardMouse object
     KeyboardMouse input(ble);
-    keyboard_ptr = &input;
+    //keyboard_ptr = &input;
 
-    // Initialize translator and scanner
-    Translator translator(&leftGlove, &input);
-    translator_ptr = &translator;
-    
+    // Initialize translators
+    Translator leftTranslator(&leftGlove,
+                              &leftGloveCompressed,
+                              &input);
+
+    Translator rightTranslator(&rightGlove,
+                               &rightGloveCompressed,
+                               &input);
+
+    // Init scanner
     crcInit();
-    Scanner scanner(ble, &translator);
-    scanner_ptr = &scanner;
+    Scanner scanner(ble,
+                    &leftGloveCompressed,
+                    &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
-    serialInit(&translator, &scanner);
+    //serialInit(&translator, &scanner);
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
@@ -102,12 +103,14 @@ void launch() {
             led1 = !led1;
             Thread::wait(10);
         }
+        
         led1 = 1;
         // Wait for connection to take place
         Thread::wait(1000);
 
         // Start scanning and translating
-        translator.startUpdateTask(30);
+        rightTranslator.startUpdateTask(50);
+        leftTranslator.startUpdateTask(50);
 
         // Scan for packets
         scanner.startScan();
@@ -115,20 +118,26 @@ void launch() {
         // CONNECTED STATE
         while (input.isConnected()) {
             led4 = 0;
-            Thread::wait(500);
-            leftGlove.touch_sensor.a = 1;
-
+            //Thread::wait(500);
+            //leftGlove.touch_sensor.a = 1;
+            //input.keyPress('a');
+            //input.sendKeyboard();
+            
             led4 = 1;
-            Thread::wait(500);
-            leftGlove.touch_sensor.a = 0;
+            //Thread::wait(500);
+            //leftGlove.touch_sensor.a = 0;
+            //input.keyRelease('a');
+            //input.sendKeyboard();
         }
 
         led4 = 1;
-        translator.stopUpdateTask();
+        rightTranslator.stopUpdateTask();
+        leftTranslator.stopUpdateTask();
         scanner.stopScan();
     }
 }
 
+/*
 void decompress_and_print() {
     static glove_sensors_raw_t raw_data;
     static int count = 0;
@@ -139,12 +148,10 @@ void decompress_and_print() {
     
     printf("[%d]: ", count);
     
-    /*
     uint8_t * compressed_ptr = (uint8_t *) &compressed_data;
     for (int i = 0; i < sizeof(compressed_data); ++i) {
         printf("%d, ", compressed_ptr[i]);
     }
-    */
     
     int error = extractGloveSensors(&raw_data, &rightGloveCompressed);
     //printf("Error: %d", error);
@@ -195,7 +202,7 @@ void scan_sensor_data(void) {
         ble.waitForEvent();
     }
 }
-
+*/
 
 
 

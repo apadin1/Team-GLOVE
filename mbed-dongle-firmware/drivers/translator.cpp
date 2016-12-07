@@ -16,15 +16,18 @@
 #include "translator.h"
 #include "gpio.h"
 
-extern glove_sensors_compressed_t rightGloveCompressed;
-
 
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
 
-Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
-    : glove_data(_glove), HIDinput(_input), working(TRANSLATOR_DEBUG_PIN) {
+Translator::Translator(glove_sensors_raw_t* _glove,
+                       glove_sensors_compressed_t* _glove_comp,
+                       KeyboardMouse* _input) :
+        glove_data(_glove),
+        glove_compressed(_glove_comp),
+        HIDinput(_input),
+        working(TRANSLATOR_DEBUG_PIN) {
 
     /* Left Glove Setup */
 
@@ -161,7 +164,7 @@ void Translator::gestureCheck() {
     }
 
     // Decompress
-    extractGloveSensors(glove_data, &rightGloveCompressed);
+    extractGloveSensors(glove_data, glove_compressed);
 
     led2 = 0;//DEBUG
 
@@ -230,9 +233,13 @@ void Translator::gestureCheck() {
             }  // for
         }  // mouse
       }  // for
-    /* Touch Sensor functionality */
+
+    /*
+
+    // Touch Sensor functionality
     for (int i = 0; i < TOUCH_COUNT; ++i) {
-        /* Keyboard functionality */
+        
+        // Keyboard functionality
         if (touch_sensors[i]->is_keyboard()) {
             keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
             if (keyboard.valid) {
@@ -244,13 +251,13 @@ void Translator::gestureCheck() {
             }
         }
 
-        /* Mouse functionality */
+        // Mouse functionality
         else if (touch_sensors[i]->is_mouse()) {
             mouseData mouse =
                   touch_sensors[i]->get_mouse_data();
             if (mouse.valid) {
 
-                /* Left click */
+                // Left click
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(LEFT, DOWN);
@@ -259,7 +266,7 @@ void Translator::gestureCheck() {
                     }
                 }
 
-                /* Right click */
+                // Right click
                 else if (mouse.part == RBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(RIGHT, DOWN);
@@ -268,7 +275,7 @@ void Translator::gestureCheck() {
                     }
                 }
 
-                /* Middle click */
+                // Middle click
                 else if (mouse.part == MIDDLECLICK) {
                   if (mouse.value) {
                       HIDinput->setMouseButton(MIDDLE, DOWN);
@@ -277,17 +284,17 @@ void Translator::gestureCheck() {
                   }
                 }
 
-                /* Scroll functionality */
+                // Scroll functionality
                 else if (mouse.part == SCROLLAXIS) {
                     HIDinput->setMouseScroll(mouse.value);
                 }
 
-                /* X-axis functionality */
+                // X-axis functionality
                 else if (mouse.part == XAXIS) {
                     HIDinput->setMouseSpeedX(mouse.value);
                 }
 
-                /* Y-axis functionality */
+                // Y-axis functionality
                 else if (mouse.part == YAXIS) {
                     HIDinput->setMouseSpeedY(mouse.value);
                 }
@@ -295,6 +302,8 @@ void Translator::gestureCheck() {
         }  // mouse
       }  // for
 
+    /*
+      
     // IMU functionality
     for (int i = 0; i < 4; i++) {
 
@@ -356,9 +365,11 @@ void Translator::gestureCheck() {
                 else if (mouse.part == YAXIS) {
                     HIDinput->setMouseSpeedY(mouse.value);
                 }
-            }  // if
+            }  // if valid
         }  // mouse
-    }  // for
+    }  // for imu
+    
+    */
 
     /* Send HID inputs */
     HIDinput->sendKeyboard();
