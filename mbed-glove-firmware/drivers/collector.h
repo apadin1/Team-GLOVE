@@ -60,7 +60,11 @@ public:
      */
     void stopUpdateTask();
 
-//private:
+    const glove_sensors_raw_t& getGloveSensorData() {
+        return glove_data;
+    }
+
+private:
     // Sensor classes (consider &refs)
     FlexSensors* flex;
     IMU_BNO055* imu;

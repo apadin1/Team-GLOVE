@@ -1,56 +1,52 @@
 #include <inttypes.h>
+#include <utility>
 
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
 #include "drivers/dot_star_leds.h"
+
 extern void blink(void); extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
-extern void thing_do(void);
 extern void keyboard_mouse_demo(void);
 extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
 
-class Blink {
-public:
-    Blink(AdvertBLE& _adble)
-    : d(LED4), adble(_adble) {
-        update_task_timer =
-          new RtosTimer(this, &Blink::update, osTimerPeriodic);
-        data.t = 0xff;
-    }
-
-    void update() {
-        d = 0;
-        wait_ms(5);
-        data.t = ~data.t;
-        adble.update((uint8_t*)&data, 19);
-        d = 1;
-    }
-
-    void startUpdateTask() {
-        update_task_timer->start(25);
-    }
-
-private:
-    DigitalOut d;
-    RtosTimer* update_task_timer;
-    AdvertBLE& adble;
-    glove_sensors_compressed_t data;
+typedef pair<DotStarColor, DotStarColor> color_pair_t;
+const uint8_t num_led_patterns_c = 3;
+const color_pair_t led_patterns_c[num_led_patterns_c] = {
+    color_pair_t(Blue, Cyan),
+    color_pair_t(Red, Magenta),
+    color_pair_t(Green, Yellow),
 };
 
-flex_sensor_t f[4];
+/*
+ * Use this to signal or very the lights based on
+ * the glove data or return true to let the set
+ * pattern continue.
+ */
+bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs& leds) {
+    /*
+     * Indicate IMU flatlining
+     */
+    float ubound = 0.001;
+    float lbound = ubound - (2*ubound);
+    if ((lbound < glove_data.imu.orient_pitch && glove_data.imu.orient_pitch < ubound)
+         && (lbound < glove_data.imu.orient_roll && glove_data.imu.orient_roll < ubound)) {
 
-bool button_leds(TouchSensor& touch_sensor, DotStarLEDs& ds_leds) {
-    static key_states_t keys;
-    touch_sensor.writeKeys(&keys);
-    //if (keys.a == 1 || keys.b == 1 || keys.c == 1 || keys.d == 1) {
-    if (f[0] < 350) {
-        ds_leds.set_color(0, Yellow, 10);
-        ds_leds.set_color(1, Blue, 10);
-        return true;
+        leds.set_color_all(Orange, 5);
+        return false;
     }
-    return false;
+
+    /*
+     * Indicate a touch has occured
+     */
+    if ( not glove_data.touch_sensor.a) {
+        leds.set_color_all(Blue, 5);
+        return false;
+    }
+
+    return true;
 }
 
 void launch() {
@@ -76,6 +72,7 @@ void launch() {
 
     Collector collector(&flex_sensors, &imu, &touch_sensor, adble);
     collector.startUpdateTask(20);
+    const glove_sensors_raw_t& glove_data = collector.getGloveSensorData();
 
     //Blink blk(adble); blk.startUpdateTask();
 
@@ -85,38 +82,18 @@ void launch() {
      */
     DigitalOut dso(p13); dso = 0;
     for (;;) {
-        l1 = !l1;
         //printf("f: %d, t: 0x%x\r\n", collector.flex_data[0], collector.touch_data->pack());
         //printf("comp: %d, fp: %f\r\n", compress_double(110.565), extract_double(11056));
 
-        int val = sizeof(glove_sensors_compressed_t);
-        for (int i=0; i<val; ++i) {dso=1;dso=0;}
-
-        for (int i=0; i < 50; ++i) {
-            flex_sensors.writeSensors(f);
-            if (!button_leds(touch_sensor, ds_leds)) {
-                ds_leds.set_color(0, Red);
-                ds_leds.set_color(1, Magenta);
+        for (uint8_t i = 0; i < num_led_patterns_c; ++i) {
+            l1 = !l1;
+            for (int j=0; j < 50; ++j) {
+                if (check_signal_conditions(glove_data, ds_leds)) {
+                    ds_leds.set_color(0, led_patterns_c[i].first);
+                    ds_leds.set_color(1, led_patterns_c[i].second);
+                }
+                Thread::wait(10);
             }
-            Thread::wait(10);
-        }
-
-        for (int i=0; i < 50; ++i) {
-            flex_sensors.writeSensors(f);
-            if (!button_leds(touch_sensor, ds_leds)) {
-                ds_leds.set_color(0, Green);
-                ds_leds.set_color(1, Yellow);
-            }
-            Thread::wait(10);
-        }
-
-        for (int i=0; i < 50; ++i) {
-            flex_sensors.writeSensors(f);
-            if (!button_leds(touch_sensor, ds_leds)) {
-                ds_leds.set_color(0, Blue);
-                ds_leds.set_color(1, Cyan);
-            }
-            Thread::wait(10);
         }
     }
 }

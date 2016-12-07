@@ -44,11 +44,11 @@ public:
     AdvertBLE();
 
     /*
-     * Given pointer to data of length PAYLOAD_DATA_LENGTH,
+     * Given pointer to data of length PAYLOAD_LENGTH,
      * update the advertisement data and the CRC, if the data
      * differs from the payload being advertised
      */
-    void update(uint8_t* data, uint8_t len=PAYLOAD_DATA_LENGTH);
+    void update(uint8_t* data, uint8_t len=PAYLOAD_LENGTH);
 
     /*
      * Calls ble.waitForEvent()

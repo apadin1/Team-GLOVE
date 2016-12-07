@@ -38,25 +38,21 @@ void Collector::updateAndAdvertise() {
 
     touch->spawnUpdateThread();
 
-    /*
-    imu->updateAndWrite(&glove_data.imu);
-    flex->updateAndWrite(&glove_data.flex_sensors[0]);
-    touch->writeKeys(&glove_data.touch_sensor);
-    */
     imu->updateAndWrite(imu_data);
     flex->updateAndWrite(flex_data);
     touch->writeKeys(touch_data);
 
-    /*
+#if 0
     if (count++ > 100) {
         printf("x f: %d, p: %f\r\n", flex_data[0], imu_data->orient_pitch);
         compressGloveSensors(&glove_data, &glove_data_compressed);
-        printf("c f: %d, p: %f\r\n", glove_data_compressed.f[0], glove_data_compressed.pitch);
+        printf("c f: %d, p: %f\r\n", glove_data_compressed.f[0]>>4, glove_data_compressed.pitch);
         count = 0;
     }
-    */
+#endif
 
-    adble.update((uint8_t*)&glove_data_compressed);
+    compressGloveSensors(&glove_data, &glove_data_compressed);
+    adble.update((uint8_t*)&glove_data_compressed, glove_sensors_compressed_size);
 
     // because it works...
     wait_ms(5);
