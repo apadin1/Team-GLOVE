@@ -30,7 +30,9 @@ void touch_to_lights() {
     I2C i2c(I2C_SDA0, I2C_SCL0);
     TouchSensor touch_sensor(i2c, TOUCH_INTERRUPT);
     for (;;) {
-        touch_sensor.updateAndWrite(&keys);
+        touch_sensor.spawnUpdateThread();
+        Thread::wait(15);
+        touch_sensor.writeKeys(&keys);
         if (keys.a == 1)
             led1 = 0;
         else led1 = 1;
@@ -43,7 +45,8 @@ void touch_to_lights() {
         if (keys.d == 1)
             led4 = 0;
         else led4 = 1;
-        wait_ms(10);
+        touch_sensor.terminateUpdateThreadIfBlocking();
+        Thread::wait(5);
     }
 }
 
