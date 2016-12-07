@@ -89,10 +89,20 @@ void DotStarLEDs::set_RGB_all(uint8_t red, uint8_t green, uint8_t blue,
 
 void DotStarLEDs::set_led_rgb(uint8_t led, uint8_t red, uint8_t green,
         uint8_t blue, uint8_t brightness) {
-    leds[led+1] = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
+
+    uint32_t led = ((0xE0 | brightness) << 24) | (blue << 16) | (green << 8) | red;
+
+    if (leds[led+1] != led) {
+        leds[led+1] = led;
+        clean = false;
+    }
 }
 
 void DotStarLEDs::flush_to_spi() {
+    if (clean) {
+        return;
+    }
+    clean = true;
     // for every 4-byte word in the buffer, write it
     uint32_t word;
     for (uint8_t i = 0; i < num_leds+2; ++i) {
@@ -110,5 +120,4 @@ float map_unsigned_analog_to_percent(uint16_t min_, uint16_t max_, uint16_t val)
 float map_float_analog_to_percent(float min_, float max_, float val) {
     return (val - min_) / float(max_ - min_);
 }
-
 

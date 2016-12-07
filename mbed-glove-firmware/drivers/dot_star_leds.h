@@ -77,6 +77,8 @@ private:
     SPI spi;
     // buffer with the packed led's values in it (plus start and stop codes)
     uint32_t* leds;
+    // dirty bit, skips flush_to_spi to avoid waver
+    bool clean;
 
     void flush_to_spi();
     void set_led_rgb(uint8_t led, uint8_t red, uint8_t green,
