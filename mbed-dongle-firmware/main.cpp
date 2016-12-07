@@ -43,7 +43,7 @@ void launch() {
     button3.fall(printPacketCounts);
     //Ticker still_alive;
     //still_alive.attach(stillAlive, 1.0);
-    
+
     // Glove data structs
     glove_sensors_compressed_t leftGloveCompressed;
     //memset(&leftGloveCompressed, 0, sizeof(glove_sensors_compressed_t));
@@ -53,7 +53,7 @@ void launch() {
     //rightGloveCompressed.checksum = 5;
     glove_sensors_raw_t leftGlove;
     glove_sensors_raw_t rightGlove;
-    
+
     // Initialize ble
     ble.init();
 
@@ -84,7 +84,7 @@ void launch() {
             led4 = !led4;
             Thread::wait(10);
         }
-        
+
         led1 = 1;
         // Wait for connection to take place
         Thread::wait(1000);
@@ -104,7 +104,7 @@ void launch() {
             leftGlove.touch_sensor.a = 1;
             //input.keyPress('a');
             //input.sendKeyboard();
-            
+
             led4 = 1;
             Thread::wait(300);
             leftGlove.touch_sensor.a = 0;
@@ -120,74 +120,74 @@ void launch() {
 }
 
 /*
-glove_sensors_compressed_t left_compressed;
-glove_sensors_compressed_t right_compressed;
-glove_sensors_raw_t left_raw;
-glove_sensors_raw_t right_raw;
+   glove_sensors_compressed_t left_compressed;
+   glove_sensors_compressed_t right_compressed;
+   glove_sensors_raw_t left_raw;
+   glove_sensors_raw_t right_raw;
 
-void print_raw_data(glove_sensors_raw_t raw_data) {
-    for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
-        printf("%d, ", raw_data.flex_sensors[i]);
-    }
+   void print_raw_data(glove_sensors_raw_t raw_data) {
+   for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
+   printf("%d, ", raw_data.flex_sensors[i]);
+   }
 
-    printf("%d, %d, %d, %d, ", 
-            raw_data.touch_sensor.a,
-            raw_data.touch_sensor.b,
-            raw_data.touch_sensor.c,
-            raw_data.touch_sensor.d);
-    
-    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f",
-            raw_data.imu.orient_pitch,
-            raw_data.imu.orient_roll,
-            raw_data.imu.orient_yaw,
-            raw_data.imu.accel_x,
-            raw_data.imu.accel_y,
-            raw_data.imu.accel_z);
-            
-    printf("\r\n");
-}
+   printf("%d, %d, %d, %d, ",
+   raw_data.touch_sensor.a,
+   raw_data.touch_sensor.b,
+   raw_data.touch_sensor.c,
+   raw_data.touch_sensor.d);
 
-void decompress_and_print() {
-    static int count = 0;
-    count += 1;
-    
-    extractGloveSensors(&left_raw, &left_compressed);
-    extractGloveSensors(&right_raw, &right_compressed);
+   printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f",
+   raw_data.imu.orient_pitch,
+   raw_data.imu.orient_roll,
+   raw_data.imu.orient_yaw,
+   raw_data.imu.accel_x,
+   raw_data.imu.accel_y,
+   raw_data.imu.accel_z);
 
-    printf("[%d] Left:  ", count);
-    print_raw_data(left_raw);
-    
-    Thread::wait(10);
-    
-    printf("[%d] Right: ", count);
-    print_raw_data(right_raw);    
+   printf("\r\n");
+   }
 
-    printf("\r\n");
-}
+   void decompress_and_print() {
+   static int count = 0;
+   count += 1;
+
+   extractGloveSensors(&left_raw, &left_compressed);
+   extractGloveSensors(&right_raw, &right_compressed);
+
+   printf("[%d] Left:  ", count);
+   print_raw_data(left_raw);
+
+   Thread::wait(10);
+
+   printf("[%d] Right: ", count);
+   print_raw_data(right_raw);
+
+   printf("\r\n");
+   }
 
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
-    
-    led1 = 1;
-    led2 = 1;
-    led3 = 1;
-    led4 = 1;
 
-    // Initialize scanning
-    ble.init();
-    Scanner scanner(ble, &left_compressed, &right_compressed);
-    scanner.startScan();
-    //Thread bleWaitForEvent(bleWaitForEventLoop);
+led1 = 1;
+led2 = 1;
+led3 = 1;
+led4 = 1;
 
-    // Decompress the raw data and print it
-    crcInit();
-    RtosTimer decompressTask(decompress_and_print);
-    decompressTask.start(1000);
-    
-    // Spin
-    while (true) {
-        ble.waitForEvent();
-    }
+// Initialize scanning
+ble.init();
+Scanner scanner(ble, &left_compressed, &right_compressed);
+scanner.startScan();
+//Thread bleWaitForEvent(bleWaitForEventLoop);
+
+// Decompress the raw data and print it
+crcInit();
+RtosTimer decompressTask(decompress_and_print);
+decompressTask.start(1000);
+
+// Spin
+while (true) {
+ble.waitForEvent();
+}
 }
 //*/
 

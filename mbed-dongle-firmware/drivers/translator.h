@@ -83,8 +83,8 @@ public:
      *
      */
     Translator(glove_sensors_raw_t* glove_raw,
-               glove_sensors_compressed_t* glove_compressed,
-               KeyboardMouse* input);
+            glove_sensors_compressed_t* glove_compressed,
+            KeyboardMouse* input);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -102,16 +102,16 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-     void startUpdateTask(uint32_t ms=10);
+    void startUpdateTask(uint32_t ms=10);
 
     /*
      * Calls the stop() method on the periodic update timer,
      */
-     void stopUpdateTask();
+    void stopUpdateTask();
 
 private:
-     void handleKeyboardInput(keyboardData&);
-     void handleMouseInput(mouseData&);
+    void handleKeyboardInput(keyboardData&);
+    void handleMouseInput(mouseData&);
 
 private:
     // NOTE: Arrays indexed by enums
