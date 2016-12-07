@@ -78,9 +78,11 @@ void TouchSensor::update() {
      * I2C I/O, but without being an interrupt
      */
     if (*change_line == 1) {
-        if (calibration_count >= 500) { //3s
+
+        // if free, do a calibration every few seconds
+        if (calibration_count >= 250) {
+            calibration_count = 0;
             qt.calibrate();
-            wait_ms(2);
         }
         return;
     }

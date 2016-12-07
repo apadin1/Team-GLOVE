@@ -17,8 +17,8 @@ const color_pair_t led_patterns_c[num_led_patterns_c] = {
     //color_pair_t(Blue, Cyan),
     //color_pair_t(Red, Magenta),
     //color_pair_t(Green, Yellow),
-    color_pair_t(Blue, Yellow),
-    color_pair_t(Yellow, Blue),
+    color_pair_t(Blue, Maize),
+    color_pair_t(Maize, Blue),
 };
 
 /*

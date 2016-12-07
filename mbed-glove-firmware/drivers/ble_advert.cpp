@@ -21,8 +21,6 @@ AdvertBLE::AdvertBLE() {
     memset(adv_payload, 0, PAYLOAD_LENGTH);
     adv_payload[0] = (ADVERT_ID >> 8) & 0x00FF;
     adv_payload[1] = ADVERT_ID & 0x00FF;
-    adv_payload[3] = 0xFA;
-    adv_payload[4] = 0xCE;
 
     ble.init();
 

@@ -45,6 +45,8 @@ void color_to_RGB(DotStarColor color, uint8_t& red, uint8_t& green, uint8_t& blu
             red = 250; green = 100; blue = 0; break;
         case(Yellow):
             red = 255; green = 230; blue = 0; break;
+        case(Maize):
+            red = 255; green = 170; blue = 0; break;
         case(Purple):
             red = 180; green = 0; blue = 255; break;
         case(Cyan):
