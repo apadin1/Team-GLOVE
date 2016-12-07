@@ -93,34 +93,35 @@ Translator::Translator(glove_sensors_raw_t* _glove,
 
     /* BUTTON MAPPING */
     flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
-    flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
+//    flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
     flex_sensors[FLEX3]->change_hid_profile(KEYBOARD, 'c');
     flex_sensors[FLEX4]->change_hid_profile(KEYBOARD, 'd');
-    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
-    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
-    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
+//    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
+//    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
+//    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
     touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'h');
     imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'i');
     imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 'j');
     imu_axis[ROLLLEFT]->change_hid_profile(KEYBOARD, 'k');
     imu_axis[ROLLRIGHT]->change_hid_profile(KEYBOARD, 'l');
-    imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
-    imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
+//    imu_axis[YAWLEFT]->change_hid_profile(KEYBOARD, 'm');
+//    imu_axis[YAWRIGHT]->change_hid_profile(KEYBOARD, 'n');
+
     //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
 //    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
-//    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
+    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
 //    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
 //    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-//    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
-//    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
-//    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
 //    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
 //   imu_axis[PITCHUP]->change_hid_profile(DISABLED);
 //    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
 //    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
 //    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
-//    imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
-//    imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
+    imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
+    imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
 
 
     update_task_timer =
@@ -180,7 +181,8 @@ void Translator::gestureCheck() {
 
     // Decompress
     extractGloveSensors(glove_data, glove_compressed);
-
+    bool MOUSE_CHANGED = false;
+    bool KEYBOARD_CHANGED = false;
     led2 = 0;//DEBUG
 
     /* Flex Sensor functionality */
@@ -190,6 +192,7 @@ void Translator::gestureCheck() {
       if (flex_sensors[i]->is_keyboard()) {
           keyboardData keyboard = flex_sensors[i]->get_keyboard_data();
           if (keyboard.valid) {
+              KEYBOARD_CHANGED = true;
               if (keyboard.value) {
                   HIDinput->keyPress(keyboard.key);
               } else {
@@ -200,10 +203,9 @@ void Translator::gestureCheck() {
 
       /* Mouse functionality */
       else if (flex_sensors[i]->is_mouse()) {
-          mouseData mouse =
-                flex_sensors[i]->get_mouse_data();  // Grab mouse data
+          mouseData mouse = flex_sensors[i]->get_mouse_data();  // Grab mouse data
           if (mouse.valid) {
-
+               MOUSE_CHANGED = true;
               /* Left click */
               if (mouse.part == LBUTTON) {
                   if (mouse.value) {
@@ -258,6 +260,7 @@ void Translator::gestureCheck() {
         if (touch_sensors[i]->is_keyboard()) {
             keyboardData keyboard = touch_sensors[i]->get_keyboard_data();
             if (keyboard.valid) {
+                KEYBOARD_CHANGED = true;
                 if (keyboard.value) {
                     HIDinput->keyPress(keyboard.key);
                 } else {
@@ -271,7 +274,7 @@ void Translator::gestureCheck() {
             mouseData mouse =
                   touch_sensors[i]->get_mouse_data();
             if (mouse.valid) {
-
+                MOUSE_CHANGED = true;
                 // Left click
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
@@ -387,8 +390,10 @@ void Translator::gestureCheck() {
     */
 
     /* Send HID inputs */
-    HIDinput->sendKeyboard();
-    HIDinput->sendMouse();
+    if (KEYBOARD_CHANGED == true)
+        HIDinput->sendKeyboard();
+    if (MOUSE_CHANGED == true)
+        HIDinput->sendMouse();
     led2 = 1;
 }
 
