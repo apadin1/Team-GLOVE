@@ -3,34 +3,14 @@
 #include "drivers/translator.h"
 #include "glove_sensors.h"
 #include "gpio.h"
-//#include "drivers/crc.h"
 
-glove_sensors_raw_t leftGlove;
-glove_sensors_raw_t rightGlove;
-static KeyboardMouse * keyboard_ptr;
-static Translator * translator_ptr;
-static Scanner * scanner_ptr;
 
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
+
+// TODO: Debug function
 extern int left_count;
 extern int right_count;
-
-
-/*
-static void press_a() {
-    //l2 = !l2;
-    keyboard_ptr->keyPress('a');
-    //keyboard_ptr->sendKeyboard();
-}
-
-static void release_a() {
-    //l2 = !l2;
-    keyboard_ptr->keyRelease('a');
-    //keyboard_ptr->sendKeyboard();
-}
-*/
-
 void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
@@ -40,9 +20,9 @@ void printPacketCounts() {
 // gets serviced in a reasonable time
 void bleWaitForEventLoop() {
     while (true) {
-        pin10 = 1;
+        led3 = 1;
         ble.waitForEvent();
-        pin10 = 0;
+        led3 = 0;
     }
 }
 
@@ -56,34 +36,37 @@ void launch() {
     led3 = 1;
     led4 = 1;
 
-    // needed for the extractGloveData to work
-    //crcInit();
-
-    // Setup buttons for testing
+    // Debugging
+    //button1.fall(stillAlive);
     //button2.fall(press_a);
     //button2.rise(release_a);
-
     button3.fall(printPacketCounts);
-
     //Ticker still_alive;
     //still_alive.attach(stillAlive, 1.0);
-    //button1.fall(stillAlive);
-
+    
+    // Glove data structs
+    glove_sensors_compressed_t leftGloveCompressed;
+    glove_sensors_compressed_t rightGloveCompressed;
+    glove_sensors_raw_t leftGlove;
+    glove_sensors_raw_t rightGlove;
+    
     // Initialize ble
     ble.init();
 
     // Initialize KeyboardMouse object
     KeyboardMouse input(ble);
-    keyboard_ptr = &input;
+    //keyboard_ptr = &input;
 
-    // Initialize translator and scanner
-    Translator translator(&leftGlove, &input);
-    translator_ptr = &translator;
-    Scanner scanner(ble, &translator);
-    scanner_ptr = &scanner;
+    // Initialize translators
+    Translator leftTranslator(&leftGlove, &leftGloveCompressed, &input);
+    Translator rightTranslator(&rightGlove, &rightGloveCompressed, &input);
+
+    // Init scanner
+    crcInit();
+    Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
-    serialInit(&translator, &scanner);
+    //serialInit(&translator, &scanner);
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
@@ -94,15 +77,18 @@ void launch() {
 
         // UNCONNECTED STATE
         while (!input.isConnected()) {
-            led1 = !led1;
+            led4 = !led4;
             Thread::wait(10);
         }
+        
         led1 = 1;
         // Wait for connection to take place
         Thread::wait(1000);
 
         // Start scanning and translating
-        translator.startUpdateTask(30);
+        rightTranslator.startUpdateTask(100);
+        Thread::wait(50);
+        leftTranslator.startUpdateTask(100);
 
         // Scan for packets
         scanner.startScan();
@@ -110,72 +96,96 @@ void launch() {
         // CONNECTED STATE
         while (input.isConnected()) {
             led4 = 0;
-            Thread::wait(500);
-            leftGlove.touch_sensor.a = 1;
-
+            //Thread::wait(500);
+            //leftGlove.touch_sensor.a = 1;
+            //input.keyPress('a');
+            //input.sendKeyboard();
+            
             led4 = 1;
-            Thread::wait(500);
-            leftGlove.touch_sensor.a = 0;
+            //Thread::wait(500);
+            //leftGlove.touch_sensor.a = 0;
+            //input.keyRelease('a');
+            //input.sendKeyboard();
         }
 
         led4 = 1;
-        translator.stopUpdateTask();
+        rightTranslator.stopUpdateTask();
+        leftTranslator.stopUpdateTask();
         scanner.stopScan();
     }
 }
 
+/*
+glove_sensors_compressed_t left_compressed;
+glove_sensors_compressed_t right_compressed;
+glove_sensors_raw_t left_raw;
+glove_sensors_raw_t right_raw;
 
-static glove_sensors_compressed_t compressed_data;
-
-
-void decompress_and_print() {
-    static glove_sensors_raw_t raw_data;
-    static int count = 0;
-    
-    count += 1;
-    
-    printf("[%d]: ", count);
-    
-    
-    extractGloveSensors(&raw_data, &compressed_data);
-    
+void print_raw_data(glove_sensors_raw_t raw_data) {
     for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
         printf("%d, ", raw_data.flex_sensors[i]);
     }
 
-    printf("%d, %d, %d, %d", 
+    printf("%d, %d, %d, %d, ", 
             raw_data.touch_sensor.a,
             raw_data.touch_sensor.b,
             raw_data.touch_sensor.c,
             raw_data.touch_sensor.d);
     
-    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
+    printf("%.2f, %.2f, %.2f, %.2f, %.2f, %.2f",
             raw_data.imu.orient_pitch,
             raw_data.imu.orient_roll,
             raw_data.imu.orient_yaw,
             raw_data.imu.accel_x,
             raw_data.imu.accel_y,
             raw_data.imu.accel_z);
+            
+    printf("\r\n");
 }
 
+void decompress_and_print() {
+    static int count = 0;
+    count += 1;
+    
+    extractGloveSensors(&left_raw, &left_compressed);
+    extractGloveSensors(&right_raw, &right_compressed);
+
+    printf("[%d] Left:  ", count);
+    print_raw_data(left_raw);
+    
+    Thread::wait(10);
+    
+    printf("[%d] Right: ", count);
+    print_raw_data(right_raw);    
+
+    printf("\r\n");
+}
 
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
+    
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
 
     // Initialize scanning
     ble.init();
-    Scanner scanner(ble, NULL);
+    Scanner scanner(ble, &left_compressed, &right_compressed);
     scanner.startScan();
-    Thread bleWaitForEvent(bleWaitForEventLoop);
+    //Thread bleWaitForEvent(bleWaitForEventLoop);
 
     // Decompress the raw data and print it
+    crcInit();
     RtosTimer decompressTask(decompress_and_print);
     decompressTask.start(1000);
     
     // Spin
-    while (true) {    }
+    while (true) {
+        ble.waitForEvent();
+    }
 }
-
+//*/
 
 
 
@@ -190,7 +200,7 @@ int main() {
     //blink();
     //launch_periodic();
     //keyboard_mouse_demo();
-    launch();
     //uart_test();
     //scan_sensor_data();
+    launch();
 }
