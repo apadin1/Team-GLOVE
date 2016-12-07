@@ -119,7 +119,7 @@ void launch() {
     }
 }
 
-/*
+
    glove_sensors_compressed_t left_compressed;
    glove_sensors_compressed_t right_compressed;
    glove_sensors_raw_t left_raw;
@@ -146,7 +146,7 @@ void launch() {
 
    printf("\r\n");
    }
-
+//*/
    void decompress_and_print() {
    static int count = 0;
    count += 1;
@@ -205,6 +205,6 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //uart_test();
-    //scan_sensor_data();
-    launch();
+    scan_sensor_data();
+    //launch();
 }
