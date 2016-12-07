@@ -8,38 +8,32 @@
 
 #include "glove_sensors.h"
 #include "translator.h"
+#include "gpio.h"
 
 #define LEFT_GLOVE_ID  0xBEEF
 #define RIGHT_GLOVE_ID 0xBABE
 
 #define MIN_PACKET_LENGTH 4
 
-static DigitalOut led111(LED1);
-
 // TODO: Testing
 int left_count;
 int right_count;
 
-const PinName SCANNER_DEBUG_PIN = p26;
 
 /************************* FUNCTIONS ********************/
 
-
 static void left_glove() {
     ++left_count;
-    //printf("left: %d\r\n", count);
 }
 
 static void right_glove() {
     ++right_count;
-    //printf("right: %d\r\n", count);
 }
 
 
 // Does most of the work of filtering packets
 static void advertisementCallback(const Gap::AdvertisementCallbackParams_t *params) {
 
-    //led111 = !led111;
     // Filter advertisements by length
     if (params->advertisingDataLen < MIN_PACKET_LENGTH) {
         return;
@@ -62,14 +56,13 @@ class Scanner {
 public:
 
     // Scan period and duration are in milliseconds
-    Scanner(Translator* _translator) :
+    Scanner(BLE &_ble, Translator* _translator) :
         translator(_translator),
-        ble(BLE::Instance(BLE::DEFAULT_INSTANCE)) {
-        translator = _translator;
+        ble(_ble) {
     }
 
     // Stop and start scanning
-    void startScan(int scan_period=10, int scan_duration=10) {
+    void startScan(int scan_period=10, int scan_duration=8) {
         ble.gap().setScanParams(scan_period, scan_duration);
         ble.gap().startScan(advertisementCallback);
     }
@@ -86,8 +79,6 @@ public:
 private:
     BLE &ble;
     Translator* translator;
-
-    //DigitalOut working;
 };
 
 #endif // SCANNER_H_

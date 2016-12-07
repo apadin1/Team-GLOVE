@@ -1,8 +1,7 @@
-#include <inttypes.h>
 #include "drivers/scanner.h"
 #include "drivers/serial_com.h"
 #include "drivers/translator.h"
-#include "uart_test.h"
+#include "gpio.h"
 
 glove_sensors_raw_t leftGlove;
 glove_sensors_raw_t rightGlove;
@@ -10,14 +9,13 @@ static KeyboardMouse * keyboard_ptr;
 static Translator * translator_ptr;
 static Scanner * scanner_ptr;
 
-static DigitalOut l1(LED1, 1);
-static DigitalOut l2(LED2, 1);
-static DigitalOut l3(LED3, 1);
-static DigitalOut l4(LED4, 1);
+BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
 extern int left_count;
 extern int right_count;
 
+
+/*
 static void press_a() {
     //l2 = !l2;
     keyboard_ptr->keyPress('a');
@@ -29,70 +27,100 @@ static void release_a() {
     keyboard_ptr->keyRelease('a');
     //keyboard_ptr->sendKeyboard();
 }
+*/
 
 void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
 
-void waitForEventAndNothingElse() {
-    for (;;) {
-        keyboard_ptr->waitForEvent();
+
+// Wait for events in a constant loop to make sure the BLE stack
+// gets serviced in a reasonable time
+void bleWaitForEventLoop() {
+    while (true) {
+        pin10 = 1;
+        ble.waitForEvent();
+        pin10 = 0;
     }
 }
 
+
+// Driver for dongle
 void launch() {
 
     // Turn off LEDs
-    l1 = 1; l2 = 1; l3 = 1; l4 = 1;
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
 
     // Setup buttons for testing
-    //InterruptIn button2(BUTTON2);
-    //InterruptIn button3(BUTTON3);
-
     //button2.fall(press_a);
     //button2.rise(release_a);
 
-    //button3.fall(printPacketCounts);
+    button3.fall(printPacketCounts);
+    
+    //Ticker still_alive;
+    //still_alive.attach(stillAlive, 1.0);
+    //button1.fall(stillAlive);
 
     // Initialize ble
-    BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
     ble.init();
+    
+    // Initialize serial interrupts for configuration
+    //serialInit(&translator, &scanner);
 
     // Initialize KeyboardMouse object
     KeyboardMouse input(ble);
     keyboard_ptr = &input;
 
-    while (!input.isConnected()) {
-      ble.waitForEvent();
-    }
-
-    // Initialize Translator and Scanner objects
+    // Initialize translator and scanner
     Translator translator(&leftGlove, &input);
-    translator.startUpdateTask(20);
     translator_ptr = &translator;
-    Scanner scanner(&translator);
+    Scanner scanner(ble, &translator);
+    scanner_ptr = &scanner;
+    
+    // Setup the waitForEvent loop in a different thread
+    Thread bleWaitForEvent(bleWaitForEventLoop);
 
-    //Thread waitForFuckingEvent(waitForEventAndNothingElse);
+    // Infinite loop with two states
+    // Either the keyboard is connected or unconnected
+    while (true) {
+    
+        // UNCONNECTED STATE
+        while (!input.isConnected()) {
+            led1 = !led1;
+            Thread::wait(10);
+        }
+        
+        // Wait for connection to take place
+        Thread::wait(1000);
 
-    // Initialize serial interrupt
-    //serialInit(&translator, &scanner);
-
-    leftGlove.touch_sensor.a = 1;
-    //Inifite loop
-    for (;;) {
-        l4 = !l4;
+        // Start scanning and translating
+        translator.startUpdateTask(50);
 
         // Scan for packets
-        //scanner.startScan();
-        //wait( 0.02 );
-        //scanner.stopScan();
+        scanner.startScan();
+                
+        // CONNECTED STATE
+        while (input.isConnected()) {
+            led4 = 0;
+            Thread::wait(500);
+            leftGlove.touch_sensor.a = 1;
+            
+            led4 = 1;
+            Thread::wait(500);
+            leftGlove.touch_sensor.a = 0;
+        }
 
-        leftGlove.touch_sensor.a = !leftGlove.touch_sensor.a;
-
-        Thread::wait(500);
+        led4 = 1;
+        translator.stopUpdateTask();
+        scanner.stopScan();
     }
-
 }
+
+
+
 
 int main() {
     /*

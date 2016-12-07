@@ -20,6 +20,8 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 #include "KeyboardMouseService.h"
+#include "gpio.h"
+
 
 
 /* Wrapper class for Keyboard Mouse BLE Service */
@@ -101,8 +103,13 @@ public:
     void waitForEvent() { ble.waitForEvent(); }
     
     /* Send the keyboard and mouse reports */
-    void sendKeyboard() { service_ptr->sendKeyboardReport(); }
-    void sendMouse() { service_ptr->sendMouseReport(); }
+    void sendKeyboard() { 
+        service_ptr->sendKeyboardReport();
+    }
+    
+    void sendMouse() {
+        service_ptr->sendMouseReport();
+    }
     
 
 private:

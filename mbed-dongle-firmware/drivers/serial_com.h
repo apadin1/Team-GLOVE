@@ -6,6 +6,7 @@
 #include "mbed.h"
 #include "scanner.h"
 #include "translator.h"
+#include "gpio.h"
 
 static Serial pc(USBTX, USBRX);
 
@@ -13,8 +14,6 @@ static Serial pc(USBTX, USBRX);
 #define CONFIG_LENGTH 28
 
 static char rx_buffer[CONFIG_LENGTH];
-
-static DigitalOut led2(LED2, 1);
 
 
 /******************** STATIC FUNCTIONS ********************/
@@ -48,6 +47,7 @@ void print_config() {
 
 // Interupt to read data from serial port
 void Rx_interrupt() {
+    
     static int len = 0;
 
     // STOP BLE SCANNING

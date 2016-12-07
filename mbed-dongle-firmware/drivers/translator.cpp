@@ -14,14 +14,11 @@
  */
 
 #include "translator.h"
+#include "gpio.h"
 
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
-static DigitalOut led1(LED1);
-static DigitalOut led2(LED2);
-static DigitalOut led3(LED3);
-static DigitalOut led4(LED4);
 
 Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     : glove_data(_glove), HIDinput(_input), working(TRANSLATOR_DEBUG_PIN) {
@@ -93,7 +90,7 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
     flex_sensors[FLEX2]->change_hid_profile(DISABLED);
     flex_sensors[FLEX3]->change_hid_profile(DISABLED);
     flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'a');
     touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
     touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
     touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
@@ -111,8 +108,8 @@ Translator::Translator(glove_sensors_raw_t* _glove, KeyboardMouse* _input)
 
 //TODO: Change protocol
 void Translator::updateGestureMap(uint8_t* config) {
-
-  /* Left Glove Configuration */
+    
+    /* Left Glove Configuration */
 
   /* Flex Sensor Configuration */
   for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -152,11 +149,17 @@ void Translator::updateGestureMap(uint8_t* config) {
       imu_axis[i-8]->change_hid_profile(MOUSE, config[i]);
     }
   }
+
 }
 
 void Translator::gestureCheck() {
 
     /* Glove Functionality */
+    if (!HIDinput->isConnected()) {
+        return;
+    }
+    
+    pin10 = 1;
 
     /* Flex Sensor functionality */
     for (int i = 0; i < FLEX_COUNT; ++i) {
@@ -223,6 +226,9 @@ void Translator::gestureCheck() {
             }  // for
         }  // mouse
       }  // for
+      
+    pin10 = 0;
+    pin11 = 1;
 
     /* Touch Sensor functionality */
     for (int i = 0; i < TOUCH_COUNT; ++i) {
@@ -288,10 +294,15 @@ void Translator::gestureCheck() {
         }  // mouse
       }  // for
 
-    /* IMU functionality */
-    for (int i = 0; i < IMU_COUNT; i++) {
+    pin11 = 0;
+    pin12 = 1;
+    
+    /*
+    
+    // IMU functionality
+    for (int i = 0; i < 4; i++) {
 
-      /* Keyboard functionality */
+      // Keyboard functionality
       if (imu_axis[i]->is_keyboard()) {
          keyboardData keyboard = imu_axis[i]->get_keyboard_data();
             if (keyboard.valid) {
@@ -303,12 +314,12 @@ void Translator::gestureCheck() {
             }
       }  // keyboard
 
-        /* Mouse functionality */
+        // Mouse functionality
         else if (imu_axis[i]->is_mouse()) {
             mouseData mouse = imu_axis[i]->get_mouse_data();  // Grab mouse data
             if (mouse.valid) {
 
-                /* Left click */
+                // Left click
                 if (mouse.part == LBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(LEFT, DOWN);
@@ -317,7 +328,7 @@ void Translator::gestureCheck() {
                    }
                 }
 
-                /* Right click */
+                // Right click
                 else if (mouse.part == RBUTTON) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(RIGHT, DOWN);
@@ -326,7 +337,7 @@ void Translator::gestureCheck() {
                     }
                 }
 
-                /* Middle click */
+                // Middle click
                 else if (mouse.part == MIDDLECLICK) {
                     if (mouse.value) {
                         HIDinput->setMouseButton(MIDDLE, DOWN);
@@ -335,31 +346,36 @@ void Translator::gestureCheck() {
                     }
                 }
 
-                /* Scroll functionality */
+                // Scroll functionality
                 else if (mouse.part == SCROLLAXIS) {
                     HIDinput->setMouseScroll(mouse.value);
                 }
 
-                /* X-axis functionality */
+                // X-axis functionality
                 else if (mouse.part == XAXIS) {
                     HIDinput->setMouseSpeedX(mouse.value);
                 }
 
-                /* Y-axis functionality */
+                // Y-axis functionality
                 else if (mouse.part == YAXIS) {
                     HIDinput->setMouseSpeedY(mouse.value);
                 }
             }  // if
         }  // mouse
     }  // for
-
+    */
+    
+    pin12 = 0;
+    
+    
+    
+    pin13 = 1;
+    
     /* Send HID inputs */
     HIDinput->sendKeyboard();
-    HIDinput->waitForEvent();
-
     HIDinput->sendMouse();
-    HIDinput->waitForEvent();
-
+    
+    pin13 = 0;
 }
 
 void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }
