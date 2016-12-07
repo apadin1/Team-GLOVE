@@ -3,7 +3,7 @@
 #include "drivers/translator.h"
 #include "glove_sensors.h"
 #include "gpio.h"
-
+#include "string.h"
 
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
@@ -46,7 +46,11 @@ void launch() {
     
     // Glove data structs
     glove_sensors_compressed_t leftGloveCompressed;
+    //memset(&leftGloveCompressed, 0, sizeof(glove_sensors_compressed_t));
+    //leftGloveCompressed.checksum = 5;
     glove_sensors_compressed_t rightGloveCompressed;
+    //memset(&rightGloveCompressed, 0, sizeof(glove_sensors_compressed_t));
+    //rightGloveCompressed.checksum = 5;
     glove_sensors_raw_t leftGlove;
     glove_sensors_raw_t rightGlove;
     
@@ -86,9 +90,9 @@ void launch() {
         Thread::wait(1000);
 
         // Start scanning and translating
-        rightTranslator.startUpdateTask(50);
+        rightTranslator.startUpdateTask(100);
         Thread::wait(25);
-        leftTranslator.startUpdateTask(50);
+        leftTranslator.startUpdateTask(100);
 
         // Scan for packets
         scanner.startScan();
@@ -97,13 +101,13 @@ void launch() {
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(300);
-            //leftGlove.flex_sensors[0] = 350;
+            leftGlove.touch_sensor.a = 1;
             //input.keyPress('a');
             //input.sendKeyboard();
             
             led4 = 1;
             Thread::wait(300);
-            //leftGlove.flex_sensors[0] = 750;
+            leftGlove.touch_sensor.a = 0;
             //input.keyRelease('a');
             //input.sendKeyboard();
         }
