@@ -123,20 +123,23 @@ glove_sensors_raw_t left_raw, left_max, left_min;
 glove_sensors_raw_t right_raw, right_max, right_min;
 
 void print_raw_data(glove_sensors_raw_t raw_data) {
+    /*
     for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
         printf("%d, ", raw_data.flex_sensors[i]);
     }
+    */
 
+    /*
     printf("%d%d%d%d, ",
             raw_data.touch_sensor.a,
             raw_data.touch_sensor.b,
             raw_data.touch_sensor.c,
             raw_data.touch_sensor.d);
+            */
 
-    printf("%.2f, %.2f, %.2f\r\n",
+    printf("%.2f, %.2f\r\n",
             raw_data.imu.orient_pitch,
-            raw_data.imu.orient_roll,
-            raw_data.imu.orient_yaw);
+            raw_data.imu.orient_roll);
 }
 
 void update_max_min(glove_sensors_raw_t& g_raw,
@@ -174,7 +177,7 @@ void update_max_min(glove_sensors_raw_t& g_raw,
 
 void decompress_and_print() {
     static int count = 0;
-    count += 1;
+    //count += 1;
 
     extractGloveSensors(&left_raw, &left_compressed);
     extractGloveSensors(&right_raw, &right_compressed);
@@ -182,13 +185,12 @@ void decompress_and_print() {
     printf("Left:  ");
     print_raw_data(left_raw);
 
-    Thread::wait(20);
-
     printf("Right: ");
     print_raw_data(right_raw);
 
     printf("\r\n");
 
+    /*
     if ((count % 20) == 0) {
         printf("R Max: ");
         print_raw_data(right_max);
@@ -199,6 +201,7 @@ void decompress_and_print() {
         printf("L Min: ", count);
         print_raw_data(left_min);
     }
+    */
 }
 
 // Tested compressing and decompressing
@@ -238,6 +241,6 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //uart_test();
-    //scan_sensor_data();
-    launch();
+    scan_sensor_data();
+    //launch();
 }
