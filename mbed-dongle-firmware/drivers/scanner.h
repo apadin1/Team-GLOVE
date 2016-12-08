@@ -31,12 +31,12 @@ public:
 
     // Scan period and duration are in milliseconds
     Scanner(BLE &_ble,
-            glove_sensors_compressed_t* _left_compressed,
-            glove_sensors_compressed_t* _right_compressed) :
+            glove_sensors_compressed_t* _compressed1,
+            glove_sensors_compressed_t* _compressed2) :
 
         ble(_ble),
-        left_compressed(_left_compressed),
-        right_compressed(_right_compressed) {
+        compressed1(_compressed1),
+        compressed2(_compressed2) {
     }
 
     // Stop and start scanning
@@ -67,7 +67,7 @@ public:
         if (id == LEFT_GLOVE_ID) {
 
             // Copy glove data
-            memcpy(left_compressed,
+            memcpy(compressed1,
                    (params->advertisingData + 4),
                    sizeof(glove_sensors_compressed_t));
             ++left_count;
@@ -77,7 +77,7 @@ public:
         else if (id == RIGHT_GLOVE_ID) {
 
             // Copy glove data
-            memcpy(right_compressed,
+            memcpy(compressed2,
                    (params->advertisingData + 4),
                    sizeof(glove_sensors_compressed_t));
             ++right_count;
@@ -89,8 +89,8 @@ private:
     //Translator* translator;
 
     // Pointers to both compressed structures
-    glove_sensors_compressed_t* left_compressed;
-    glove_sensors_compressed_t* right_compressed;
+    glove_sensors_compressed_t* compressed1;
+    glove_sensors_compressed_t* compressed2;
 
 };
 

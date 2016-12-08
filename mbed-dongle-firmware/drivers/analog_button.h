@@ -67,11 +67,9 @@ public:
      * Active low for now cuz sure
      */
     bool get_binary_state() {
-        DigitalOut l3(LED3);
 
         // in the lowest range
         if (*data < min_thresh) {
-            l3 = 1;
             binary_state = active_low;
         }
         // in the transition band
@@ -81,7 +79,6 @@ public:
         // in the upper range
         else {
             binary_state = ! active_low;
-            l3 = 0;
         }
 
         return binary_state;

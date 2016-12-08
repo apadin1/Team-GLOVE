@@ -20,73 +20,70 @@
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
 
-Translator::Translator(glove_sensors_compressed_t* _glove_comp,
+Translator::Translator(glove_sensors_raw_t& _raw_data,
                        KeyboardMouse* _input) :
-            glove_compressed(_glove_comp),
-            HIDinput(_input),
-            working(TRANSLATOR_DEBUG_PIN) {
+                       
+        glove_data(_raw_data),
+        HIDinput(_input),
+        working(TRANSLATOR_DEBUG_PIN) {
 
     /* Glove Setup */
     for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
-        glove_data.flex_sensors[i] = 1023;
+        glove_data.flex_sensors[i] = 1000;
     }
 
     /* FLEX1 */
-    flexToHID flex1(&(glove_data.flex_sensors[0]), 300, 800, 0.05, true);
-    flex_sensors[FLEX1] = &flex1;
+    flex_sensors[FLEX1] = 
+        new flexToHID(&(glove_data.flex_sensors[0]), 300, 800, 0.05, true);
 
     /* FLEX2 */
-    flexToHID flex2(&(glove_data.flex_sensors[1]), 300, 800, 0.05, true);
-    flex_sensors[FLEX2] = &flex2;
+    flex_sensors[FLEX2] = 
+        new flexToHID(&(glove_data.flex_sensors[1]), 300, 800, 0.05, true);
 
     /* FLEX3 */
-    flexToHID flex3(&(glove_data.flex_sensors[2]), 300, 800, 0.05, true);
-    flex_sensors[FLEX3] = &flex3;
+    flex_sensors[FLEX3] =
+        new flexToHID(&(glove_data.flex_sensors[2]), 300, 800, 0.05, true);
 
     /* FLEX4 */
-    flexToHID flex4(&(glove_data.flex_sensors[3]), 300, 800, 0.05, true);
-    flex_sensors[FLEX4] = &flex4;
+    flex_sensors[FLEX4] =
+        new flexToHID(&(glove_data.flex_sensors[3]), 300, 800, 0.05, true);
 
     /* TOUCH1 */
-    touchToHID touch1(&(glove_data.touch_sensor.a));
-    touch_sensors[TOUCH1] = &touch1;
+    touch_sensors[TOUCH1] = new touchToHID(&(glove_data.touch_sensor.a));
 
     /* TOUCH2 */
-    touchToHID touch2(&(glove_data.touch_sensor.b));
-    touch_sensors[TOUCH2] = &touch2;
+    touch_sensors[TOUCH2] = new touchToHID(&(glove_data.touch_sensor.b));
 
     /* TOUCH3 */
-    touchToHID touch3(&(glove_data.touch_sensor.c));
-    touch_sensors[TOUCH3] = &touch3;
+    touch_sensors[TOUCH3] = new touchToHID(&(glove_data.touch_sensor.c));
 
     /* TOUCH4 */
-    touchToHID touch4(&(glove_data.touch_sensor.d));
-    touch_sensors[TOUCH4] = &touch4;
-
+    touch_sensors[TOUCH4] = new touchToHID(&(glove_data.touch_sensor.d));
+  
     /* PITCHUP */
-    imuToHID pitchup(&(glove_data.imu.orient_pitch), 0, 35, 0.15, false);
-    imu_axis[PITCHUP] = &pitchup;
+    imu_axis[PITCHUP] =
+        new imuToHID(&(glove_data.imu.orient_pitch), 0, 35, 0.15, false);    
 
     /* PITCHDOWN */
-    imuToHID pitchdown(&(glove_data.imu.orient_pitch), -35, 0, 0.15, true);
-    imu_axis[PITCHDOWN] = &pitchdown;
+    imu_axis[PITCHDOWN] =
+        new imuToHID(&(glove_data.imu.orient_pitch), -35, 0, 0.15, true);
 
     /* ROLLLEFT */
-    imuToHID rollleft(&(glove_data.imu.orient_roll), 0, 45, 0.15, false);
-    imu_axis[ROLLLEFT] = &rollleft;
-
+    imu_axis[ROLLLEFT] =
+        new imuToHID(&(glove_data.imu.orient_roll), 0, 45, 0.15, false);
+    
     /* ROLLRIGHT */
-    imuToHID rollright(&(glove_data.imu.orient_roll), -45, 0, 0.15, true);
-    imu_axis[ROLLRIGHT] = &rollright;
+    imu_axis[ROLLRIGHT] =
+        new imuToHID(&(glove_data.imu.orient_roll), -45, 0, 0.15, true);
 
     /* YAWLEFT */
-    imuToHID yawleft(&(glove_data.imu.orient_yaw), 0, 20, 0.15, false);
-    imu_axis[YAWLEFT] = &yawleft;
-
+    imu_axis[YAWLEFT] =
+        new imuToHID(&(glove_data.imu.orient_yaw), 0, 20, 0.15, false);
+    
     /* YAWRIGHT */
-    imuToHID yawright(&(glove_data.imu.orient_yaw), -20, 0, 0.15, true);
-    imu_axis[YAWRIGHT] = &yawright;
-
+    imu_axis[YAWRIGHT] =
+        new imuToHID(&(glove_data.imu.orient_yaw), -20, 0, 0.15, true);
+    
     /* BUTTON MAPPING */
     flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
     flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
@@ -175,16 +172,7 @@ void Translator::gestureCheck() {
         return;
     }
 
-    // Decompress
-    extractGloveSensors(&glove_data, glove_compressed);
-    //if (glove_data->imu.orient_pitch > 0)
-    //    glove_data->imu.orient_pitch = 0;
-    //else
-    //    glove_data->imu.orient_pitch = 33;
-    //bool MOUSE_CHANGED = false;
-    //bool KEYBOARD_CHANGED = false;
-    led2 = 0;//DEBUG
-
+    pin11 = 1;
     // Flex Sensor functionality
     for (int i = 0; i < FLEX_COUNT; ++i) {
 
@@ -200,7 +188,10 @@ void Translator::gestureCheck() {
             handleMouseInput(mouse);
         }
     }
-
+    pin11 = 0;
+    
+    pin12 = 1;
+    
     // Touch Sensor functionality
     for (int i = 0; i < TOUCH_COUNT; ++i) {
 
@@ -217,6 +208,11 @@ void Translator::gestureCheck() {
         }
     }
 
+    pin12 = 0;
+    
+    pin13 = 1;
+    
+    /*
     // IMU functionality
     for (int i = 0; i < 4; i++) {
 
@@ -232,14 +228,14 @@ void Translator::gestureCheck() {
             handleMouseInput(mouse);
         }
     }
-
+    */
+    pin13 = 0;
 
     /* Send HID inputs */
     //if (KEYBOARD_CHANGED == true)
     //    HIDinput->sendKeyboard();
     //if (MOUSE_CHANGED == true)
     //    HIDinput->sendMouse();
-    led2 = 1;
 }
 
 void Translator::handleKeyboardInput(keyboardData& keyboard) {

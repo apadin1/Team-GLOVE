@@ -1,12 +1,14 @@
-#include "drivers/scanner.h"
-#include "drivers/serial_com.h"
-#include "drivers/translator.h"
+#include "scanner.h"
+#include "serial_com.h"
+#include "translate_task.h"
+#include "translator.h"
 #include "glove_sensors.h"
 #include "gpio.h"
-#include "string.h"
-#include "drivers/translate_task.h"
 
+
+// Global BLE
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
+
 
 // TODO: Debug function
 extern int left_count;
@@ -20,10 +22,20 @@ void printPacketCounts() {
 // gets serviced in a reasonable time
 void bleWaitForEventLoop() {
     while (true) {
-        led3 = 1;
         ble.waitForEvent();
-        led3 = 0;
     }
+}
+
+void config_thread_fn() {
+    //SerialCom* serial_ptr = getSerial(NULL);
+    while (true) {
+        //config_sem.wait();
+        //serial_ptr->gestureConfig();
+    }
+}
+
+void stillAlive() {
+    pin15 = !pin15;
 }
 
 
@@ -35,86 +47,90 @@ void launch() {
     led2 = 1;
     led3 = 1;
     led4 = 1;
+            
+    pin10 = 0;
+    pin11 = 0;
+    pin12 = 0;
+    pin13 = 0;
 
     // Debugging
-    //button1.fall(stillAlive);
+    button1.fall(stillAlive);
     //button2.fall(press_a);
     //button2.rise(release_a);
-    button3.fall(printPacketCounts);
-    //Ticker still_alive;
-    //still_alive.attach(stillAlive, 1.0);
-
-    // Compressed glove data structs
-    static glove_sensors_compressed_t leftGloveCompressed;
-    static glove_sensors_compressed_t rightGloveCompressed;
-
+    //button3.fall(printPacketCounts);
+    
     // Initialize ble
     ble.init();
 
     // Initialize KeyboardMouse object
-    static KeyboardMouse input(ble);
+    KeyboardMouse input(ble);
     //keyboard_ptr = &input;
-
-    // Initialize translators
-    static Translator leftTranslator(&leftGloveCompressed, &input);
-    static Translator rightTranslator(&rightGloveCompressed, &input);
-    static TranslateTask combinedTask(&leftTranslator, &rightTranslator, &input);
-
-    // Init scanner
-    crcInit();
-    static Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
-
-    // Initialize serial interrupts for configuration
-    serialInit(&leftTranslator, &rightTranslator, &scanner);
-
-    // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
 
+    // Compressed glove data structs
+    glove_sensors_raw_t left_raw;
+    glove_sensors_raw_t right_raw;
+
+    // Initialize translators
+    Translator right_translator(right_raw, &input);
+    Translator left_translator(left_raw, &input);
+    
+    TranslateTask combinedTask(&right_translator,
+                               &left_translator, 
+                               &input);
+
+    // Init scanner
+    //crcInit();
+    //static Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
+
+    // Initialize serial interrupts for configuration
+    SerialCom serial_com(&left_translator, &right_translator, (Scanner *) NULL);
+    RtosTimer gestureUpdateTask(&serial_com, &SerialCom::gestureConfig, osTimerPeriodic);
+    gestureUpdateTask.start(5000);
+    
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected
     while (true) {
 
         // UNCONNECTED STATE
         while (!input.isConnected()) {
-            led4 = !led4;
+            led1 = !led1;
             Thread::wait(10);
         }
 
         led1 = 1;
+
         // Wait for connection to take place
         Thread::wait(1000);
 
-        // Start scanning and translating
-        //rightTranslator.startUpdateTask(40);
-        //Thread::wait(20);
-        //leftTranslator.startUpdateTask(40);
+        // Start translation task
         combinedTask.startUpdateTask(100);
         
         // Scan for packets
-        scanner.startScan();
+        //scanner.startScan();
 
         // CONNECTED STATE
         while (input.isConnected()) {
-            led4 = 0;
+            led1 = 0;
             Thread::wait(300);
-            rightGloveCompressed.t = 0;
-            
-            //rightGlove.touch_sensor.b = 1;
-            //compressGloveSensors(&rightGlove, &rightGloveCompressed);
-            //input.keyPress('a');
-            //input.sendKeyboard();
+            left_raw.touch_sensor.a = 1;
 
-            led4 = 1;
+            led1 = 1;
             Thread::wait(300);
-            //rightGlove.touch_sensor.b = 0;
-            //compressGloveSensors(&rightGlove, &rightGloveCompressed);
-            //input.keyRelease('a');
-            //input.sendKeyboard();
+            left_raw.touch_sensor.a = 0;
+            
+            led1 = 0;
+            Thread::wait(300);
+            right_raw.touch_sensor.b = 2;
+
+            led1 = 1;
+            Thread::wait(300);
+            right_raw.touch_sensor.b = 0;
         }
 
-        led4 = 1;
+        led1 = 1;
         combinedTask.stopUpdateTask();
-        scanner.stopScan();
+        //scanner.stopScan();
     }
 }
 

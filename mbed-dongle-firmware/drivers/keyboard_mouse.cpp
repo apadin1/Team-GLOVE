@@ -28,8 +28,6 @@
 #define HID_SECURITY_REQUIRE_MITM false
 #endif
 
-DigitalOut l1(LED1);
-
 static const char DEVICE_NAME[] = "TeamGLOVE";
 static const char SHORT_NAME[] = "glove1";
 

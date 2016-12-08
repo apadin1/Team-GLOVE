@@ -14,22 +14,28 @@
  */
 #include "translate_task.h"
 
-TranslateTask::TranslateTask(Translator* left_, Translator* right_,
-                        KeyboardMouse* input_):
-                        left(left_), right(right_), input(input_){
-                            update_task_timer =
-                                new RtosTimer(this, &TranslateTask::doTheThing, osTimerPeriodic);
-                        }
+TranslateTask::TranslateTask(Translator* left_, 
+                             Translator* right_,
+                             KeyboardMouse* input_):
+        left(left_), 
+        right(right_), 
+        input(input_){
+            
+    update_task_timer = 
+        new RtosTimer(this, &TranslateTask::doTheThing, osTimerPeriodic);
+}
 
 void  TranslateTask::doTheThing() {
-    //right->gestureCheck();
+    right->gestureCheck();
     left->gestureCheck();
     input->sendMouse();
     input->sendKeyboard();
 }
+
 void TranslateTask::startUpdateTask(uint32_t ms) {
     update_task_timer->start(ms);
 }
+
 void TranslateTask::stopUpdateTask() {
     update_task_timer->stop();
 }

@@ -8,119 +8,113 @@
 #include "translator.h"
 #include "gpio.h"
 
-static Serial pc(USBTX, USBRX);
-
-#define SEND(args...) pc.printf(args)
 #define CONFIG_LENGTH 28
 
+static Serial pc(USBTX, USBRX);
+//static Semaphore config_sem;
+
 static char rx_buffer[CONFIG_LENGTH];
-
-
-/******************** STATIC FUNCTIONS ********************/
-
-static Translator * getleftTranslator(void * new_ptr=NULL) {
-    static Translator * leftptr;
-    if (new_ptr != NULL) {
-        leftptr = (Translator *) new_ptr;
-    }
-    return leftptr;
-}
-
-static Translator * getrightTranslator(void * new_ptr=NULL) {
-  static Translator * rightptr;
-  if (new_ptr != NULL) {
-      rightptr = (Translator *) new_ptr;
-  }
-  return rightptr;
-}
-
-
-static Scanner * getScanner(void * new_ptr=NULL) {
-    static Scanner * ptr;
-    if (new_ptr != NULL) {
-        ptr = (Scanner *) new_ptr;
-    }
-    return ptr;
-}
-
-
-void print_config() {
-    for (int i = 0; i < CONFIG_LENGTH; ++i) {
-        printf("%d: %d\r\n", i, rx_buffer[i]);
-    }
-}
+bool config_changed = false;
 
 
 /******************** INTERRUPT FUNCTIONS ********************/
 
-// Deferred interrupt implementation
-void gestureConfig(void const *argument) {
-
-    static int len = 0;
-
-    // STOP BLE SCANNING/TRANSLATING
-    getScanner()->stopScan();
-    getleftTranslator()->stopUpdateTask();
-    getrightTranslator()->stopUpdateTask();
-
-    led1 = 1;
-    led2 = 1;
-    led3 = 1;
-    led4 = 1;
+// Wrapper class for serial communication
+// Used for configuration
+class SerialCom {
+public:
     
-    // Read in data
-    while (pc.readable() && (len < CONFIG_LENGTH)) {
-        rx_buffer[len] = pc.getc();
-        len = ((len+1) % CONFIG_LENGTH);
+    // Constructor
+    SerialCom(Translator * _left_translator,
+              Translator * _right_translator,
+              Scanner * _scanner);
+    
+    // Start the configuration task
+    void startConfigTask();
+
+    // Send configuration information to the translators
+    void gestureConfig();
+
+
+private:
+    Translator * left_translator;
+    Translator * right_translator;
+    Scanner * scanner;
+};
+
+
+/******************** INTERRUPT FUNCTIONS ********************/
+
+// Return pointer to serial device
+SerialCom* getSerial(void* new_ptr=NULL) {
+    SerialCom* serial_ptr = NULL;
+    if (new_ptr != NULL) {
+        serial_ptr = (SerialCom*) new_ptr;
     }
-    
-    led1 = 0;
-
-    // Pointer to rx_buff
-    uint8_t* rxptr = (uint8_t*) &rx_buffer;
-
-    // Configure the translators
-    getleftTranslator()->updateGestureMap(rxptr);
-    
-    led2 = 0;
-    
-    rxptr += 14;
-    getrightTranslator()->updateGestureMap(rxptr);
-    
-    led3 = 0;
-
-    // START BLE SCANNING/TRANSLATING
-    getleftTranslator()->startUpdateTask(20);
-
-    led4 = 0;
-
-    getrightTranslator()->startUpdateTask(20);
-    
-    led1 = 1;
-    led2 = 1;
-    led3 = 1;
-    led4 = 1;
-    
-    getScanner()->startScan();
+    return serial_ptr;
 }
 
-
-//TODO: Deferred interrupt
 // Interupt to read data from serial port
 void Rx_interrupt() {
-
-    // Setup deferred interrupt
-    RtosTimer configTask(gestureConfig, osTimerOnce, NULL);
-    configTask.start(1000);
+    led2 = 0;
+    config_changed = true;
+    
+    // Read in data
+    int len = 0;
+    while (len < CONFIG_LENGTH) {
+        pin15 = 1;
+        rx_buffer[len++] = pc.getc();
+        pin15 = 0;
+    }
+    
+    led2 = 1;
 }
 
-// MAIN
-void serialInit(Translator * leftTranslator, Translator * rightTranslator,
-                Scanner * scanner) {
-    getleftTranslator(leftTranslator);
-    getrightTranslator(rightTranslator);
-    getScanner(scanner);
+
+// Constructor
+SerialCom::SerialCom(Translator * _left_translator,
+              Translator * _right_translator,
+              Scanner * _scanner) :
+        left_translator(_left_translator),
+        right_translator(_right_translator),
+        scanner(_scanner) {
+
+    // Set up the interrupt for when data is ready on the serial port
     pc.attach(&Rx_interrupt, Serial::RxIrq);
+    getSerial(this);
+}
+
+// Send configuration information to the translators
+void SerialCom::gestureConfig() {
+
+    if (config_changed) {
+            
+        led4 = 0;
+
+        // STOP BLE SCANNING/TRANSLATING
+        pin14 = 1;
+        //scanner->stopScan();
+        left_translator->stopUpdateTask();
+        right_translator->stopUpdateTask();
+        pin14 = 0;
+       
+        // Pointer to rx_buff
+        uint8_t* rxptr = (uint8_t*) rx_buffer;
+
+        // Configure the translators
+        pin16 = 1;
+        left_translator->updateGestureMap(rxptr);
+        rxptr += 14;
+        right_translator->updateGestureMap(rxptr);
+        pin16 = 0;
+        
+        // START BLE SCANNING/TRANSLATING
+        left_translator->startUpdateTask(20);
+        right_translator->startUpdateTask(20);
+        //scanner->startScan();
+        
+        config_changed = false;
+    }
 }
 
 

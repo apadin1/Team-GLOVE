@@ -82,7 +82,7 @@ public:
      * Constructor for translator
      *
      */
-    Translator(glove_sensors_compressed_t* glove_compressed,
+    Translator(glove_sensors_raw_t& raw_data,
                KeyboardMouse* input);
 
     /*
@@ -124,8 +124,7 @@ private:
     KeyboardMouse* HIDinput;
 
     /* Glove Data */
-    glove_sensors_raw_t glove_data;
-    glove_sensors_compressed_t* glove_compressed;
+    glove_sensors_raw_t& glove_data;
 
     RtosTimer* update_task_timer;
     DigitalOut working;
