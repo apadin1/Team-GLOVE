@@ -24,6 +24,8 @@ void bleWaitForEventLoop() {
         led3 = 0;
     }
 }
+#define IS_LEFT true
+#define IS_RIGHT false
 
 // Driver for dongle
 void launch() {
@@ -42,9 +44,9 @@ void launch() {
     KeyboardMouse HIDinput(ble);
 
     // Initialize translators
-    Translator leftTranslator(left_glove_data, HIDinput);
-    Translator rightTranslator(right_glove_data, HIDinput);
-    TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
+    //Translator leftTranslator(left_glove_data, HIDinput, IS_LEFT);
+    //Translator rightTranslator(right_glove_data, HIDinput, IS_RIGHT);
+    //TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
 
     // Init scanner
     crcInit();
@@ -93,7 +95,7 @@ void launch() {
         led2 = 0;
 
         led4 = 1;
-        combinedTask.stopUpdateTask();
+        //combinedTask.stopUpdateTask();
         scanner.stopScan();
     }
 }

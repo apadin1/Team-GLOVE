@@ -196,11 +196,10 @@ private:
 
 class imuToHID {
 public:
-    imuToHID( float* data_, float min_, float max_, float transition_band_, bool active_low_=false)
-        : active_low(active_low_) {
+    imuToHID() {}
+    void init( float* data_, float min_, float max_, float transition_band_, bool active_low_=false) {
+        active_low = active_low_;
         sensor_conversion = AnalogButton<float>(data_, min_, max_, transition_band_, active_low_);
-        cur_keyboard = keyboardData();
-        cur_mouse = mouseData();
     }
 
     keyboardData get_keyboard_data() {
@@ -245,10 +244,9 @@ private:
 
 class touchToHID {
 public:
-  touchToHID(uint8_t* data_)
-      : data(data_) {
-      cur_keyboard = keyboardData();
-      cur_mouse = mouseData(); //Only for mouse clicks
+  touchToHID() {}
+  void init(uint8_t* data_) {
+      data = data_;
   }
 
   // these are functions to check the HID status of the sensor

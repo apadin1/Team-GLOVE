@@ -100,8 +100,8 @@ private:
 
     /* Left Glove Analog Buttons */
     flexToHID* flex_sensors;
-    imuToHID* imu_axis;
     touchToHID* touch_sensors;
+    imuToHID* imu_axis;
 
     RtosTimer* update_task_timer;
     DigitalOut working;
