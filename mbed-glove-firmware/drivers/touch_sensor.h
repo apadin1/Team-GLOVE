@@ -53,8 +53,9 @@ const uint8_t TOUCH_LP_MODE = 0;
 /* Max On:
  *  - default is 180 steps of 160ms (28.8 seconds)
  *  - might want this to be off (0)
+ *  - using 32 = ~ 5 seconds
  */
-const uint8_t TOUCH_MAX_ON = 0;
+const uint8_t TOUCH_MAX_ON = 32;
 
 /* Guard Key:
  *  - default is key 0

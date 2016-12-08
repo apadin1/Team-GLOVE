@@ -71,6 +71,7 @@ void TouchSensor::update() {
     /*
      * After a predetermined count of updates, recalibrate the sensor
      */
+#if 0
     static int calibration_count = 0;
     calibration_count += 1;
 
@@ -81,12 +82,14 @@ void TouchSensor::update() {
 
         // if free, do a calibration every minute (50ct/sec)
         // SWITCH TO KEY TIMOUTS
-        if (calibration_count >= 3000) {
+        if (calibration_count >= 750) {
             calibration_count = 0;
             qt.calibrate();
         }
         return;
     }
+#endif
+
     uint8_t buttons = qt.getButtonsState();
 
     // Check overflow flag
