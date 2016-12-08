@@ -61,17 +61,22 @@ public:
 
         // Packet is a Left Glove
         if (id == LEFT_GLOVE_ID) {
-            extractGloveSensors(left_glove_data, compressed_data);
+            memcpy(compressed_data, &left_compressed, glove_sensors_compressed_size);
+            //extractGloveSensors(left_glove_data, compressed_data);
         }
 
         // Packet is a Right Glove
         else if (id == RIGHT_GLOVE_ID) {
-            extractGloveSensors(right_glove_data, compressed_data);
+            memcpy(compressed_data, &right_compressed, glove_sensors_compressed_size);
+            //extractGloveSensors(right_glove_data, compressed_data);
         }
     }
 
+    glove_sensors_compressed_t left_compressed;
+    glove_sensors_compressed_t right_compressed;
 private:
     BLE &ble;
+
 
     // Pointers to both compressed structures
     glove_sensors_raw_t& left_glove_data;

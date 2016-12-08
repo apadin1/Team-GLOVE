@@ -41,7 +41,7 @@ void launch() {
     ble.init();
 
     // Initialize KeyboardMouse object
-    KeyboardMouse HIDinput(ble);
+    //KeyboardMouse HIDinput(ble);
 
     // Initialize translators
     //Translator leftTranslator(left_glove_data, HIDinput, IS_LEFT);
@@ -63,6 +63,9 @@ void launch() {
     while (true) {
         scanner.startScan(100, 25);
         for (;;) {
+            led1 != led1;
+            extractGloveSensors(left_glove_data, &(scanner.left_compressed));
+            extractGloveSensors(right_glove_data, &(scanner.right_compressed));
             printf("%d, %d, | %f %f || %d, %d | %f, %f\r\n",
                     left_glove_data.flex_sensors[0], left_glove_data.flex_sensors[3],
                     left_glove_data.imu.orient_pitch, left_glove_data.imu.orient_roll,
@@ -71,6 +74,7 @@ void launch() {
             Thread::wait(500);
         }
 
+#if 0
         // UNCONNECTED STATE
         while (!HIDinput.isConnected()) {
             led4 = !led4;
@@ -97,6 +101,18 @@ void launch() {
         led4 = 1;
         //combinedTask.stopUpdateTask();
         scanner.stopScan();
+#endif
+    }
+}
+
+void blink() {
+    led2 = 1;
+    led1 = 0;
+    for (;;) {
+        led1 = !led1;
+        led2 = !led2;
+        printf("Hi!\r\n");
+        Thread::wait(520);
     }
 }
 
@@ -107,5 +123,6 @@ int main() {
      * to comment out/have multiple versions.
      * Just change your local one to call the test loop you need.
      */
+    //blink();
     launch();
 }

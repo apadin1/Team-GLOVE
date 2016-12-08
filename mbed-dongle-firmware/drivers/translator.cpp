@@ -21,21 +21,25 @@
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
+/*
 static flexToHID flex_sensors_L[FLEX_COUNT];
 static flexToHID flex_sensors_R[FLEX_COUNT];
 static touchToHID touch_sensors_L[TOUCH_COUNT];
 static touchToHID touch_sensors_R[TOUCH_COUNT];
 static imuToHID imu_axis_L[IMU_COUNT];
 static imuToHID imu_axis_R[IMU_COUNT];
+*/
 
 Translator::Translator(glove_sensors_raw_t& _glove_data,
                        KeyboardMouse& _HIDinput, bool is_left)
     : glove_data(_glove_data), HIDinput(_HIDinput),
     working(TRANSLATOR_DEBUG_PIN) {
 
+        /*
         flex_sensors = (is_left) ? flex_sensors_L : flex_sensors_R;
         touch_sensors = (is_left) ? touch_sensors_L : touch_sensors_R;
         imu_axis = (is_left) ? imu_axis_L : imu_axis_R;
+        */
 
         /* FLEX */
         flex_sensors[FLEX1].init(glove_data.flex_sensors,   300, 800, 0.10);
