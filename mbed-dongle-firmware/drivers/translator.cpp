@@ -80,10 +80,10 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
         }
         else {
             /* IMU */
-            imu_axis[PITCHUP].init(&(glove_data.imu.orient_pitch), -50, 0, 0.15, ACTIVE_HIGH);
-            imu_axis[PITCHDOWN].init(&(glove_data.imu.orient_pitch), 0, 50, 0.15, ACTIVE_LOW);
-            imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -50, 0, 0.15, ACTIVE_HIGH);
-            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), 0, 50, 0.15, ACTIVE_LOW);
+            imu_axis[PITCHUP].init(&(glove_data.imu.orient_pitch), -50, 0, 0.10, ACTIVE_LOW);
+            imu_axis[PITCHDOWN].init(&(glove_data.imu.orient_pitch), 0, 50, 0.10, ACTIVE_HIGH);
+            imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -25, 25, 0.10, ACTIVE_LOW);
+            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), 25, 75, 0.10, ACTIVE_HIGH);
 
             /* LEFT BUTTON MAPPING */
             flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
@@ -94,10 +94,10 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             //touch_sensors[TOUCH2].change_hid_profile(MOUSE, 0, RBUTTON);
             //touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
             //touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
-            imu_axis[PITCHUP].change_hid_profile(KEYBOARD,  's');
-            imu_axis[PITCHDOWN].change_hid_profile(KEYBOARD, 'w');
-            imu_axis[ROLLLEFT].change_hid_profile(KEYBOARD, 'a');
-            imu_axis[ROLLRIGHT].change_hid_profile(KEYBOARD, 'd');
+            imu_axis[PITCHUP].change_hid_profile(KEYBOARD,  'w');
+            imu_axis[PITCHDOWN].change_hid_profile(KEYBOARD, 's');
+            imu_axis[ROLLLEFT].change_hid_profile(KEYBOARD, 'd');
+            imu_axis[ROLLRIGHT].change_hid_profile(KEYBOARD, 'a');
 
             //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
             //flex_sensors[FLEX1].change_hid_profile(DISABLED);
@@ -230,8 +230,10 @@ void Translator::gestureCheck() {
     }
     // balance the mouse TODO
 
-    if (!is_left) {
-
+    if (is_left) {
+    }
+    else {
+        // Right glove special mouse thing
         float r = -(glove_data.imu.orient_roll+20);
         float p = -glove_data.imu.orient_pitch;
         int T_r = 8;

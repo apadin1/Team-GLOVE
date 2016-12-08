@@ -93,11 +93,11 @@ void launch() {
         }
 
         // Wait for connection to take place
-        Thread::wait(5000);
+        Thread::wait(3000);
 
         // Start scanning and translating
-        combinedTask.startUpdateTask(40);
-        scanner.startScan(100, 25);
+        combinedTask.startUpdateTask(50);
+        scanner.startScan(100, 20);
         led1 = 0;
 
         // CONNECTED STATE
