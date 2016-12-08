@@ -11,9 +11,6 @@ extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
 
-//color_pair_t(Blue, Cyan),
-//color_pair_t(Red, Magenta),
-//color_pair_t(Green, Yellow),
 
 typedef pair<DotStarColor, DotStarColor> color_pair_t;
 #if defined RIGHT_GLOVE
@@ -22,13 +19,17 @@ const color_pair_t led_patterns_c[num_led_patterns_c] = {
     color_pair_t(Blue, Maize),
     color_pair_t(Maize, Blue),
 };
+const uint8_t portal_intensity_c = 12;
+const DotStarColor portal_color_c = Blue;
 #elif defined LEFT_GLOVE
 const uint8_t num_led_patterns_c = 3;
 const color_pair_t led_patterns_c[num_led_patterns_c] = {
-    color_pair_t(White, Pink),
-    color_pair_t(Pink, Red),
-    color_pair_t(Red, White),
+    color_pair_t(Blue, Cyan),
+    color_pair_t(Red, Magenta),
+    color_pair_t(Green, Yellow),
 };
+const uint8_t portal_intensity_c = 15;
+const DotStarColor portal_color_c = Orange;
 #else
 #error "Must define either LEFT_GLOVE or RIGHT_GLOVE"
 #endif
@@ -47,17 +48,15 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
     if ((lbound < glove_data.imu.orient_pitch && glove_data.imu.orient_pitch < ubound)
          && (lbound < glove_data.imu.orient_roll && glove_data.imu.orient_roll < ubound)) {
 
-        leds.set_color_all(Orange, 5);
+        leds.set_color_all(Pink, 10);
         return false;
     }
 
     /*
      * Indicate the first flex sensor is pulled
      */
-    if (glove_data.flex_sensors[0] < 450) {
-        //TODO match the portal colors
-        //leds.set_color_all(Red, 10);
-        leds.set_color_all(Cyan, 8);
+    if (glove_data.flex_sensors[0] < 500) {
+        leds.set_color_all(portal_color_c, portal_intensity_c);
         return false;
     }
 
@@ -65,7 +64,7 @@ bool check_signal_conditions(const glove_sensors_raw_t& glove_data, DotStarLEDs&
      * Indicate a touch has occured
      */
     if (glove_data.touch_sensor.a || glove_data.touch_sensor.b || glove_data.touch_sensor.c || glove_data.touch_sensor.d) {
-        leds.set_color_all(Magenta, 8);
+        leds.set_color_all(Magenta, 3);
         return false;
     }
 
