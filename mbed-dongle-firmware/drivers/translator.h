@@ -62,7 +62,7 @@ public:
      * Constructor for translator
      */
     Translator(glove_sensors_raw_t& glove_data,
-               KeyboardMouse& HIDinput);
+               KeyboardMouse& HIDinput, bool is_left);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -99,9 +99,9 @@ private:
     KeyboardMouse& HIDinput;
 
     /* Left Glove Analog Buttons */
-    flexToHID* flex_sensors[FLEX_COUNT];
-    imuToHID* imu_axis[IMU_COUNT];
-    touchToHID* touch_sensors[TOUCH_COUNT];
+    flexToHID* flex_sensors;
+    imuToHID* imu_axis;
+    touchToHID* touch_sensors;
 
     RtosTimer* update_task_timer;
     DigitalOut working;

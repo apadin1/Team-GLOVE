@@ -21,28 +21,29 @@
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
+flexToHID flex_sensors_L[FLEX_COUNT];
+flexToHID flex_sensors_R[FLEX_COUNT];
+/*
+imuToHID imu_axis_L[IMU_COUNT];
+imuToHID imu_axis_R[IMU_COUNT];
+touchToHID touch_sensors_L[TOUCH_COUNT];
+touchToHID touch_sensors_R[TOUCH_COUNT];
+*/
+
 Translator::Translator(glove_sensors_raw_t& _glove_data,
-                       KeyboardMouse& _HIDinput)
+                       KeyboardMouse& _HIDinput, bool is_left)
     : glove_data(_glove_data), HIDinput(_HIDinput),
     working(TRANSLATOR_DEBUG_PIN) {
 
-        /* Left Glove Setup */
+        flex_sensors = (is_left) ? flex_sensors_L : flex_sensors_R;
+        //imu_axis = (is_left) ? flex_sensors_L : flex_sensors_R;
+        //flex_sensors = (is_left) ? flex_sensors_L : flex_sensors_R;
 
         /* FLEX1 */
-        flex_sensors[FLEX1] =
-        new flexToHID(glove_data.flex_sensors, 300, 800, 0.10, ACTIVE_LOW);
-
-        /* FLEX2 */
-        flex_sensors[FLEX2] =
-        new flexToHID(glove_data.flex_sensors+1, 400, 800, 0.25, ACTIVE_LOW);
-
-        /* FLEX3 */
-        flex_sensors[FLEX3] =
-        new flexToHID(glove_data.flex_sensors+2, 370, 1000, 0.15, ACTIVE_LOW);
-
-        /* FLEX4 */
-        flex_sensors[FLEX4] =
-        new flexToHID(glove_data.flex_sensors+3, 350, 930, 0.15, ACTIVE_LOW);
+        flex_sensors[FLEX1].init(glove_data.flex_sensors, 300, 800, 0.10);
+        flex_sensors[FLEX2].init(glove_data.flex_sensors+1, 400, 800, 0.25);
+        flex_sensors[FLEX3].init(glove_data.flex_sensors+2, 370, 1000, 0.15);
+        flex_sensors[FLEX4].init(glove_data.flex_sensors+3, 350, 930, 0.15);
 
         /* TOUCH1 */
         touch_sensors[TOUCH1] =

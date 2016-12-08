@@ -23,7 +23,7 @@ template <class T>
 class AnalogButton {
 public:
     AnalogButton() {
-        //TODO:fix this shit
+        //TODO: this IS the shit
     }
     AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_) {
@@ -145,13 +145,12 @@ struct mouseData {
 };
 
 class flexToHID {
-    public:
-    flexToHID( uint16_t* data_, uint16_t min_, uint16_t max_, float transition_band_, bool active_low_=false)
-        : active_low(active_low_) {
-        //sensor_conversion = AnalogButton<uint16_t>(data_, min_, max_, transition_band_, active_low_);
+public:
+    flexToHID () {}
+    void init( uint16_t* data_, uint16_t min_, uint16_t max_, float transition_band_, bool active_low_=true) {
+
+        active_low = active_low_;
         sensor_conversion.init(data_, min_, max_, transition_band_, active_low_);
-        cur_keyboard = keyboardData();
-        cur_mouse = mouseData();
     }
 
     keyboardData get_keyboard_data() {
@@ -186,7 +185,7 @@ class flexToHID {
         }
     }
 
-    private:
+private:
     bool active_low;
     AnalogButton<uint16_t> sensor_conversion;
     hidType HID;
@@ -196,7 +195,7 @@ class flexToHID {
 };
 
 class imuToHID {
-    public:
+public:
     imuToHID( float* data_, float min_, float max_, float transition_band_, bool active_low_=false)
         : active_low(active_low_) {
         sensor_conversion = AnalogButton<float>(data_, min_, max_, transition_band_, active_low_);
@@ -236,7 +235,7 @@ class imuToHID {
         }
     }
 
-    private:
+private:
     bool active_low;
     AnalogButton <float> sensor_conversion;
     hidType HID;
