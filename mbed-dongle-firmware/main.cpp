@@ -53,7 +53,7 @@ void launch() {
     // Init scanner
     crcInit();
     //Scanner scanner(ble, left_glove_data, right_glove_data);
-    Scanner scanner(ble, &left_compressed);
+    Scanner scanner(ble, &left_compressed, &right_compressed);
 
     // Initialize serial interrupts for configuration
     //serialInit(&leftTranslator, &rightTranslator, &scanner);
@@ -68,7 +68,7 @@ void launch() {
         for (;;) {
             led1 != led1;
             extractGloveSensors(left_glove_data, &left_compressed);
-            //extractGloveSensors(right_glove_data, &(scanner.right_compressed));
+            extractGloveSensors(right_glove_data, &right_compressed);
             printf("%d, %d, | %f %f || %d, %d | %f, %f\r\n",
                     left_glove_data.flex_sensors[0], left_glove_data.flex_sensors[3],
                     left_glove_data.imu.orient_pitch, left_glove_data.imu.orient_roll,

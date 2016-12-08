@@ -26,12 +26,13 @@ public:
 
     // Scan period and duration are in milliseconds
     Scanner(BLE &_ble,
-            glove_sensors_compressed_t* left_data) :
+            glove_sensors_compressed_t* left_data,
+            glove_sensors_compressed_t* right_data) :
             //glove_sensors_raw_t& right_data) :
 
         ble(_ble),
-        left_compressed(left_data)
-        //right_glove_data(right_data)
+        left_compressed(left_data),
+        right_compressed(right_data)
         {}
 
     // Stop and start scanning
@@ -61,14 +62,14 @@ public:
             (glove_sensors_compressed_t*)(params->advertisingData + 4);
 
         // Packet is a Left Glove
-        if (id == RIGHT_GLOVE_ID) {
+        if (id == LEFT_GLOVE_ID) {
             memcpy(left_compressed, compressed_data, glove_sensors_compressed_size);
             //extractGloveSensors(left_glove_data, compressed_data);
         }
 
         // Packet is a Right Glove
         else if (id == RIGHT_GLOVE_ID) {
-            //memcpy(compressed_data, &right_compressed, glove_sensors_compressed_size);
+            memcpy(right_compressed, compressed_data, glove_sensors_compressed_size);
             //extractGloveSensors(right_glove_data, compressed_data);
         }
     }
@@ -77,7 +78,7 @@ private:
     BLE &ble;
 
     glove_sensors_compressed_t* left_compressed;
-    //glove_sensors_compressed_t right_compressed;
+    glove_sensors_compressed_t* right_compressed;
 
     // Pointers to both compressed structures
     //glove_sensors_raw_t& left_glove_data;
