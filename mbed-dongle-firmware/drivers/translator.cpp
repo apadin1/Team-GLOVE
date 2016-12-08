@@ -91,7 +91,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             //flex_sensors[FLEX3].change_hid_profile(KEYBOARD, '0');
             flex_sensors[FLEX4].change_hid_profile(KEYBOARD, 'e');
             //touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
-            touch_sensors[TOUCH2].change_hid_profile(KEYBOARD, 'e');
+            touch_sensors[TOUCH2].change_hid_profile(KEYBOARD, 27);
             //touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
             //touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
             imu_axis[PITCHUP].change_hid_profile(KEYBOARD,  's');
