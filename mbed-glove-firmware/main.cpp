@@ -11,26 +11,27 @@ extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
 
+//color_pair_t(Blue, Cyan),
+//color_pair_t(Red, Magenta),
+//color_pair_t(Green, Yellow),
+
 typedef pair<DotStarColor, DotStarColor> color_pair_t;
 #if defined RIGHT_GLOVE
 const uint8_t num_led_patterns_c = 2;
-#elif defined LEFT_GLOVE
-const uint8_t num_led_patterns_c = 3;
-#endif
-
 const color_pair_t led_patterns_c[num_led_patterns_c] = {
-    //color_pair_t(Blue, Cyan),
-    //color_pair_t(Red, Magenta),
-    //color_pair_t(Green, Yellow),
-#if defined RIGHT_GLOVE
     color_pair_t(Blue, Maize),
     color_pair_t(Maize, Blue),
+};
 #elif defined LEFT_GLOVE
+const uint8_t num_led_patterns_c = 3;
+const color_pair_t led_patterns_c[num_led_patterns_c] = {
     color_pair_t(White, Pink),
     color_pair_t(Pink, Red),
     color_pair_t(Red, White),
-#endif
 };
+#else
+#error "Must define either LEFT_GLOVE or RIGHT_GLOVE"
+#endif
 
 /*
  * Use this to signal or very the lights based on
