@@ -91,9 +91,9 @@ void launch() {
         //rightTranslator.startUpdateTask(40);
         //Thread::wait(20);
         //leftTranslator.startUpdateTask(40);
-        combinedTask.startUpdateTask(30);
+        combinedTask.startUpdateTask(40);
         // Scan for packets
-        scanner.startScan();
+        scanner.startScan(100, 25);
 
         // CONNECTED STATE
         while (input.isConnected()) {
