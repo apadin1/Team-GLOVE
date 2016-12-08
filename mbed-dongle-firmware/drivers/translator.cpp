@@ -31,10 +31,10 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
     working(TRANSLATOR_DEBUG_PIN) {
 
         /* FLEX */
-        flex_sensors[FLEX1].init(glove_data.flex_sensors,   300, 800, 0.10);
-        flex_sensors[FLEX2].init(glove_data.flex_sensors+1, 400, 800, 0.25);
-        flex_sensors[FLEX3].init(glove_data.flex_sensors+2, 370, 1000, 0.15);
-        flex_sensors[FLEX4].init(glove_data.flex_sensors+3, 350, 930, 0.15);
+        flex_sensors[FLEX1].init(glove_data.flex_sensors,   380, 820, 0.25);
+        flex_sensors[FLEX2].init(glove_data.flex_sensors+1, 360, 830, 0.25);
+        flex_sensors[FLEX3].init(glove_data.flex_sensors+2, 580, 870, 0.15);
+        flex_sensors[FLEX4].init(glove_data.flex_sensors+3, 560, 850, 0.15);
 
         /* TOUCH */
         touch_sensors[TOUCH1].init(&(glove_data.touch_sensor.a));
@@ -51,11 +51,11 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), -45, 0, 0.15, ACTIVE_LOW);
 
             /* RIGHT BUTTON MAPPING */
-            flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, RBUTTON);
+            flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
             //flex_sensors[FLEX2].change_hid_profile(KEYBOARD, 'k');
             //flex_sensors[FLEX3].change_hid_profile(KEYBOARD, 'c');
             flex_sensors[FLEX4].change_hid_profile(KEYBOARD, ' ');
-            touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
+            //touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
             //touch_sensors[TOUCH2].change_hid_profile(MOUSE, 0, RBUTTON);
             //touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
             //touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
@@ -69,11 +69,11 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             flex_sensors[FLEX2].change_hid_profile(DISABLED);
             //flex_sensors[FLEX3].change_hid_profile(DISABLED);
             flex_sensors[FLEX4].change_hid_profile(DISABLED);
-            //touch_sensors[TOUCH1].change_hid_profile(DISABLED);
-            //touch_sensors[TOUCH2].change_hid_profile(DISABLED);
-            //touch_sensors[TOUCH3].change_hid_profile(DISABLED);
-            //touch_sensors[TOUCH4].change_hid_profile(DISABLED);
-            //imu_axis[PITCHUP].change_hid_profile(DISABLED);
+            touch_sensors[TOUCH1].change_hid_profile(DISABLED);
+            touch_sensors[TOUCH2].change_hid_profile(DISABLED);
+            touch_sensors[TOUCH3].change_hid_profile(DISABLED);
+            touch_sensors[TOUCH4].change_hid_profile(DISABLED);
+            imu_axis[PITCHUP].change_hid_profile(DISABLED);
             imu_axis[PITCHDOWN].change_hid_profile(DISABLED);
             //imu_axis[ROLLLEFT].change_hid_profile(DISABLED);
             imu_axis[ROLLRIGHT].change_hid_profile(DISABLED);
@@ -86,7 +86,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), 25, 65, 0.10, ACTIVE_HIGH);
 
             /* LEFT BUTTON MAPPING */
-            flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
+            flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, RBUTTON);
             //flex_sensors[FLEX2].change_hid_profile(KEYBOARD, 'z');
             //flex_sensors[FLEX3].change_hid_profile(KEYBOARD, '0');
             flex_sensors[FLEX4].change_hid_profile(KEYBOARD, 'e');
