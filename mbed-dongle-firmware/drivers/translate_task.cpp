@@ -22,8 +22,8 @@ TranslateTask::TranslateTask(Translator* left_, Translator* right_,
                         }
 
 void  TranslateTask::doTheThing() {
+    //right->gestureCheck();
     left->gestureCheck();
-    right->gestureCheck();
     input->sendMouse();
     input->sendKeyboard();
 }

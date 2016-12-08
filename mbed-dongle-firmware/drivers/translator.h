@@ -82,9 +82,8 @@ public:
      * Constructor for translator
      *
      */
-    Translator(glove_sensors_raw_t* glove_raw,
-            glove_sensors_compressed_t* glove_compressed,
-            KeyboardMouse* input);
+    Translator(glove_sensors_compressed_t* glove_compressed,
+               KeyboardMouse* input);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -125,7 +124,7 @@ private:
     KeyboardMouse* HIDinput;
 
     /* Glove Data */
-    glove_sensors_raw_t* glove_data;
+    glove_sensors_raw_t glove_data;
     glove_sensors_compressed_t* glove_compressed;
 
     RtosTimer* update_task_timer;

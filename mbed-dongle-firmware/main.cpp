@@ -15,6 +15,7 @@ void printPacketCounts() {
     printf("left: %d\r\nright: %d\r\n", left_count, right_count);
 }
 
+
 // Wait for events in a constant loop to make sure the BLE stack
 // gets serviced in a reasonable time
 void bleWaitForEventLoop() {
@@ -24,6 +25,7 @@ void bleWaitForEventLoop() {
         led3 = 0;
     }
 }
+
 
 // Driver for dongle
 void launch() {
@@ -42,37 +44,32 @@ void launch() {
     //Ticker still_alive;
     //still_alive.attach(stillAlive, 1.0);
 
-    // Glove data structs
-    glove_sensors_compressed_t leftGloveCompressed;
-    //memset(&leftGloveCompressed, 0, sizeof(glove_sensors_compressed_t));
-    //leftGloveCompressed.checksum = 5;
-    glove_sensors_compressed_t rightGloveCompressed;
-    //memset(&rightGloveCompressed, 0, sizeof(glove_sensors_compressed_t));
-    //rightGloveCompressed.checksum = 5;
-    glove_sensors_raw_t leftGlove;
-    glove_sensors_raw_t rightGlove;
+    // Compressed glove data structs
+    static glove_sensors_compressed_t leftGloveCompressed;
+    static glove_sensors_compressed_t rightGloveCompressed;
 
     // Initialize ble
     ble.init();
 
     // Initialize KeyboardMouse object
-    KeyboardMouse input(ble);
+    static KeyboardMouse input(ble);
     //keyboard_ptr = &input;
 
     // Initialize translators
-    Translator leftTranslator(&leftGlove, &leftGloveCompressed, &input);
-    Translator rightTranslator(&rightGlove, &rightGloveCompressed, &input);
-    TranslateTask combinedTask(&leftTranslator, &rightTranslator, &input);
+    static Translator leftTranslator(&leftGloveCompressed, &input);
+    static Translator rightTranslator(&rightGloveCompressed, &input);
+    static TranslateTask combinedTask(&leftTranslator, &rightTranslator, &input);
 
     // Init scanner
     crcInit();
-    Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
+    static Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
     serialInit(&leftTranslator, &rightTranslator, &scanner);
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
+
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected
     while (true) {
@@ -92,6 +89,7 @@ void launch() {
         //Thread::wait(20);
         //leftTranslator.startUpdateTask(40);
         combinedTask.startUpdateTask(100);
+        
         // Scan for packets
         scanner.startScan();
 
@@ -99,22 +97,23 @@ void launch() {
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(300);
-            rightGlove.touch_sensor.a = 1;
-            compressGloveSensors(&rightGlove, &rightGloveCompressed);
+            rightGloveCompressed.t = 0;
+            
+            //rightGlove.touch_sensor.b = 1;
+            //compressGloveSensors(&rightGlove, &rightGloveCompressed);
             //input.keyPress('a');
             //input.sendKeyboard();
 
             led4 = 1;
             Thread::wait(300);
-            rightGlove.touch_sensor.a = 0;
-            compressGloveSensors(&rightGlove, &rightGloveCompressed);
+            //rightGlove.touch_sensor.b = 0;
+            //compressGloveSensors(&rightGlove, &rightGloveCompressed);
             //input.keyRelease('a');
             //input.sendKeyboard();
         }
 
         led4 = 1;
-        rightTranslator.stopUpdateTask();
-        leftTranslator.stopUpdateTask();
+        combinedTask.stopUpdateTask();
         scanner.stopScan();
     }
 }

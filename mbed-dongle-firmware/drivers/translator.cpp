@@ -16,117 +16,113 @@
 #include "translator.h"
 #include "gpio.h"
 
-
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
 
-Translator::Translator(glove_sensors_raw_t* _glove,
-        glove_sensors_compressed_t* _glove_comp,
-        KeyboardMouse* _input) :
-    glove_data(_glove),
-    glove_compressed(_glove_comp),
-    HIDinput(_input),
-    working(TRANSLATOR_DEBUG_PIN) {
+Translator::Translator(glove_sensors_compressed_t* _glove_comp,
+                       KeyboardMouse* _input) :
+            glove_compressed(_glove_comp),
+            HIDinput(_input),
+            working(TRANSLATOR_DEBUG_PIN) {
 
-        /* Left Glove Setup */
-
-        /* FLEX1 */
-        flexToHID flex1(&(glove_data->flex_sensors[0]), 300, 800, 0.05,
-                true);
-        flex_sensors[FLEX1] = &flex1;
-
-        /* FLEX2 */
-        flexToHID flex2(&(glove_data->flex_sensors[1]), 300, 800, 0.05,
-                true);
-        flex_sensors[FLEX2] = &flex2;
-
-        /* FLEX3 */
-        flexToHID flex3(&(glove_data->flex_sensors[2]), 300, 800, 0.05,
-                true);
-        flex_sensors[FLEX3] = &flex3;
-
-        /* FLEX4 */
-        flexToHID flex4(&(glove_data->flex_sensors[3]), 300, 800, 0.05,
-                true);
-        flex_sensors[FLEX4] = &flex4;
-
-        /* TOUCH1 */
-        touchToHID touch1(&(glove_data->touch_sensor.a));
-        touch_sensors[TOUCH1] = &touch1;
-
-        /* TOUCH2 */
-        touchToHID touch2(&(glove_data->touch_sensor.b));
-        touch_sensors[TOUCH2] = &touch2;
-
-        /* TOUCH3 */
-        touchToHID touch3(&(glove_data->touch_sensor.c));
-        touch_sensors[TOUCH3] = &touch3;
-
-        /* TOUCH4 */
-        touchToHID touch4(&(glove_data->touch_sensor.d));
-        touch_sensors[TOUCH4] = &touch4;
-
-        /* PITCHUP */
-        imuToHID pitchup(&(glove_data->imu.orient_pitch), 0, 35, 0.15, false);
-        imu_axis[PITCHUP] = &pitchup;
-
-        /* PITCHDOWN */
-        imuToHID pitchdown(&(glove_data->imu.orient_pitch), -35, 0, 0.15, true);
-        imu_axis[PITCHDOWN] = &pitchdown;
-
-        /* ROLLLEFT */
-        imuToHID rollleft(&(glove_data->imu.orient_roll), 0, 45, 0.15, false);
-        imu_axis[ROLLLEFT] = &rollleft;
-
-        /* ROLLRIGHT */
-        imuToHID rollright(&(glove_data->imu.orient_roll), -45, 0, 0.15, true);
-        imu_axis[ROLLRIGHT] = &rollright;
-
-        /* YAWLEFT */
-        imuToHID yawleft(&(glove_data->imu.orient_yaw), 0, 20, 0.15, false);
-        imu_axis[YAWLEFT] = &yawleft;
-
-        /* YAWRIGHT */
-        imuToHID yawright(&(glove_data->imu.orient_yaw), -20, 0, 0.15, true);
-        imu_axis[YAWRIGHT] = &yawright;
-
-        /* BUTTON MAPPING */
-        flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
-        flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
-        flex_sensors[FLEX3]->change_hid_profile(KEYBOARD, 'c');
-        flex_sensors[FLEX4]->change_hid_profile(KEYBOARD, 'd');
-        touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
-        touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
-        touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
-        touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'h');
-        imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'i');
-        imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 'j');
-        imu_axis[ROLLLEFT]->change_hid_profile(KEYBOARD, 'k');
-        imu_axis[ROLLRIGHT]->change_hid_profile(KEYBOARD, 'l');
-        //    imu_axis[YAWLEFT]->change_hid_profile(KEYBOARD, 'm');
-        //    imu_axis[YAWRIGHT]->change_hid_profile(KEYBOARD, 'n');
-
-        //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
-        //    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
-        //    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
-        //    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
-        //    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
-        //   imu_axis[PITCHUP]->change_hid_profile(DISABLED);
-        //    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
-        //    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
-        //    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
-        imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
-        imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
-
-
-        update_task_timer =
-            new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
+    /* Glove Setup */
+    for (int i = 0; i < FLEX_SENSORS_COUNT; ++i) {
+        glove_data.flex_sensors[i] = 1023;
     }
+
+    /* FLEX1 */
+    flexToHID flex1(&(glove_data.flex_sensors[0]), 300, 800, 0.05, true);
+    flex_sensors[FLEX1] = &flex1;
+
+    /* FLEX2 */
+    flexToHID flex2(&(glove_data.flex_sensors[1]), 300, 800, 0.05, true);
+    flex_sensors[FLEX2] = &flex2;
+
+    /* FLEX3 */
+    flexToHID flex3(&(glove_data.flex_sensors[2]), 300, 800, 0.05, true);
+    flex_sensors[FLEX3] = &flex3;
+
+    /* FLEX4 */
+    flexToHID flex4(&(glove_data.flex_sensors[3]), 300, 800, 0.05, true);
+    flex_sensors[FLEX4] = &flex4;
+
+    /* TOUCH1 */
+    touchToHID touch1(&(glove_data.touch_sensor.a));
+    touch_sensors[TOUCH1] = &touch1;
+
+    /* TOUCH2 */
+    touchToHID touch2(&(glove_data.touch_sensor.b));
+    touch_sensors[TOUCH2] = &touch2;
+
+    /* TOUCH3 */
+    touchToHID touch3(&(glove_data.touch_sensor.c));
+    touch_sensors[TOUCH3] = &touch3;
+
+    /* TOUCH4 */
+    touchToHID touch4(&(glove_data.touch_sensor.d));
+    touch_sensors[TOUCH4] = &touch4;
+
+    /* PITCHUP */
+    imuToHID pitchup(&(glove_data.imu.orient_pitch), 0, 35, 0.15, false);
+    imu_axis[PITCHUP] = &pitchup;
+
+    /* PITCHDOWN */
+    imuToHID pitchdown(&(glove_data.imu.orient_pitch), -35, 0, 0.15, true);
+    imu_axis[PITCHDOWN] = &pitchdown;
+
+    /* ROLLLEFT */
+    imuToHID rollleft(&(glove_data.imu.orient_roll), 0, 45, 0.15, false);
+    imu_axis[ROLLLEFT] = &rollleft;
+
+    /* ROLLRIGHT */
+    imuToHID rollright(&(glove_data.imu.orient_roll), -45, 0, 0.15, true);
+    imu_axis[ROLLRIGHT] = &rollright;
+
+    /* YAWLEFT */
+    imuToHID yawleft(&(glove_data.imu.orient_yaw), 0, 20, 0.15, false);
+    imu_axis[YAWLEFT] = &yawleft;
+
+    /* YAWRIGHT */
+    imuToHID yawright(&(glove_data.imu.orient_yaw), -20, 0, 0.15, true);
+    imu_axis[YAWRIGHT] = &yawright;
+
+    /* BUTTON MAPPING */
+    flex_sensors[FLEX1]->change_hid_profile(KEYBOARD, 'a');
+    flex_sensors[FLEX2]->change_hid_profile(KEYBOARD, 'b');
+    flex_sensors[FLEX3]->change_hid_profile(KEYBOARD, 'c');
+    flex_sensors[FLEX4]->change_hid_profile(KEYBOARD, 'd');
+    touch_sensors[TOUCH1]->change_hid_profile(KEYBOARD, 'e');
+    touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
+    touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
+    touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'h');
+    imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'i');
+    imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 'j');
+    imu_axis[ROLLLEFT]->change_hid_profile(KEYBOARD, 'k');
+    imu_axis[ROLLRIGHT]->change_hid_profile(KEYBOARD, 'l');
+    //    imu_axis[YAWLEFT]->change_hid_profile(KEYBOARD, 'm');
+    //    imu_axis[YAWRIGHT]->change_hid_profile(KEYBOARD, 'n');
+
+    //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
+    //    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
+    //    flex_sensors[FLEX2]->change_hid_profile(DISABLED);
+    //    flex_sensors[FLEX3]->change_hid_profile(DISABLED);
+    //    flex_sensors[FLEX4]->change_hid_profile(DISABLED);
+    //    touch_sensors[TOUCH1]->change_hid_profile(DISABLED);
+    //    touch_sensors[TOUCH2]->change_hid_profile(DISABLED);
+    //    touch_sensors[TOUCH3]->change_hid_profile(DISABLED);
+    //    touch_sensors[TOUCH4]->change_hid_profile(DISABLED);
+    //   imu_axis[PITCHUP]->change_hid_profile(DISABLED);
+    //    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
+    //    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
+    //    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
+    imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
+    imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
+
+
+    //update_task_timer =
+    //    new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
+}
 
 void Translator::updateGestureMap(uint8_t* config) {
 
@@ -180,7 +176,7 @@ void Translator::gestureCheck() {
     }
 
     // Decompress
-    extractGloveSensors(glove_data, glove_compressed);
+    extractGloveSensors(&glove_data, glove_compressed);
     //if (glove_data->imu.orient_pitch > 0)
     //    glove_data->imu.orient_pitch = 0;
     //else
@@ -240,9 +236,9 @@ void Translator::gestureCheck() {
 
     /* Send HID inputs */
     //if (KEYBOARD_CHANGED == true)
-       // HIDinput->sendKeyboard();
+    //    HIDinput->sendKeyboard();
     //if (MOUSE_CHANGED == true)
-       // HIDinput->sendMouse();
+    //    HIDinput->sendMouse();
     led2 = 1;
 }
 
