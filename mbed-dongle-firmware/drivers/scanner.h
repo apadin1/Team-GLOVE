@@ -27,12 +27,15 @@ public:
     // Scan period and duration are in milliseconds
     Scanner(BLE &_ble,
             glove_sensors_compressed_t* left_data,
-            glove_sensors_compressed_t* right_data) :
-            //glove_sensors_raw_t& right_data) :
-
+            glove_sensors_compressed_t* right_data,
+            glove_sensors_raw_t& left_data_r,
+            glove_sensors_raw_t& right_data_r)
+        :
         ble(_ble),
         left_compressed(left_data),
-        right_compressed(right_data)
+        right_compressed(right_data),
+        left_glove_data(left_data_r),
+        right_glove_data(right_data_r)
         {}
 
     // Stop and start scanning
@@ -64,13 +67,13 @@ public:
         // Packet is a Left Glove
         if (id == LEFT_GLOVE_ID) {
             memcpy(left_compressed, compressed_data, glove_sensors_compressed_size);
-            //extractGloveSensors(left_glove_data, compressed_data);
+            extractGloveSensors(left_glove_data, left_compressed);
         }
 
         // Packet is a Right Glove
         else if (id == RIGHT_GLOVE_ID) {
             memcpy(right_compressed, compressed_data, glove_sensors_compressed_size);
-            //extractGloveSensors(right_glove_data, compressed_data);
+            extractGloveSensors(right_glove_data, right_compressed);
         }
     }
 
@@ -81,8 +84,8 @@ private:
     glove_sensors_compressed_t* right_compressed;
 
     // Pointers to both compressed structures
-    //glove_sensors_raw_t& left_glove_data;
-    //love_sensors_raw_t& right_glove_data;
+    glove_sensors_raw_t& left_glove_data;
+    glove_sensors_raw_t& right_glove_data;
 };
 
 #endif // SCANNER_H_

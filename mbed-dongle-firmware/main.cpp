@@ -55,12 +55,12 @@ void launch() {
     // Initialize translators
     Translator leftTranslator(left_glove_data, HIDinput, flex_sensors_L, touch_sensors_L, imu_axis_L);
     Translator rightTranslator(right_glove_data, HIDinput, flex_sensors_R, touch_sensors_R, imu_axis_R);
-    //TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
+    TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
 
     // Init scanner
     crcInit();
     //Scanner scanner(ble, left_glove_data, right_glove_data);
-    Scanner scanner(ble, &left_compressed, &right_compressed);
+    Scanner scanner(ble, &left_compressed, &right_compressed, left_glove_data, right_glove_data);
 
     // Initialize serial interrupts for configuration
     //serialInit(&leftTranslator, &rightTranslator, &scanner);
@@ -71,6 +71,7 @@ void launch() {
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected
     while (true) {
+#if 0
         scanner.startScan(100, 25);
         for (;;) {
             led1 != led1;
@@ -83,8 +84,8 @@ void launch() {
                     right_glove_data.imu.orient_pitch, right_glove_data.imu.orient_roll);
             Thread::wait(500);
         }
+#endif
 
-#if 0
         // UNCONNECTED STATE
         while (!HIDinput.isConnected()) {
             led4 = !led4;
@@ -95,7 +96,7 @@ void launch() {
         Thread::wait(5000);
 
         // Start scanning and translating
-        //combinedTask.startUpdateTask(40);
+        combinedTask.startUpdateTask(40);
         scanner.startScan(100, 25);
         led1 = 0;
 
@@ -109,9 +110,8 @@ void launch() {
         led2 = 0;
 
         led4 = 1;
-        //combinedTask.stopUpdateTask();
+        combinedTask.stopUpdateTask();
         scanner.stopScan();
-#endif
     }
 }
 
