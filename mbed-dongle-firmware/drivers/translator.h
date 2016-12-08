@@ -23,28 +23,10 @@
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
 
-#define GESTURE_COUNT 15
+#define GESTURE_COUNT 13
 #define FLEX_COUNT 4
 #define TOUCH_COUNT 4
-#define IMU_COUNT 6
-
-enum SENSOR {
-    hand,
-    flex1,
-    flex2,
-    flex3,
-    flex4,
-    touch1,
-    touch2,
-    touch3,
-    touch4,
-    pitchup,
-    pitchdown,
-    rollleft,
-    rollright,
-    yawleft,
-    yawright
-};
+#define IMU_COUNT 4
 
 enum FLEX {
     FLEX1,
@@ -65,8 +47,6 @@ enum IMU {
     PITCHDOWN,
     ROLLLEFT,
     ROLLRIGHT,
-    YAWLEFT,
-    YAWRIGHT
 };
 
 /* Translator
@@ -81,9 +61,8 @@ public:
     /*
      * Constructor for translator
      */
-    Translator(glove_sensors_raw_t& glove_L,
-               glove_sensors_raw_t& glove_R,
-               KeyboardMouse* HIDinput);
+    Translator(glove_sensors_raw_t& glove_data,
+               KeyboardMouse& HIDinput);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -116,20 +95,15 @@ private:
     // NOTE: Arrays indexed by enums
 
     /* Left Glove Analog Buttons */
-    flexToHID* flex_sensors_L[FLEX_COUNT];
-    imuToHID* imu_axis_L[IMU_COUNT];
-    touchToHID* touch_sensors_L[TOUCH_COUNT];
-
-    flexToHID* flex_sensors_R[FLEX_COUNT];
-    imuToHID* imu_axis_R[IMU_COUNT];
-    touchToHID* touch_sensors_R[TOUCH_COUNT];
+    flexToHID* flex_sensors[FLEX_COUNT];
+    imuToHID* imu_axis[IMU_COUNT];
+    touchToHID* touch_sensors[TOUCH_COUNT];
 
     /* KeyboardMouse Object */
     KeyboardMouse& HIDinput;
 
     /* Glove Data */
-    glove_sensors_raw_t& glove_L;
-    glove_sensors_raw_t& glove_R;
+    glove_sensors_raw_t& glove_data,
 
     RtosTimer* update_task_timer;
     DigitalOut working;

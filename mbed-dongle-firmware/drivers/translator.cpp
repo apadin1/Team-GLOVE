@@ -16,79 +16,66 @@
 #include "translator.h"
 #include "gpio.h"
 
+#define ACTIVE_LOW true
+#define ACTIVE_HIGH false
 
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
-Translator::Translator(glove_sensors_raw_t* _glove,
-        glove_sensors_compressed_t* _glove_comp,
-        KeyboardMouse* _input) :
-    glove_data(_glove),
-    glove_compressed(_glove_comp),
-    HIDinput(_input),
+Translator::Translator(glove_sensors_raw_t& _glove_data,
+                       KeyboardMouse& _HIDinput)
+    : glove_data(_glove_data), HIDinput(_HIDinput),
     working(TRANSLATOR_DEBUG_PIN) {
 
         /* Left Glove Setup */
 
         /* FLEX1 */
-        flexToHID flex1(&(glove_data->flex_sensors[0]), 300, 800, 0.10,
-                true);
-        flex_sensors[FLEX1] = &flex1;
+        flex_sensors[FLEX1] =
+        new flexToHID(glove_data.flex_sensors, 300, 800, 0.10, ACTIVE_LOW);
 
         /* FLEX2 */
-        flexToHID flex2(&(glove_data->flex_sensors[1]), 400, 800, 0.25,
-                true);
-        flex_sensors[FLEX2] = &flex2;
+        flex_sensors[FLEX2] =
+        new flexToHID(glove_data.flex_sensors+1, 400, 800, 0.25, ACTIVE_LOW);
 
         /* FLEX3 */
-        flexToHID flex3(&(glove_data->flex_sensors[2]), 370, 1000, 0.15,
-                true);
-        flex_sensors[FLEX3] = &flex3;
+        flex_sensors[FLEX3] =
+        new flexToHID(glove_data.flex_sensors+2, 370, 1000, 0.15, ACTIVE_LOW);
 
         /* FLEX4 */
-        flexToHID flex4(&(glove_data->flex_sensors[3]), 350, 930, 0.15,
-                true);
-        flex_sensors[FLEX4] = &flex4;
+        flex_sensors[FLEX4] =
+        new flexToHID(glove_data.flex_sensors+3, 350, 930, 0.15, ACTIVE_LOW);
 
         /* TOUCH1 */
-        touchToHID touch1(&(glove_data->touch_sensor.a));
-        touch_sensors[TOUCH1] = &touch1;
+        touch_sensors[TOUCH1] =
+        new touchToHID(&(glove_data.touch_sensor.a));
 
         /* TOUCH2 */
-        touchToHID touch2(&(glove_data->touch_sensor.b));
-        touch_sensors[TOUCH2] = &touch2;
+        touch_sensors[TOUCH2] =
+        new touchToHID(&(glove_data.touch_sensor.b));
 
         /* TOUCH3 */
-        touchToHID touch3(&(glove_data->touch_sensor.c));
-        touch_sensors[TOUCH3] = &touch3;
+        touch_sensors[TOUCH3] =
+        new touchToHID(&(glove_data.touch_sensor.c));
 
         /* TOUCH4 */
-        touchToHID touch4(&(glove_data->touch_sensor.d));
-        touch_sensors[TOUCH4] = &touch4;
+        touch_sensors[TOUCH4] =
+        new touchToHID(&(glove_data.touch_sensor.d));
 
         /* PITCHUP */
-        imuToHID pitchup(&(glove_data->imu.orient_pitch), -50, 50, 0.15, false);
-        imu_axis[PITCHUP] = &pitchup;
+        imu_axis[PITCHUP] =
+        new imuToHID(&(glove_data.imu.orient_pitch), -50, 50, 0.15, ACTIVE_HIGH);
 
         /* PITCHDOWN */
-        imuToHID pitchdown(&(glove_data->imu.orient_pitch), -35, 0, 0.15, true);
         imu_axis[PITCHDOWN] = &pitchdown;
+        new imuToHID(&(glove_data.imu.orient_pitch), -35, 0, 0.15, ACTIVE_LOW);
 
         /* ROLLLEFT */
-        imuToHID rollleft(&(glove_data->imu.orient_roll), -50, 50, 0.15, false);
         imu_axis[ROLLLEFT] = &rollleft;
+        new imuToHID(&(glove_data.imu.orient_roll), -50, 50, 0.15, ACTIVE_HIGH);
 
         /* ROLLRIGHT */
-        imuToHID rollright(&(glove_data->imu.orient_roll), -45, 0, 0.15, true);
         imu_axis[ROLLRIGHT] = &rollright;
-
-        /* YAWLEFT */
-        imuToHID yawleft(&(glove_data->imu.orient_yaw), 0, 20, 0.15, false);
-        imu_axis[YAWLEFT] = &yawleft;
-
-        /* YAWRIGHT */
-        imuToHID yawright(&(glove_data->imu.orient_yaw), -20, 0, 0.15, true);
-        imu_axis[YAWRIGHT] = &yawright;
+        new imuToHID(&(glove_data.imu.orient_roll), -45, 0, 0.15, ACTIVE_LOW);
 
         /* BUTTON MAPPING */
         flex_sensors[FLEX1]->change_hid_profile(MOUSE, 0, LBUTTON);
@@ -103,8 +90,6 @@ Translator::Translator(glove_sensors_raw_t* _glove,
         imu_axis[PITCHDOWN]->change_hid_profile(DISABLED, 'j');
         imu_axis[ROLLLEFT]->change_hid_profile(MOUSE, 0, XAXIS);
         imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED, 'l');
-        //    imu_axis[YAWLEFT]->change_hid_profile(KEYBOARD, 'm');
-        //    imu_axis[YAWRIGHT]->change_hid_profile(KEYBOARD, 'n');
 
         //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
         //    flex_sensors[FLEX1]->change_hid_profile(DISABLED);
@@ -119,8 +104,6 @@ Translator::Translator(glove_sensors_raw_t* _glove,
         //    imu_axis[PITCHDOWN]->change_hid_profile(DISABLED);
         //    imu_axis[ROLLLEFT]->change_hid_profile(DISABLED);
         //    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
-        imu_axis[YAWLEFT]->change_hid_profile(DISABLED);
-        imu_axis[YAWRIGHT]->change_hid_profile(DISABLED);
 
 
         update_task_timer =
