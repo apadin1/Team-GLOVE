@@ -8,16 +8,16 @@
 
 class TranslateTask {
 public:
-    TranslateTask(Translator* left_, Translator* right_, KeyboardMouse* input_);
+    TranslateTask(Translator& left_, Translator& right_, KeyboardMouse& input_);
     void doTheThing();
     void startUpdateTask(uint32_t ms);
     void stopUpdateTask();
 
 private:
+    Translator& left;
+    Translator& right;
+    KeyboardMouse& HIDinput;
     RtosTimer* update_task_timer;
-    Translator* left;
-    Translator* right;
-    KeyboardMouse* input;
 };
 
 

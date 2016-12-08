@@ -14,7 +14,6 @@
  */
 
 #include "translator.h"
-#include "gpio.h"
 
 #define ACTIVE_LOW true
 #define ACTIVE_HIGH false
@@ -169,7 +168,7 @@ float deadzone(float f, float T) {
 void Translator::gestureCheck() {
 
     /* Glove Functionality */
-    if (!HIDinput->isConnected()) {
+    if (!HIDinput.isConnected()) {
         return;
     }
 
@@ -224,12 +223,12 @@ void Translator::gestureCheck() {
     }
     // balance the mouse TODO
 
-        float r = -(glove_data->imu.orient_roll+20);
-        float p = -glove_data->imu.orient_pitch;
+        float r = -(glove_data.imu.orient_roll+20);
+        float p = -glove_data.imu.orient_pitch;
         int T_r = 8;
         int T_p = 5;
-        HIDinput->setMouseSpeedX(int8_t(deadzone(r, T_r)));
-        HIDinput->setMouseSpeedY(int8_t(deadzone(p, T_p)));
+        HIDinput.setMouseSpeedX(int8_t(deadzone(r, T_r)));
+        HIDinput.setMouseSpeedY(int8_t(deadzone(p, T_p)));
 
     led2 = 1;
 }
@@ -237,9 +236,9 @@ void Translator::gestureCheck() {
 void Translator::handleKeyboardInput(keyboardData& keyboard) {
     if (keyboard.valid) {
         if (keyboard.value) {
-            HIDinput->keyPress(keyboard.key);
+            HIDinput.keyPress(keyboard.key);
         } else {
-            HIDinput->keyRelease(keyboard.key);
+            HIDinput.keyRelease(keyboard.key);
         }
     }
 }
@@ -250,43 +249,43 @@ void Translator::handleMouseInput(mouseData& mouse) {
         // Left click
         if (mouse.part == LBUTTON) {
             if (mouse.value) {
-                HIDinput->setMouseButton(LEFT, DOWN);
+                HIDinput.setMouseButton(LEFT, DOWN);
             } else {
-                HIDinput->setMouseButton(LEFT, UP);
+                HIDinput.setMouseButton(LEFT, UP);
             }
         }
 
         // Right click
         else if (mouse.part == RBUTTON) {
             if (mouse.value) {
-                HIDinput->setMouseButton(RIGHT, DOWN);
+                HIDinput.setMouseButton(RIGHT, DOWN);
             } else {
-                HIDinput->setMouseButton(RIGHT, UP);
+                HIDinput.setMouseButton(RIGHT, UP);
             }
         }
 
         // Middle click
         else if (mouse.part == MIDDLECLICK) {
             if (mouse.value) {
-                HIDinput->setMouseButton(MIDDLE, DOWN);
+                HIDinput.setMouseButton(MIDDLE, DOWN);
             } else {
-                HIDinput->setMouseButton(MIDDLE, UP);
+                HIDinput.setMouseButton(MIDDLE, UP);
             }
         }
 
         // Scroll functionality
         else if (mouse.part == SCROLLAXIS) {
-            HIDinput->setMouseScroll(mouse.value);
+            HIDinput.setMouseScroll(mouse.value);
         }
 
         // X-axis functionality
         else if (mouse.part == XAXIS) {
-            HIDinput->setMouseSpeedX(mouse.value);
+            HIDinput.setMouseSpeedX(mouse.value);
         }
 
         // Y-axis functionality
         else if (mouse.part == YAXIS) {
-            HIDinput->setMouseSpeedY(mouse.value);
+            HIDinput.setMouseSpeedY(mouse.value);
         }
     }  // if valid
 }

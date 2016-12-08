@@ -22,6 +22,7 @@
 #include "analog_button.h"
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
+#include "gpio.h"
 
 #define FLEX_COUNT 4
 #define TOUCH_COUNT 4
@@ -91,18 +92,16 @@ private:
     void handleMouseInput(mouseData&);
 
 private:
-    // NOTE: Arrays indexed by enums
+    /* Glove Data */
+    glove_sensors_raw_t& glove_data;
+
+    /* KeyboardMouse Object */
+    KeyboardMouse& HIDinput;
 
     /* Left Glove Analog Buttons */
     flexToHID* flex_sensors[FLEX_COUNT];
     imuToHID* imu_axis[IMU_COUNT];
     touchToHID* touch_sensors[TOUCH_COUNT];
-
-    /* KeyboardMouse Object */
-    KeyboardMouse& HIDinput;
-
-    /* Glove Data */
-    glove_sensors_raw_t& glove_data,
 
     RtosTimer* update_task_timer;
     DigitalOut working;
