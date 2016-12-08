@@ -91,7 +91,7 @@ void launch() {
         //rightTranslator.startUpdateTask(40);
         //Thread::wait(20);
         //leftTranslator.startUpdateTask(40);
-        combinedTask.startUpdateTask(100);
+        combinedTask.startUpdateTask(30);
         // Scan for packets
         scanner.startScan();
 
