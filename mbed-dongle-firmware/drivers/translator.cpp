@@ -89,7 +89,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, RBUTTON);
             //flex_sensors[FLEX2].change_hid_profile(KEYBOARD, 'z');
             //flex_sensors[FLEX3].change_hid_profile(KEYBOARD, '0');
-            //flex_sensors[FLEX4].change_hid_profile(KEYBOARD, 'e');
+            flex_sensors[FLEX4].change_hid_profile(KEYBOARD, 'e');
             //touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
             touch_sensors[TOUCH2].change_hid_profile(KEYBOARD, 'e');
             //touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
@@ -103,7 +103,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             //flex_sensors[FLEX1].change_hid_profile(DISABLED);
             flex_sensors[FLEX2].change_hid_profile(DISABLED);
             flex_sensors[FLEX3].change_hid_profile(DISABLED);
-            flex_sensors[FLEX4].change_hid_profile(DISABLED);
+            //flex_sensors[FLEX4].change_hid_profile(DISABLED);
             touch_sensors[TOUCH1].change_hid_profile(DISABLED);
             //touch_sensors[TOUCH2].change_hid_profile(DISABLED);
             touch_sensors[TOUCH3].change_hid_profile(DISABLED);
