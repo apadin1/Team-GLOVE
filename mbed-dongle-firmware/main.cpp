@@ -43,11 +43,18 @@ void launch() {
     ble.init();
 
     // Initialize KeyboardMouse object
-    //KeyboardMouse HIDinput(ble);
+    KeyboardMouse HIDinput(ble);
+
+    flexToHID flex_sensors_L[FLEX_COUNT];
+    touchToHID touch_sensors_L[TOUCH_COUNT];
+    imuToHID imu_axis_L[IMU_COUNT];
+    flexToHID flex_sensors_R[FLEX_COUNT];
+    touchToHID touch_sensors_R[TOUCH_COUNT];
+    imuToHID imu_axis_R[IMU_COUNT];
 
     // Initialize translators
-    //Translator leftTranslator(left_glove_data, HIDinput, IS_LEFT);
-    //Translator rightTranslator(right_glove_data, HIDinput, IS_RIGHT);
+    Translator leftTranslator(left_glove_data, HIDinput, flex_sensors_L, touch_sensors_L, imu_axis_L);
+    Translator rightTranslator(right_glove_data, HIDinput, flex_sensors_R, touch_sensors_R, imu_axis_R);
     //TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
 
     // Init scanner

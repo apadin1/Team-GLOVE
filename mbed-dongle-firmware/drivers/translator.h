@@ -62,7 +62,10 @@ public:
      * Constructor for translator
      */
     Translator(glove_sensors_raw_t& glove_data,
-               KeyboardMouse& HIDinput, bool is_left);
+               KeyboardMouse& HIDinput,
+                       flexToHID* f,
+                       touchToHID* t,
+                       imuToHID* i);
 
     /*
      * Update gesture mapping via new configuration arrary.
