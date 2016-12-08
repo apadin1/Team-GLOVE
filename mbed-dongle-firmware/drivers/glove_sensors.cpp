@@ -51,9 +51,9 @@ int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* co
     raw->touch_sensor.c = (compressed->t & 0x2) >> 1;
     raw->touch_sensor.d = (compressed->t & 0x1);
 
-    raw->imu.orient_roll = (compressed->roll);
-    raw->imu.orient_pitch = (compressed->pitch);
-    raw->imu.orient_yaw = (compressed->yaw);
+    raw->imu.orient_roll = compressed->pitch;
+    raw->imu.orient_pitch = compressed->roll;
+    raw->imu.orient_yaw = compressed->yaw;
 
     return 0;
 }
