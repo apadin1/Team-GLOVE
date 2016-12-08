@@ -99,13 +99,15 @@ void launch() {
         while (input.isConnected()) {
             led4 = 0;
             Thread::wait(300);
-            //leftGlove.touch_sensor.a = 1;
+            rightGlove.touch_sensor.a = 1;
+            compressGloveSensors(&rightGlove, &rightGloveCompressed);
             //input.keyPress('a');
             //input.sendKeyboard();
 
             led4 = 1;
             Thread::wait(300);
-            leftGlove.touch_sensor.a = 0;
+            rightGlove.touch_sensor.a = 0;
+            compressGloveSensors(&rightGlove, &rightGloveCompressed);
             //input.keyRelease('a');
             //input.sendKeyboard();
         }
@@ -117,6 +119,7 @@ void launch() {
     }
 }
 
+/*
 glove_sensors_compressed_t left_compressed;
 glove_sensors_compressed_t right_compressed;
 glove_sensors_raw_t left_raw, left_max, left_min;
@@ -138,7 +141,8 @@ void print_raw_data(glove_sensors_raw_t raw_data) {
             raw_data.imu.orient_roll,
             raw_data.imu.orient_yaw);
 }
-
+*/
+/*
 void update_max_min(glove_sensors_raw_t& g_raw,
                     glove_sensors_raw_t& g_max,
                     glove_sensors_raw_t& g_min) {
@@ -171,7 +175,9 @@ void update_max_min(glove_sensors_raw_t& g_raw,
         g_max.imu.orient_yaw = g_raw.imu.orient_yaw;
     }
 }
+*/
 
+/*
 void decompress_and_print() {
     static int count = 0;
     count += 1;
@@ -200,7 +206,9 @@ void decompress_and_print() {
         print_raw_data(left_min);
     }
 }
+*/
 
+/*
 // Tested compressing and decompressing
 void scan_sensor_data(void) {
 
@@ -225,6 +233,7 @@ void scan_sensor_data(void) {
         ble.waitForEvent();
     }
 }
+*/
 
 int main() {
     /*

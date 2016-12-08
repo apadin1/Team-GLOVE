@@ -63,23 +63,44 @@ void gestureConfig(void const *argument) {
     getleftTranslator()->stopUpdateTask();
     getrightTranslator()->stopUpdateTask();
 
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
+    
     // Read in data
     while (pc.readable() && (len < CONFIG_LENGTH)) {
         rx_buffer[len] = pc.getc();
         len = ((len+1) % CONFIG_LENGTH);
     }
+    
+    led1 = 0;
 
     // Pointer to rx_buff
     uint8_t* rxptr = (uint8_t*) &rx_buffer;
 
     // Configure the translators
     getleftTranslator()->updateGestureMap(rxptr);
+    
+    led2 = 0;
+    
     rxptr += 14;
     getrightTranslator()->updateGestureMap(rxptr);
+    
+    led3 = 0;
 
     // START BLE SCANNING/TRANSLATING
     getleftTranslator()->startUpdateTask(20);
+
+    led4 = 0;
+
     getrightTranslator()->startUpdateTask(20);
+    
+    led1 = 1;
+    led2 = 1;
+    led3 = 1;
+    led4 = 1;
+    
     getScanner()->startScan();
 }
 
