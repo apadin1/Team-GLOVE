@@ -80,6 +80,7 @@ void TouchSensor::update() {
     if (*change_line == 1) {
 
         // if free, do a calibration every minute (50ct/sec)
+        // SWITCH TO KEY TIMOUTS
         if (calibration_count >= 3000) {
             calibration_count = 0;
             qt.calibrate();
