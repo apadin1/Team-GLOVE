@@ -67,6 +67,6 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
 /*
  * Runs the checksum and returns -1 without changing glove_sensors_raw if that fails
  */
-int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed);
+int extractGloveSensors(glove_sensors_raw_t& raw, glove_sensors_compressed_t* compressed);
 
 #endif /* GLOVE_SENSORS_H_ */

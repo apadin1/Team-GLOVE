@@ -23,7 +23,6 @@
 #include "keyboard_mouse.h"
 #include "glove_sensors.h"
 
-#define GESTURE_COUNT 13
 #define FLEX_COUNT 4
 #define TOUCH_COUNT 4
 #define IMU_COUNT 4

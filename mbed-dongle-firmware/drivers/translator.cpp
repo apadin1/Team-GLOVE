@@ -66,15 +66,15 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
         new imuToHID(&(glove_data.imu.orient_pitch), -50, 50, 0.15, ACTIVE_HIGH);
 
         /* PITCHDOWN */
-        imu_axis[PITCHDOWN] = &pitchdown;
+        imu_axis[PITCHDOWN] =
         new imuToHID(&(glove_data.imu.orient_pitch), -35, 0, 0.15, ACTIVE_LOW);
 
         /* ROLLLEFT */
-        imu_axis[ROLLLEFT] = &rollleft;
+        imu_axis[ROLLLEFT] =
         new imuToHID(&(glove_data.imu.orient_roll), -50, 50, 0.15, ACTIVE_HIGH);
 
         /* ROLLRIGHT */
-        imu_axis[ROLLRIGHT] = &rollright;
+        imu_axis[ROLLRIGHT] =
         new imuToHID(&(glove_data.imu.orient_roll), -45, 0, 0.15, ACTIVE_LOW);
 
         /* BUTTON MAPPING */
@@ -106,8 +106,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
         //    imu_axis[ROLLRIGHT]->change_hid_profile(DISABLED);
 
 
-        update_task_timer =
-            new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
+        //update_task_timer = new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
     }
 
 void Translator::updateGestureMap(uint8_t* config) {
@@ -174,14 +173,6 @@ void Translator::gestureCheck() {
         return;
     }
 
-    // Decompress
-    extractGloveSensors(glove_data, glove_compressed);
-    //if (glove_data->imu.orient_pitch > 0)
-    //    glove_data->imu.orient_pitch = 0;
-    //else
-    //    glove_data->imu.orient_pitch = 33;
-    //bool MOUSE_CHANGED = false;
-    //bool KEYBOARD_CHANGED = false;
     led2 = 0;//DEBUG
 
     // Flex Sensor functionality
@@ -195,7 +186,7 @@ void Translator::gestureCheck() {
 
         /* Mouse functionality */
         else if (flex_sensors[i]->is_mouse()) {
-            mouseData mouse = flex_sensors[i]->get_mouse_data();  // Grab mouse data
+            mouseData mouse = flex_sensors[i]->get_mouse_data();
             handleMouseInput(mouse);
         }
     }
@@ -217,15 +208,7 @@ void Translator::gestureCheck() {
     }
 
     // IMU functionality
-    /*
-    static int count = 0;
-    count++;
-    if (count >= 30) {
-        printf("P: %d, R: %d\r\n", int(glove_data->imu.orient_pitch), int(glove_data->imu.orient_roll));
-        count = 0;
-    }
-    */
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < IMU_COUNT; i++) {
 
         // Keyboard functionality
         if (imu_axis[i]->is_keyboard()) {
@@ -239,7 +222,7 @@ void Translator::gestureCheck() {
             //handleMouseInput(mouse);
         }
     }
-    // balance the mouse
+    // balance the mouse TODO
 
         float r = -(glove_data->imu.orient_roll+20);
         float p = -glove_data->imu.orient_pitch;
@@ -248,12 +231,6 @@ void Translator::gestureCheck() {
         HIDinput->setMouseSpeedX(int8_t(deadzone(r, T_r)));
         HIDinput->setMouseSpeedY(int8_t(deadzone(p, T_p)));
 
-
-    /* Send HID inputs */
-    //if (KEYBOARD_CHANGED == true)
-       // HIDinput->sendKeyboard();
-    //if (MOUSE_CHANGED == true)
-       // HIDinput->sendMouse();
     led2 = 1;
 }
 
