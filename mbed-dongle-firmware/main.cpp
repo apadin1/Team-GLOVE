@@ -85,8 +85,6 @@ void launch() {
 
     // Initialize serial interrupts for configuration
     SerialCom serial_com(&left_translator, &right_translator, (Scanner *) NULL);
-    RtosTimer gestureUpdateTask(&serial_com, &SerialCom::gestureConfig, osTimerPeriodic);
-    gestureUpdateTask.start(5000);
     
     // Infinite loop with two states
     // Either the keyboard is connected or unconnected

@@ -40,6 +40,7 @@ private:
     Translator * left_translator;
     Translator * right_translator;
     Scanner * scanner;
+    RtosTimer * config_task;
 };
 
 
@@ -82,6 +83,9 @@ SerialCom::SerialCom(Translator * _left_translator,
     // Set up the interrupt for when data is ready on the serial port
     pc.attach(&Rx_interrupt, Serial::RxIrq);
     getSerial(this);
+    
+    config_task = new RtosTimer(&serial_com, &SerialCom::gestureConfig, osTimerPeriodic);
+    config_task->start(5000);
 }
 
 // Send configuration information to the translators
