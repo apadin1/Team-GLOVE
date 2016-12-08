@@ -63,7 +63,7 @@ void launch() {
     Translator leftTranslator(&leftGlove, &leftGloveCompressed, &input);
     Translator rightTranslator(&rightGlove, &rightGloveCompressed, &input);
     TranslateTask combinedTask(&leftTranslator, &rightTranslator, &input);
-    
+
     // Init scanner
     crcInit();
     Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);

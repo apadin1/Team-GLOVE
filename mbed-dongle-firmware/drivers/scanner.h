@@ -40,7 +40,7 @@ public:
     }
 
     // Stop and start scanning
-    void startScan(int scan_period=100, int scan_duration=30) {
+    void startScan(int scan_period=50, int scan_duration=28) {
         ble.gap().setScanParams(scan_period, scan_duration);
         ble.gap().startScan(this, &Scanner::advertisementCallback);
     }

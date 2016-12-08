@@ -7,13 +7,13 @@
 #include "mbed.h"
 
 class TranslateTask {
-    public:
+public:
     TranslateTask(Translator* left_, Translator* right_, KeyboardMouse* input_);
     void doTheThing();
     void startUpdateTask(uint32_t ms);
     void stopUpdateTask();
-    
-    private:
+
+private:
     RtosTimer* update_task_timer;
     Translator* left;
     Translator* right;

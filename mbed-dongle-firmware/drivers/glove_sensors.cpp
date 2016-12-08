@@ -34,10 +34,12 @@ void compressGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* 
 
 int extractGloveSensors(glove_sensors_raw_t* raw, glove_sensors_compressed_t* compressed) {
 
+    /*
     uint16_t crc_result = crcFast((uint8_t*)compressed, glove_sensors_compressed_size_no_crc);
     if (crc_result != compressed->checksum) {
-        //return -1;
+        return -1;
     }
+    */
 
     raw->flex_sensors[0] = (compressed->f[0] >> 4);
     raw->flex_sensors[1] = ((compressed->f[0] & 0x000F) << 8) | (compressed->f[1] >> 8);
