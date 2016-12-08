@@ -28,7 +28,7 @@ const color_pair_t led_patterns_c[num_led_patterns_c] = {
     color_pair_t(Red, Magenta),
     color_pair_t(Green, Yellow),
 };
-const uint8_t portal_intensity_c = 15;
+const uint8_t portal_intensity_c = 11;
 const DotStarColor portal_color_c = Orange;
 #else
 #error "Must define either LEFT_GLOVE or RIGHT_GLOVE"
