@@ -100,7 +100,7 @@ Translator::Translator(glove_sensors_raw_t* _glove,
         touch_sensors[TOUCH2]->change_hid_profile(KEYBOARD, 'f');
         touch_sensors[TOUCH3]->change_hid_profile(KEYBOARD, 'g');
         touch_sensors[TOUCH4]->change_hid_profile(KEYBOARD, 'h');
-        imu_axis[PITCHUP]->change_hid_profile(KEYBOARD, 'i');
+        imu_axis[PITCHUP]->change_hid_profile(MOUSE, 0, XAXIS);
         imu_axis[PITCHDOWN]->change_hid_profile(KEYBOARD, 'j');
         imu_axis[ROLLLEFT]->change_hid_profile(KEYBOARD, 'k');
         imu_axis[ROLLRIGHT]->change_hid_profile(KEYBOARD, 'l');
