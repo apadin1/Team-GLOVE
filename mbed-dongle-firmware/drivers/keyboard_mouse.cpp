@@ -30,7 +30,7 @@
 
 DigitalOut l1(LED1);
 
-static const char DEVICE_NAME[] = "TR_Glove";
+static const char DEVICE_NAME[] = "Team GLOVE";
 static const char SHORT_NAME[] = "glove2";
 
 
