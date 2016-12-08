@@ -83,7 +83,7 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
             imu_axis[PITCHUP].init(&(glove_data.imu.orient_pitch), -50, 0, 0.10, ACTIVE_LOW);
             imu_axis[PITCHDOWN].init(&(glove_data.imu.orient_pitch), 0, 50, 0.10, ACTIVE_HIGH);
             imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -25, 25, 0.10, ACTIVE_LOW);
-            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), 25, 75, 0.10, ACTIVE_HIGH);
+            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), 25, 65, 0.10, ACTIVE_HIGH);
 
             /* LEFT BUTTON MAPPING */
             flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
