@@ -80,11 +80,10 @@ class Translator {
 public:
     /*
      * Constructor for translator
-     *
      */
-    Translator(glove_sensors_raw_t* glove_raw,
-            glove_sensors_compressed_t* glove_compressed,
-            KeyboardMouse* input);
+    Translator(glove_sensors_raw_t& glove_L,
+               glove_sensors_raw_t& glove_R,
+               KeyboardMouse* HIDinput);
 
     /*
      * Update gesture mapping via new configuration arrary.
@@ -102,7 +101,7 @@ public:
      * Calls the start() method on the periodic update task,
      * an internal timer is set up in the constructor
      */
-    void startUpdateTask(uint32_t ms=10);
+    void startUpdateTask(uint32_t ms);
 
     /*
      * Calls the stop() method on the periodic update timer,
@@ -117,16 +116,20 @@ private:
     // NOTE: Arrays indexed by enums
 
     /* Left Glove Analog Buttons */
-    flexToHID* flex_sensors[FLEX_COUNT];
-    imuToHID* imu_axis[IMU_COUNT];
-    touchToHID* touch_sensors[TOUCH_COUNT];
+    flexToHID* flex_sensors_L[FLEX_COUNT];
+    imuToHID* imu_axis_L[IMU_COUNT];
+    touchToHID* touch_sensors_L[TOUCH_COUNT];
+
+    flexToHID* flex_sensors_R[FLEX_COUNT];
+    imuToHID* imu_axis_R[IMU_COUNT];
+    touchToHID* touch_sensors_R[TOUCH_COUNT];
 
     /* KeyboardMouse Object */
-    KeyboardMouse* HIDinput;
+    KeyboardMouse& HIDinput;
 
     /* Glove Data */
-    glove_sensors_raw_t* glove_data;
-    glove_sensors_compressed_t* glove_compressed;
+    glove_sensors_raw_t& glove_L;
+    glove_sensors_raw_t& glove_R;
 
     RtosTimer* update_task_timer;
     DigitalOut working;

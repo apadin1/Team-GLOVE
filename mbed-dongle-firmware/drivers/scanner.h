@@ -20,11 +20,6 @@ const int PACKET_LENGTH =
      glove_sensors_compressed_size /* Data + checksum */
      );
 
-
-// TODO: Testing
-int left_count;
-int right_count;
-
 /************************* SCANNER CLASS ********************/
 class Scanner {
 public:
@@ -66,26 +61,12 @@ public:
 
         // Packet is a Left Glove
         if (id == LEFT_GLOVE_ID) {
-
             extractGloveSensors(left_glove_data, compressed_data);
-
-            // Copy glove data
-            /*
-            memcpy(left_compressed,
-                   compressed_data,
-                   sizeof(glove_sensors_compressed_t));
-               */
-            ++left_count;
         }
 
         // Packet is a Right Glove
         else if (id == RIGHT_GLOVE_ID) {
-
-            // Copy glove data
-            memcpy(right_compressed,
-                   (params->advertisingData + 4),
-                   sizeof(glove_sensors_compressed_t));
-            ++right_count;
+            extractGloveSensors(right_glove_data, compressed_data);
         }
     }
 
