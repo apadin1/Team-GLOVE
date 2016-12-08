@@ -31,13 +31,12 @@ public:
 
     // Scan period and duration are in milliseconds
     Scanner(BLE &_ble,
-            glove_sensors_compressed_t* _left_compressed,
-            glove_sensors_compressed_t* _right_compressed) :
+            glove_sensors_raw_t& left_data,
+            glove_sensors_raw_t& right_data) :
 
         ble(_ble),
-        left_compressed(_left_compressed),
-        right_compressed(_right_compressed) {
-    }
+        left_glove_data(left_data),
+        right_glove_data(right_data) {}
 
     // Stop and start scanning
     void startScan(int scan_period=100, int scan_duration=30) {
@@ -62,14 +61,20 @@ public:
         // Filter advertisements by ID number
         uint16_t id = params->advertisingData[2] << 8;
         id |= params->advertisingData[3];
+        glove_sensors_compressed_t* compressed_data =
+            (glove_sensors_compressed_t*)(params->advertisingData + 4);
 
         // Packet is a Left Glove
         if (id == LEFT_GLOVE_ID) {
 
+            extractGloveSensors(left_glove_data, compressed_data);
+
             // Copy glove data
+            /*
             memcpy(left_compressed,
-                   (params->advertisingData + 4),
+                   compressed_data,
                    sizeof(glove_sensors_compressed_t));
+               */
             ++left_count;
         }
 
@@ -86,12 +91,10 @@ public:
 
 private:
     BLE &ble;
-    //Translator* translator;
 
     // Pointers to both compressed structures
-    glove_sensors_compressed_t* left_compressed;
-    glove_sensors_compressed_t* right_compressed;
-
+    glove_sensors_raw_t& left_glove_data;
+    glove_sensors_raw_t& right_glove_data;
 };
 
 #endif // SCANNER_H_
