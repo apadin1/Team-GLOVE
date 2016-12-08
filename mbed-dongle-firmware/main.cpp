@@ -241,6 +241,6 @@ int main() {
     //launch_periodic();
     //keyboard_mouse_demo();
     //uart_test();
-    scan_sensor_data();
-    //launch();
+    //scan_sensor_data();
+    launch();
 }

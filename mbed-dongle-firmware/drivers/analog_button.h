@@ -18,6 +18,7 @@
 #define ANALOG_BUTTON_H_
 #include <stdint.h>
 
+
 template <class T>
 class AnalogButton {
 public:
@@ -44,7 +45,7 @@ public:
             return;
         }
 
-        T range = max_abs - min_abs;
+        range = max_abs - min_abs;
         float valid_band = range * ((1-transition_band) / 2.0);
 
         min_thresh = min_abs + valid_band;
@@ -84,17 +85,25 @@ public:
 
         return binary_state;
     }
+
     uint8_t imu_analog_state() {
         T value = (*data < max_abs) ? *data : max_abs;
         value = (*data > min_abs) ? *data : min_abs;
-        int8_t temp = 0;
-        if (true) {
-            temp = 127 * (value / range);
-            if (temp < 10 && temp > -10)
-                temp = 0;
-        }
-        return temp;
+        int8_t tmp = 0;
+        //int mouse_range = 10;
+        /*
+        double in_min = -50.0;
+        double in_max = 50.0;
+        double out_min = -50;
+        double out_max = 50;
+        */
+        //tmp = (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        tmp = int(value);
+
+        //tmp = 10 * (value / range); // TODO this scalar
+        return tmp;
     }
+
     T* data;
     T range;
 private:
