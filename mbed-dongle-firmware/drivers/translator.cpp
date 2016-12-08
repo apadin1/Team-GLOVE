@@ -23,10 +23,11 @@ const PinName TRANSLATOR_DEBUG_PIN = p26;
 
 Translator::Translator(glove_sensors_raw_t& _glove_data,
                        KeyboardMouse& _HIDinput,
+                       bool is_l,
                        flexToHID* f,
                        touchToHID* t,
                        imuToHID* i)
-    : glove_data(_glove_data), HIDinput(_HIDinput), flex_sensors(f), touch_sensors(t), imu_axis(i),
+    : glove_data(_glove_data), HIDinput(_HIDinput), is_left(is_l), flex_sensors(f), touch_sensors(t), imu_axis(i),
     working(TRANSLATOR_DEBUG_PIN) {
 
         /* FLEX */
@@ -47,36 +48,64 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
         imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -50, 50, 0.15, ACTIVE_HIGH);
         imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), -45, 0, 0.15, ACTIVE_LOW);
 
-        /* BUTTON MAPPING */
-        flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
-        flex_sensors[FLEX2].change_hid_profile(MOUSE, 0, RBUTTON);
-        flex_sensors[FLEX3].change_hid_profile(KEYBOARD, 'c');
-        flex_sensors[FLEX4].change_hid_profile(KEYBOARD, ' ');
-        touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
-        //touch_sensors[TOUCH2].change_hid_profile(MOUSE, 0, RBUTTON);
-        touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
-        touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
-        imu_axis[PITCHUP].change_hid_profile(DISABLED, 0, YAXIS);
-        imu_axis[PITCHDOWN].change_hid_profile(DISABLED, 'j');
-        imu_axis[ROLLLEFT].change_hid_profile(MOUSE, 0, XAXIS);
-        imu_axis[ROLLRIGHT].change_hid_profile(DISABLED, 'l');
+        if (!is_left) {
+            /* RIGHT BUTTON MAPPING */
+            flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
+            flex_sensors[FLEX2].change_hid_profile(MOUSE, 0, RBUTTON);
+            flex_sensors[FLEX3].change_hid_profile(KEYBOARD, 'c');
+            flex_sensors[FLEX4].change_hid_profile(KEYBOARD, ' ');
+            touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
+            //touch_sensors[TOUCH2].change_hid_profile(MOUSE, 0, RBUTTON);
+            touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
+            touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
+            imu_axis[PITCHUP].change_hid_profile(DISABLED, 0, YAXIS);
+            imu_axis[PITCHDOWN].change_hid_profile(DISABLED, 'j');
+            imu_axis[ROLLLEFT].change_hid_profile(MOUSE, 0, XAXIS);
+            imu_axis[ROLLRIGHT].change_hid_profile(DISABLED, 'l');
 
-        //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
-        //    flex_sensors[FLEX1].change_hid_profile(DISABLED);
-            //flex_sensors[FLEX2].change_hid_profile(DISABLED);
-        //    flex_sensors[FLEX3].change_hid_profile(DISABLED);
-        //    flex_sensors[FLEX4].change_hid_profile(DISABLED);
-            //touch_sensors[TOUCH1].change_hid_profile(DISABLED);
-            touch_sensors[TOUCH2].change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH3].change_hid_profile(DISABLED);
-        //    touch_sensors[TOUCH4].change_hid_profile(DISABLED);
-        //   imu_axis[PITCHUP].change_hid_profile(DISABLED);
-        //    imu_axis[PITCHDOWN].change_hid_profile(DISABLED);
-        //    imu_axis[ROLLLEFT].change_hid_profile(DISABLED);
-        //    imu_axis[ROLLRIGHT].change_hid_profile(DISABLED);
+            //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
+            //    flex_sensors[FLEX1].change_hid_profile(DISABLED);
+                //flex_sensors[FLEX2].change_hid_profile(DISABLED);
+            //    flex_sensors[FLEX3].change_hid_profile(DISABLED);
+            //    flex_sensors[FLEX4].change_hid_profile(DISABLED);
+                //touch_sensors[TOUCH1].change_hid_profile(DISABLED);
+                touch_sensors[TOUCH2].change_hid_profile(DISABLED);
+            //    touch_sensors[TOUCH3].change_hid_profile(DISABLED);
+            //    touch_sensors[TOUCH4].change_hid_profile(DISABLED);
+            //   imu_axis[PITCHUP].change_hid_profile(DISABLED);
+            //    imu_axis[PITCHDOWN].change_hid_profile(DISABLED);
+            //    imu_axis[ROLLLEFT].change_hid_profile(DISABLED);
+            //    imu_axis[ROLLRIGHT].change_hid_profile(DISABLED);
+        }
+        else {
+            /* LEFT BUTTON MAPPING */
+            flex_sensors[FLEX1].change_hid_profile(KEYBOARD, 'x');
+            flex_sensors[FLEX2].change_hid_profile(KEYBOARD, 'z');
+            flex_sensors[FLEX3].change_hid_profile(KEYBOARD, '0');
+            flex_sensors[FLEX4].change_hid_profile(KEYBOARD, '1');
+            //touch_sensors[TOUCH1].change_hid_profile(KEYBOARD,'e');
+            //touch_sensors[TOUCH2].change_hid_profile(MOUSE, 0, RBUTTON);
+            //touch_sensors[TOUCH3].change_hid_profile(KEYBOARD, 'g');
+            //touch_sensors[TOUCH4].change_hid_profile(KEYBOARD, 'h');
+            //imu_axis[PITCHUP].change_hid_profile(DISABLED, 0, YAXIS);
+            //imu_axis[PITCHDOWN].change_hid_profile(DISABLED, 'j');
+            //imu_axis[ROLLLEFT].change_hid_profile(MOUSE, 0, XAXIS);
+            //imu_axis[ROLLRIGHT].change_hid_profile(DISABLED, 'l');
 
-
-        //update_task_timer = new RtosTimer(this, &Translator::gestureCheck, osTimerPeriodic);
+            //TO MAKE DEBUG EASIER - choose one line from top or below to be uncommented
+            //    flex_sensors[FLEX1].change_hid_profile(DISABLED);
+                //flex_sensors[FLEX2].change_hid_profile(DISABLED);
+            //    flex_sensors[FLEX3].change_hid_profile(DISABLED);
+            //    flex_sensors[FLEX4].change_hid_profile(DISABLED);
+               touch_sensors[TOUCH1].change_hid_profile(DISABLED);
+                touch_sensors[TOUCH2].change_hid_profile(DISABLED);
+                touch_sensors[TOUCH3].change_hid_profile(DISABLED);
+                touch_sensors[TOUCH4].change_hid_profile(DISABLED);
+               imu_axis[PITCHUP].change_hid_profile(DISABLED);
+                imu_axis[PITCHDOWN].change_hid_profile(DISABLED);
+                imu_axis[ROLLLEFT].change_hid_profile(DISABLED);
+                imu_axis[ROLLRIGHT].change_hid_profile(DISABLED);
+        }
     }
 
 void Translator::updateGestureMap(uint8_t* config) {
@@ -194,12 +223,15 @@ void Translator::gestureCheck() {
     }
     // balance the mouse TODO
 
+    if (!is_left) {
+
         float r = -(glove_data.imu.orient_roll+20);
         float p = -glove_data.imu.orient_pitch;
         int T_r = 8;
         int T_p = 5;
         HIDinput.setMouseSpeedX(int8_t(deadzone(r, T_r)));
         HIDinput.setMouseSpeedY(int8_t(deadzone(p, T_p)));
+    }
 
     led2 = 1;
 }

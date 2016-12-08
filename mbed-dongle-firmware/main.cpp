@@ -53,8 +53,8 @@ void launch() {
     imuToHID imu_axis_R[IMU_COUNT];
 
     // Initialize translators
-    Translator leftTranslator(left_glove_data, HIDinput, flex_sensors_L, touch_sensors_L, imu_axis_L);
-    Translator rightTranslator(right_glove_data, HIDinput, flex_sensors_R, touch_sensors_R, imu_axis_R);
+    Translator leftTranslator(left_glove_data, HIDinput, IS_LEFT, flex_sensors_L, touch_sensors_L, imu_axis_L);
+    Translator rightTranslator(right_glove_data, HIDinput, IS_RIGHT, flex_sensors_R, touch_sensors_R, imu_axis_R);
     TranslateTask combinedTask(leftTranslator, rightTranslator, HIDinput);
 
     // Init scanner
