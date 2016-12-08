@@ -20,7 +20,6 @@
 /* DEBUG */
 const PinName TRANSLATOR_DEBUG_PIN = p26;
 
-
 Translator::Translator(glove_sensors_raw_t* _glove,
         glove_sensors_compressed_t* _glove_comp,
         KeyboardMouse* _input) :
