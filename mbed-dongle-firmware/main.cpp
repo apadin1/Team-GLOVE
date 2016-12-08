@@ -69,7 +69,7 @@ void launch() {
     Scanner scanner(ble, &leftGloveCompressed, &rightGloveCompressed);
 
     // Initialize serial interrupts for configuration
-    //serialInit(&leftTranslator, &rightTranslator, &scanner);
+    serialInit(&leftTranslator, &rightTranslator, &scanner);
 
     // Setup the waitForEvent loop in a different thread
     Thread bleWaitForEvent(bleWaitForEventLoop);
@@ -105,7 +105,7 @@ void launch() {
 
             led4 = 1;
             Thread::wait(300);
-            //leftGlove.touch_sensor.a = 0;
+            leftGlove.touch_sensor.a = 0;
             //input.keyRelease('a');
             //input.sendKeyboard();
         }
