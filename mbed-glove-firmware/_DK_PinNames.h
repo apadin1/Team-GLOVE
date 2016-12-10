@@ -1,1 +1,0 @@
-mbed-os/hal/targets/hal/TARGET_NORDIC/TARGET_MCU_NRF51822/TARGET_NRF51_DK/PinNames.h
