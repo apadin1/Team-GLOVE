@@ -11,6 +11,27 @@
  *
  * Purpose:
  *  Implementation of translator.h
+ *
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 #include "translator.h"
@@ -18,17 +39,18 @@
 #define ACTIVE_LOW true
 #define ACTIVE_HIGH false
 
-/* DEBUG */
-const PinName TRANSLATOR_DEBUG_PIN = p26;
-
 Translator::Translator(glove_sensors_raw_t& _glove_data,
                        KeyboardMouse& _HIDinput,
                        bool is_l,
                        flexToHID* f,
                        touchToHID* t,
                        imuToHID* i)
-    : glove_data(_glove_data), HIDinput(_HIDinput), is_left(is_l), flex_sensors(f), touch_sensors(t), imu_axis(i),
-    working(TRANSLATOR_DEBUG_PIN) {
+    : glove_data(_glove_data),
+    HIDinput(_HIDinput),
+    is_left(is_l),
+    flex_sensors(f),
+    touch_sensors(t),
+    imu_axis(i) {
 
         /* FLEX */
         flex_sensors[FLEX1].init(glove_data.flex_sensors,   380, 820, 0.25);
@@ -301,6 +323,3 @@ void Translator::handleMouseInput(mouseData& mouse) {
         }
     }  // if valid
 }
-
-void Translator::startUpdateTask(uint32_t ms) { update_task_timer->start(ms); }
-void Translator::stopUpdateTask() { update_task_timer->stop(); }
