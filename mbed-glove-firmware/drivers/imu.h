@@ -24,7 +24,7 @@
  */
 //const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
 //const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
-const PinName IMU_RST = p12;
+const PinName IMU_RST = p20;
 
 /*
  * Update Period (in milliseconds)
@@ -34,7 +34,7 @@ const uint32_t IMU_UPDATE_PERIOD = 10;
 /*
  * Section 3.4 Axis Remap, p.25
  * On prototype in P1
- * On PCB in P?
+ * On PCB in P1
  */
 const BNO055_MOUNT_POSITIONS_TypeDef IMU_MOUNT_POSITION = MT_P1;
 
@@ -102,6 +102,10 @@ public:
      * For debuggs
      */
     void print(Serial& debug_out);
+
+    uint8_t hwDebugCheckVal () {
+        return imu.read_calib_status();
+    }
 
 private:
     BNO055 imu;

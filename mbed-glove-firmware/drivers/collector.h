@@ -19,67 +19,14 @@
 #include "mbed.h"
 
 #include "glove_sensors.h"
-<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
-
-#define GESTURE_COUNT 15
-#define FLEX_COUNT 4
-#define TOUCH_COUNT 4
-#define IMU_COUNT 6
-=======
 #include "ble_advert.h"
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
 /*
  * Default Update Period (in milliseconds)
  */
 const uint32_t COLLECTOR_UPDATE_PERIOD = 20;
 
-<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
-enum SENSOR {
-    hand,
-    flex1,
-    flex2,
-    flex3,
-    flex4,
-    touch1,
-    touch2,
-    touch3,
-    touch4,
-    pitchup,
-    pitchdown,
-    rollleft,
-    rollright,
-    yawleft,
-    yawright
-};
-
-enum FLEX {
-    FLEX1,
-    FLEX2,
-    FLEX3,
-    FLEX4
-};
-
-enum TOUCH {
-    TOUCH1,
-    TOUCH2,
-    TOUCH3,
-    TOUCH4
-};
-
-enum IMU {
-    PITCHUP,
-    PITCHDOWN,
-    ROLLLEFT,
-    ROLLRIGHT,
-    YAWLEFT,
-    YAWRIGHT
-};
-
-/* Translator
-=======
 /* Collector
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
  *
  * Single class to handle data interpretation between
  * glove data and HID input. Methods are written
@@ -90,20 +37,12 @@ class Collector {
 public:
     /*
      * Constructor for collector
-     *
-     * TODO try to use refrences instead of pointers
      */
-<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
-    Translator(glove_sensors_raw_t* left, glove_sensors_raw_t* right,
-               KeyboardMouse* input);
-=======
-    Collector(FlexSensors* _flex, IMU_BNO055* _imu, TouchSensor* _touch, AdvertBLE& _adble);
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
+    Collector(FlexSensors& _flex, IMU_BNO055& _imu, TouchSensor& _touch, AdvertBLE& _adble);
 
     /*
      * Update gesture mapping via new configuration arrary.
      */
-<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
     void updateGestureMap(uint8_t* config);
 
     /*
@@ -111,10 +50,7 @@ public:
      * is occuring. If so, generate proper HID data to be sent to HID class.
      * This function designed to be set up as a periodic task.
      */
-    void gestureCheck();
-=======
     void updateAndAdvertise();
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
     /*
      * Calls the start() method on the periodic update task,
@@ -127,40 +63,28 @@ public:
      */
     void stopUpdateTask();
 
+    const glove_sensors_raw_t& getGloveSensorData() {
+        return glove_data;
+    }
+
 private:
-<<<<<<< HEAD:mbed-glove-firmware/drivers/translator.h
-    // NOTE: Arrays indexed by enums
-
-    /* Left Glove Analog Buttons */
-    flexToHID* flex_sensorsL[FLEX_COUNT];
-    imuToHID* imu_axisL[IMU_COUNT];
-    touchToHID* touch_sensorsL[TOUCH_COUNT];
-
-    /* Right Glove Analog Buttons */
-    flexToHID* flex_sensorsR[FLEX_COUNT];
-    imuToHID* imu_axisR[IMU_COUNT];
-    touchToHID* touch_sensorsR[TOUCH_COUNT];
-
-    /* KeyboardMouse Object */
-    KeyboardMouse* HIDinput;
-
-    /* Glove Data */
-    glove_sensors_raw_t* glove_dataL;
-    glove_sensors_raw_t* glove_dataR;
-=======
     // Sensor classes (consider &refs)
-    FlexSensors* flex;
-    IMU_BNO055* imu;
-    TouchSensor* touch;
+    FlexSensors& flex;
+    IMU_BNO055& imu;
+    TouchSensor& touch;
     AdvertBLE& adble;
 
+    // glove sensor data struct(s)
     glove_sensors_raw_t glove_data;
     glove_sensors_compressed_t glove_data_compressed;
->>>>>>> 17f51a3311726110e5f3f68bb6b3a82db8dab800:mbed-glove-firmware/drivers/collector.h
 
-    /* MBED Objects */
+    // alias pointers into the glove_data struct
+    // to be passed into the write() methods of sensors
+    flex_sensor_t* flex_data;
+    key_states_t* touch_data;
+    bno_imu_t* imu_data;
+
     RtosTimer* update_task_timer;
-    DigitalOut working;
 };
 
 #endif /* TRANSLATOR_H_ */

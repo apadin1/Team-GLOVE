@@ -101,7 +101,7 @@ typedef struct {
     uint8_t d;
 
     uint8_t pack() {
-        return a << 3 | b << 2 | c << 1 | d;
+        return (a << 3 | b << 2 | c << 1 | d);
     }
 } key_states_t;
 

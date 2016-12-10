@@ -23,12 +23,17 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-#include "crc.h"
+#include "glove_sensors.h"
 
+#ifdef LEFT_GLOVE
+static const uint16_t ADVERT_ID = 0xBEEF;
+#elif defined RIGHT_GLOVE
 static const uint16_t ADVERT_ID = 0xBABE;
-static const uint8_t PAYLOAD_DATA_LENGTH = 19;
-static const uint8_t PAYLOAD_CRC_LENGTH = 2;
-static const uint8_t PAYLOAD_LENGTH = 2 + PAYLOAD_DATA_LENGTH + PAYLOAD_CRC_LENGTH; // 23
+#else
+#error "Must define either LEFT_GLOVE or RIGHT_GLOVE"
+#endif
+
+static const uint8_t PAYLOAD_LENGTH = 2 + glove_sensors_compressed_size;
 
 /*
  * Structure of advertising packet data:
@@ -46,11 +51,11 @@ public:
     AdvertBLE();
 
     /*
-     * Given pointer to data of length PAYLOAD_DATA_LENGTH,
+     * Given pointer to data of length PAYLOAD_LENGTH,
      * update the advertisement data and the CRC, if the data
      * differs from the payload being advertised
      */
-    void update(uint8_t* data, uint8_t len=PAYLOAD_DATA_LENGTH);
+    void update(uint8_t* data, uint8_t len=PAYLOAD_LENGTH);
 
     /*
      * Calls ble.waitForEvent()

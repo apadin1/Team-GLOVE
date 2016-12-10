@@ -23,7 +23,6 @@ AdvertBLE::AdvertBLE() {
     adv_payload[1] = ADVERT_ID & 0x00FF;
 
     ble.init();
-    crcInit();
 
     adv.addData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
     ble.setAdvertisingData(adv);
@@ -38,11 +37,6 @@ AdvertBLE::AdvertBLE() {
 void AdvertBLE::update(uint8_t* data, uint8_t len) {
     // set data in the advertisement, after the ADVERT_ID bytes
     memcpy(adv_payload+2, data, len);
-
-    // CRC appended at end of payload
-    crc_result = crcFast(data, len);
-    adv_payload[PAYLOAD_LENGTH-2] = (crc_result >> 8) & 0x00FF;
-    adv_payload[PAYLOAD_LENGTH-1] = crc_result & 0x00FF;
 
     // start the new advertisement
     adv.updateData(GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA, adv_payload, PAYLOAD_LENGTH);
