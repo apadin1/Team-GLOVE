@@ -13,6 +13,27 @@
  *  Top-level interface for a task to get data from the IMU
  *
  *  Uses the BNO055_fusion mbed library by Kenji Arai
+ *
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 #ifndef IMU_H_
@@ -22,8 +43,6 @@
 /*
  * PinName definitions for the BNO055 on the board
  */
-//const PinName IMU_I2C_SCL = I2C_SCL0;  // = p7
-//const PinName IMU_I2C_SDA = I2C_SDA0;  // = p30
 const PinName IMU_RST = p20;
 
 /*
@@ -71,17 +90,6 @@ public:
     void update();
 
     /*
-     * Calls the start() method on the periodic update task,
-     * an internal timer is set up in the constructor
-     */
-    //void startUpdateTask(uint32_t ms=IMU_UPDATE_PERIOD);
-
-    /*
-     * Calls the stop() method on the periodic update timer,
-     */
-    //void stopUpdateTask();
-
-    /*
      * Write the imu orientation values to the given struct
      * This assumes no ownership or locking of the given container
      */
@@ -94,12 +102,7 @@ public:
     void updateAndWrite(bno_imu_t*);
 
     /*
-     * something something do manual calibration
-     */
-    // .manualCalibration()
-
-    /*
-     * For debuggs
+     * For debugging
      */
     void print(Serial& debug_out);
 
@@ -114,15 +117,6 @@ private:
     BNO055_ID_INF_TypeDef bno055_id_inf;
     BNO055_EULER_TypeDef euler_angles;
     BNO055_LIN_ACC_TypeDef linear_acc;
-
-    //RtosTimer* update_task_timer;
 };
-
-/*
- * Need some way to save the calibration for the IMU
- * and then reload it on setup
- */
-void saveIMUCalibration();
-void loadIMUCalibration();
 
 #endif /* IMU_H_ */

@@ -11,7 +11,29 @@
  *
  * Purpose:
  *  Implementation for the FlexSensors class in flex_sensor.h
+ *
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
+
 #include "flex_sensor.h"
 
 const PinName FLEX_DEBUG_PIN = p15;
@@ -21,8 +43,6 @@ FlexSensors::FlexSensors() {
     pins[1] = new AnalogIn(FLEX_1);
     pins[2] = new AnalogIn(FLEX_2);
     pins[3] = new AnalogIn(FLEX_3);
-
-    //update_task_timer = new RtosTimer(this, &FlexSensors::update, osTimerPeriodic);
 }
 
 void FlexSensors::update() {
@@ -30,16 +50,6 @@ void FlexSensors::update() {
         values[i] = pins[i]->read_u16();
     }
 }
-
-/*
-void FlexSensors::startUpdateTask(uint32_t ms) {
-    update_task_timer->start(ms);
-}
-
-void FlexSensors::stopUpdateTask() {
-    update_task_timer->stop();
-}
-*/
 
 void FlexSensors::writeSensors(flex_sensor_t* buf) {
     for (uint8_t i = 0; i < FLEX_SENSORS_COUNT; i++) {

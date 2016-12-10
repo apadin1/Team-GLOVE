@@ -1,17 +1,24 @@
-/* mbed Microcontroller Library
- * Copyright (c) 2015 ARM Limited
+/*
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 #include "keyboard_mouse.h"
@@ -30,7 +37,7 @@
 
 
 static const char DEVICE_NAME[] = "TeamGLOVE";
-static const char SHORT_NAME[] = "glove1"; 
+static const char SHORT_NAME[] = "glove1";
 
 
 /******************** CALLBACKS ********************/
@@ -45,7 +52,7 @@ static KeyboardMouseService * getServicePtr(KeyboardMouseService * new_ptr) {
 }
 
 /* When the device gets connected */
-static void connectionCallback(const Gap::ConnectionCallbackParams_t *params) { 
+static void connectionCallback(const Gap::ConnectionCallbackParams_t *params) {
     KeyboardMouseService * service_ptr = getServicePtr(NULL);
     service_ptr->setConnected(true);
 }
@@ -81,7 +88,7 @@ void bleInitComplete(BLE& ble) {
 
     // Security is required to pair
     initializeSecurity(ble);
-    
+
     // Initialize callbacks
     ble.gap().onConnection(connectionCallback);
     ble.gap().onDisconnection(disconnectionCallback);
@@ -89,12 +96,12 @@ void bleInitComplete(BLE& ble) {
     // Setup device services
     KeyboardMouseService * hid_service = new KeyboardMouseService(ble);
     BatteryService * battery_service = new BatteryService(ble, 80);
-    DeviceInformationService * device_info_service = 
+    DeviceInformationService * device_info_service =
         new DeviceInformationService(ble, "ARM", "Model1", "SN1", "hw-rev1", "fw-rev1", "soft-rev1");
 
     // Back door to let the KeyboardMouse class access the hid service
     getServicePtr(hid_service);
-    
+
     // Continue building advertising payload
     static const uint16_t uuid16_list[] =  {
         GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE,
@@ -107,7 +114,7 @@ void bleInitComplete(BLE& ble) {
 
     // This is how the device will initially be known to the computer
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::KEYBOARD);
-    
+
     // Add the device short and full name
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::COMPLETE_LOCAL_NAME, (const uint8_t *) DEVICE_NAME, sizeof(DEVICE_NAME));
     ble.gap().accumulateAdvertisingPayload(GapAdvertisingData::SHORTENED_LOCAL_NAME, (const uint8_t *) SHORT_NAME, sizeof(SHORT_NAME));
@@ -125,18 +132,18 @@ void bleInitComplete(BLE& ble) {
 KeyboardMouse::KeyboardMouse(BLE& _ble) :
         ble(_ble),
         len(0) {
-    
+
     /* Initialize keyboard variables */
     memset(keyboard_keys, 0, KBD_USAGE_LENGTH);
-            
+
     /* Initialize the BLE communication scheme */
     bleInitComplete(ble);
-    
+
     /* Initialize HID service pointer */
     service_ptr = getServicePtr(NULL);
-    
+
     /* Start GAP transmission */
-    ble.gap().startAdvertising();    
+    ble.gap().startAdvertising();
 }
 
 /* Destructor */
@@ -149,7 +156,7 @@ KeyboardMouse::~KeyboardMouse() {
 
 /* Set a button to be pressed or released */
 void KeyboardMouse::setMouseButton(MouseButton button, ButtonState state) {
-    service_ptr->setMouseButton(button, state);        
+    service_ptr->setMouseButton(button, state);
 }
 
 /* Set the speed of the mouse cursor in the x direction */
@@ -176,15 +183,15 @@ void KeyboardMouse::setMouseSpeedAll(int8_t x, int8_t y, int8_t scroll) {
 
 /* Set a keyboard button to be 'pressed' */
 void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
-    
+
     /* If the array is full, there is nothing to do */
     if (len == KBD_USAGE_LENGTH) return;
-    
+
     /* Make sure the key is not already pressed */
     for (int i = 0; i < len; ++i) {
         if (keyboard_keys[i] == key) return;
     }
-    
+
     /* Not already pressed - add it to the list */
     keyboard_keys[len] = key;
     len += 1;
@@ -193,10 +200,10 @@ void KeyboardMouse::keyPress(uint8_t key, uint8_t modifier) {
 
 /* Set the keyboard to be all buttons released */
 void KeyboardMouse::keyRelease(uint8_t key) {
-    
+
     /* Check if it is actually there */
     for (int i = 0; i < len; ++i) {
-        
+
         /* If found, zero out and shift others down */
         if (keyboard_keys[i] == key) {
             len -= 1;

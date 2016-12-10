@@ -14,19 +14,26 @@
  *   The AT42QT1070 in I2C comms mode can use a single interrupt line
  *   to indicate a change in state of the sensors.
  *
- * Usage: needs Thread and TouchSensor objects
- *   TouchSensor touch_sensor;
- *   Thread touch_sensor_thread;
- *   touch_sensor_thread.start(&touch_sensor, &TouchSensor::updateTask);
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
  *
- ************************
- *  NOTES
- *   Calibrate:
- *    - can send into "calibration cycle" with any non-zero value
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- *   Reset:
- *    - soft reset with any non-zero value
- *    - hard reset with minimum 5us pulse to reset line
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 #ifndef TOUCH_SENSOR_H_

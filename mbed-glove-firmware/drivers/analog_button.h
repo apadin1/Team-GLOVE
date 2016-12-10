@@ -15,17 +15,37 @@
  *  to translate to a binary value on threshold.
  *  Also encapsulates some HID Functionality.
  *
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
+
 #ifndef ANALOG_BUTTON_H_
 #define ANALOG_BUTTON_H_
+
 #include <stdint.h>
 
 template <class T>
 class AnalogButton {
 public:
-    AnalogButton() {
-        //TODO:fix this shit
-    }
+    AnalogButton() { }
     AnalogButton(T* data_, T min_, T max_, float transition_band, bool active_low_)
         : data(data_), min_abs(min_), max_abs(max_), active_low(active_low_) {
 
@@ -137,10 +157,9 @@ struct mouseData {
 };
 
 class flexToHID {
-    public:
+public:
     flexToHID( uint16_t* data_, uint16_t min_, uint16_t max_, float transition_band_, bool active_low_=false)
         : active_low(active_low_) {
-        //sensor_conversion = AnalogButton<uint16_t>(data_, min_, max_, transition_band_, active_low_);
         sensor_conversion.init(data_, min_, max_, transition_band_, active_low_);
         cur_keyboard = keyboardData();
         cur_mouse = mouseData();
@@ -178,7 +197,7 @@ class flexToHID {
         }
     }
 
-    private:
+private:
     bool active_low;
     AnalogButton<uint16_t> sensor_conversion;
     hidType HID;
@@ -188,7 +207,7 @@ class flexToHID {
 };
 
 class imuToHID {
-    public:
+public:
     imuToHID( float* data_, float min_, float max_, float transition_band_, bool active_low_=false)
         : active_low(active_low_) {
         sensor_conversion = AnalogButton<float>(data_, min_, max_, transition_band_, active_low_);
@@ -228,7 +247,7 @@ class imuToHID {
         }
     }
 
-    private:
+private:
     bool active_low;
     AnalogButton <float> sensor_conversion;
     hidType HID;

@@ -11,6 +11,27 @@
  *
  * Purpose:
  *  Top-level interface to the flex sensors
+ *
+ * Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
+ *                       Adrian Padin, Timothy Schumacher
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
  */
 
 #ifndef FLEX_SENSOR_H_
@@ -33,11 +54,6 @@ const PinName FLEX_1 = p2;
 const PinName FLEX_2 = p3;
 const PinName FLEX_3 = p4;
 #endif
-
-/*
- * Update Period (in milliseconds)
- */
-const uint32_t FLEX_UPDATE_PERIOD = 10;
 
 /* flex_sensor_t
  *
@@ -65,19 +81,6 @@ public:
     void update();
 
     /*
-     * Calls the start() method on the periodic update task,
-     * an internal timer is set up in the constructor
-     *
-     * Measured to take approximately 520us
-     */
-    //void startUpdateTask(uint32_t ms=FLEX_UPDATE_PERIOD);
-
-    /*
-     * Calls the stop() method on the periodic update timer,
-     */
-    //void stopUpdateTask();
-
-    /*
      * Write the flex sensor values to the given array.
      * This assumes no ownership or locking of the given container
      */
@@ -99,11 +102,8 @@ public:
      */
     void printSingle(Serial& pc, uint8_t index);
 
-
-
 private:
     flex_sensor_t values[FLEX_SENSORS_COUNT];
     AnalogIn* pins[FLEX_SENSORS_COUNT];
-    //RtosTimer* update_task_timer;
 };
 #endif /* FLEX_SENSOR_H_ */
