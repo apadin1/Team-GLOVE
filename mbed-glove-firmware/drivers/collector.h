@@ -41,9 +41,14 @@ public:
     Collector(FlexSensors& _flex, IMU_BNO055& _imu, TouchSensor& _touch, AdvertBLE& _adble);
 
     /*
-     * Update gesture mapping via new configuration vector.
-     * Transciever to send the new Vector to bluetooth class,
-     * which should then call this function
+     * Update gesture mapping via new configuration arrary.
+     */
+    void updateGestureMap(uint8_t* config);
+
+    /*
+     * Analyze sensors to determine if gesture
+     * is occuring. If so, generate proper HID data to be sent to HID class.
+     * This function designed to be set up as a periodic task.
      */
     void updateAndAdvertise();
 

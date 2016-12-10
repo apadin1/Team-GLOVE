@@ -1,12 +1,17 @@
 #include <inttypes.h>
 #include <utility>
 
+#include "mbed.h"
+
 #include "drivers/collector.h"
 #include "drivers/ble_advert.h"
 #include "drivers/dot_star_leds.h"
 
 extern void blink(void); extern void boot_delay(uint8_t);
 extern void sensors_to_lights(void);
+extern void keyboard_mouse_demo(void);
+extern void ble_scan_test(void);
+extern void uart_test(void);
 extern void advert_test(void);
 extern void touch_to_lights(void);
 extern void imu_to_lights(void);
@@ -96,6 +101,18 @@ void launch() {
     collector.startUpdateTask(20);
     const glove_sensors_raw_t& glove_data = collector.getGloveSensorData();
 
+    //Blink blk(adble); blk.startUpdateTask();
+    l1 = 0;
+
+    //glove_sensors_raw_t glove_data;
+
+    for (;;) {
+        l2 = !l2;
+        adble.waitForEvent();
+        Thread::wait(50);
+    }
+    l1 = 0;
+    DigitalOut d1(p20);
     /* The following main loop sets the light pattern on the
      * gloves after all the sensors have been initialized,
      * the BLE advertising set up, and the collector is running
