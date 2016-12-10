@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016 by Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe,
-#                       Adrian Padin, Timothy Schumacher
+# Copyright (c) 2016 by Timothy Schumacher
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the "Software"),
