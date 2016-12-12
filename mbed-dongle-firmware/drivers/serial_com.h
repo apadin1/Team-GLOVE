@@ -75,6 +75,7 @@ void print_config() {
 
 /******************** INTERRUPT FUNCTIONS ********************/
 
+/*
 // Deferred interrupt implementation
 void gestureConfig(void const *argument) {
 
@@ -124,5 +125,5 @@ void serialInit(Translator * leftTranslator, Translator * rightTranslator,
     pc.attach(&Rx_interrupt, Serial::RxIrq);
 }
 
-
+*/
 #endif //SERIAL_COM_H_
