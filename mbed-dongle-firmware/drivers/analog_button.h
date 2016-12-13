@@ -110,19 +110,7 @@ public:
     uint8_t imu_analog_state() {
         T value = (*data < max_abs) ? *data : max_abs;
         value = (*data > min_abs) ? *data : min_abs;
-        int8_t tmp = 0;
-        //int mouse_range = 10;
-        /*
-        double in_min = -50.0;
-        double in_max = 50.0;
-        double out_min = -50;
-        double out_max = 50;
-        */
-        //tmp = (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-        tmp = int(value);
-
-        //tmp = 10 * (value / range); // TODO this scalar
-        return tmp;
+        return int(0.7*value);
     }
 
     T* data;

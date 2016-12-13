@@ -67,10 +67,10 @@ Translator::Translator(glove_sensors_raw_t& _glove_data,
 
         if (!is_left) {
             /* IMU */
-            imu_axis[PITCHUP].init(&(glove_data.imu.orient_pitch), -50, 50, 0.15, ACTIVE_HIGH);
-            imu_axis[PITCHDOWN].init(&(glove_data.imu.orient_pitch), -50, 0, 0.15, ACTIVE_LOW);
-            imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -50, 50, 0.15, ACTIVE_HIGH);
-            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), -45, 0, 0.15, ACTIVE_LOW);
+            imu_axis[PITCHUP].init(&(glove_data.imu.orient_pitch), -50, 50, 0.10, ACTIVE_HIGH);
+            imu_axis[PITCHDOWN].init(&(glove_data.imu.orient_pitch), -50, 0, 0.10, ACTIVE_LOW);
+            imu_axis[ROLLLEFT].init(&(glove_data.imu.orient_roll), -50, 50, 0.10, ACTIVE_HIGH);
+            imu_axis[ROLLRIGHT].init(&(glove_data.imu.orient_roll), -45, 0, 0.10, ACTIVE_LOW);
 
             /* RIGHT BUTTON MAPPING */
             flex_sensors[FLEX1].change_hid_profile(MOUSE, 0, LBUTTON);
@@ -258,8 +258,8 @@ void Translator::gestureCheck() {
         // Right glove special mouse thing
         float r = -(glove_data.imu.orient_roll+20);
         float p = -glove_data.imu.orient_pitch;
-        int T_r = 8;
-        int T_p = 5;
+        int T_r = 4;
+        int T_p = 2;
         HIDinput.setMouseSpeedX(int8_t(deadzone(r, T_r)));
         HIDinput.setMouseSpeedY(int8_t(deadzone(p, T_p)));
     }

@@ -119,8 +119,8 @@ void launch() {
         Thread::wait(3000);
 
         // Start scanning and translating
-        combinedTask.startUpdateTask(50);
-        scanner.startScan(100, 20);
+        combinedTask.startUpdateTask(25); // 50 is stable, 25 is playable...
+        scanner.startScan(100, 21); // this is the most smooth but crashes eventually
         led1 = 0;
 
         // CONNECTED STATE
