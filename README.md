@@ -11,3 +11,5 @@ Need git
 
 
 In our repo, go into the mbed-glove-firmware and do `mbed-deploy` to update the mbed-os lib
+
+Ben, interfaces.tar.gz in mbed-glove-firmware plus serial_com.h and scanner.h in the dongle
