@@ -14,6 +14,7 @@ Nick Bertoldi, Ben Heckathorn, Ryan O'Keefe, Adrian Padin, Tim Schumacher
 ## Repository Organization
 This repository is divided into several sections:
 * ConfigApp - Contains code for a Windows app which was used to configure the inputs on the glove. It is mostly written in C#
+* Hardware - This folder holdsthe eagle and gerber files for the PCB that was designed to run on the glove
 * mbed-dongle-firmware - The code that ran on the reciever board (USB dongle) that did the translation and generated keyboard and mouse commands
 * mbed-glove-firmware - The software running on the glove itself to collect sensor data and transmit to the receiver
 
